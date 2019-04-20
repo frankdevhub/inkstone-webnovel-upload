@@ -18,6 +18,10 @@ public class Logger {
 	private org.slf4j.Logger logger;
 	private ConsoleSender sender = new ConsoleSender();
 
+	public Logger(){
+		
+	}
+	
 	public Logger(Class<?> class1) {
 		this.class1 = class1;
 	}

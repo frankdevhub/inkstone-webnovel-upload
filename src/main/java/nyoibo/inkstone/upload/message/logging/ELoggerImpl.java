@@ -17,7 +17,7 @@ import nyoibo.inkstone.upload.message.MessageMethod;
  * @date:2019-04-20 22:54
  */
 
-public final class ELoggerImpl extends MessageBuilder{
+public class ELoggerImpl extends MessageBuilder{
 	private static final String COLUMN_CHAIN = "@chain";
 	private static final String COLUMN_CLASS = "@class";
 	private static final String COLUMN_LEVEL = "@level";
@@ -29,9 +29,6 @@ public final class ELoggerImpl extends MessageBuilder{
 	private static final String LEVEL_WARN = "warn";
 	private static final String SYS_LOG = "sysLog";
 	private Class<?> class1;
-
-	public ELoggerImpl() {
-	}
 
 	public ELoggerImpl(IMessageSender sender, Class<?> class1) {
 		super(sender);

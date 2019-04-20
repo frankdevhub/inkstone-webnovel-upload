@@ -1,5 +1,8 @@
 package nyoibo.inkstone.upload.message.logging;
 
+import nyoibo.inkstone.upload.message.IMessageSender;
+import nyoibo.inkstone.upload.message.MessageItem;
+
 /**
  * <p>Title:ConsoleSender.java</p>  
  * <p>Description: </p>  
@@ -10,6 +13,10 @@ package nyoibo.inkstone.upload.message.logging;
  * @date:2019-04-20 22:46
  */
 
-public class ConsoleSender {
-
+public class ConsoleSender implements IMessageSender {
+	
+	@Override
+	public void sendMessage(MessageItem source) {
+		System.out.println(source.toJson());
+	}
 }
