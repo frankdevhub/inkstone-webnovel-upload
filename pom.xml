@@ -24,7 +24,7 @@
 		<pagehelper.version>4.1.6</pagehelper.version>
 		<!-- Selenium Web Test -->
 		<!--Dependency Versions -->
-		<selenium.version>3.141.59</selenium.version>
+		<selenium.version>3.7.1</selenium.version>
 		<assertj-core.version>3.11.1</assertj-core.version>
 		<testng.version>6.14.3</testng.version>
 		<query.version>2.0.0-BETA3</query.version>

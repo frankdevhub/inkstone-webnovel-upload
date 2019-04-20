@@ -1,5 +1,14 @@
 package nyoibo.inkstone.upload.web.action;
 
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import nyoibo.inkstone.upload.selenium.DriverBase;
+import nyoibo.inkstone.upload.web.pages.InkstoneHomePage;
+
+
+
 /**
  * <p>Title:InkStoneWebPageAutomation.java</p>  
  * <p>Description: </p>  
@@ -11,5 +20,36 @@ package nyoibo.inkstone.upload.web.action;
  */
 
 public class InkStoneLoginExample {
+	private ExpectedCondition<Boolean> pageTitleStartsWith(final String searchString) {
+		return driver -> driver.getTitle().toLowerCase().startsWith(searchString.toLowerCase());
+	}
 
+	public void test() throws Exception{
+		WebDriver driver = DriverBase.getDriver();
+
+        // And now use this to visit Google
+        driver.get("http://www.baidu.com");
+        // Alternatively the same thing can be done like this
+        // driver.navigate().to("http://www.google.com");
+
+        InkstoneHomePage googleHomePage = new InkstoneHomePage();
+
+        // Check the title of the page
+        System.out.println("Page title is: " + driver.getTitle());
+
+        googleHomePage.enterSearchTerm("Cheese")
+                .submitSearch();
+
+        // Google's search is rendered dynamically with JavaScript.
+        // Wait for the page to load, timeout after 10 seconds
+        WebDriverWait wait = new WebDriverWait(driver, 10, 100);
+        wait.until(pageTitleStartsWith("Cheese"));
+
+        // Should see: "cheese! - Google Search"
+        System.out.println("Page title is: " + driver.getTitle());
+	}
+	
+	public static void main(String[] args) throws Exception {
+		new InkStoneLoginExample().test();
+	}
 }
