@@ -10,6 +10,6 @@ package nyoibo.inkstone.upload.web.action;
  * @date:2019-04-21 01:34
  */
 
-public class InkStoneAuthAutomation {
+public class InkStoneLoginExample {
 
 }
