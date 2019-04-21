@@ -101,7 +101,15 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+
 		<!-- Selenium Web Test -->
+		<!-- https://mvnrepository.com/artifact/org.openqa.selenium.webdriver/webdriver-common -->
+		<dependency>
+			<groupId>org.openqa.selenium.webdriver</groupId>
+			<artifactId>webdriver-common</artifactId>
+			<version>0.6.1039</version>
+		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-remote-driver</artifactId>
@@ -198,15 +206,15 @@
 							<webdriver.edge.driver>${webdriver.edge.driver}</webdriver.edge.driver>
 						</systemPropertyVariables>
 					</configuration>
-					<executions>
+					<!-- <executions>
 						<execution>
 							<goals>
 								<goal>integration-test</goal>
-								<!--This goal makes the build fail if you have test failures -->
+								This goal makes the build fail if you have test failures
 								<goal>verify</goal>
 							</goals>
 						</execution>
-					</executions>
+					</executions> -->
 				</plugin>
 			</plugins>
 		</pluginManagement>

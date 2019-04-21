@@ -29,7 +29,6 @@ public class DriverBase {
     private static List<DriverFactory> webDriverThreadPool = Collections.synchronizedList(new ArrayList<DriverFactory>());
     private static ThreadLocal<DriverFactory> driverFactoryThread;
 
-    @BeforeSuite(alwaysRun = true)
     public static void instantiateDriverObject() {
         driverFactoryThread = ThreadLocal.withInitial(() -> {
             DriverFactory driverFactory = new DriverFactory();
@@ -42,7 +41,6 @@ public class DriverBase {
         return driverFactoryThread.get().getDriver();
     }
 
-    @AfterMethod(alwaysRun = true)
     public static void clearCookies() {
         try {
             driverFactoryThread.get().getStoredDriver().manage().deleteAllCookies();
@@ -51,7 +49,6 @@ public class DriverBase {
         }
     }
 
-    @AfterSuite(alwaysRun = true)
     public static void closeDriverObjects() {
         for (DriverFactory driverFactory : webDriverThreadPool) {
             driverFactory.quitDriver();

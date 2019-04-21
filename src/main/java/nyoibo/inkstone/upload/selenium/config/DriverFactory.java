@@ -35,7 +35,7 @@ public class DriverFactory {
     private final String proxyDetails = String.format("%s:%d", proxyHostname, proxyPort);
 
 	public DriverFactory() {
-		DriverType driverType = DriverType.FIREFOX;
+		DriverType driverType = DriverType.CHROME;
 		String browser = System.getProperty("browser", driverType.toString()).toUpperCase();
 		try {
 			driverType = DriverType.valueOf(browser);

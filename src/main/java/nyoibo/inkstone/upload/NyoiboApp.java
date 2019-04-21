@@ -1,7 +1,9 @@
 package nyoibo.inkstone.upload;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+
 
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.message.MessageMethod;
@@ -17,10 +19,11 @@ import nyoibo.inkstone.upload.message.MessageMethod;
  * @date 2019-04-20 20:12:35
  */
 
-@ComponentScan(basePackages = { "nyoibo.inkstone.upload" })
 @SpringBootApplication
+@ComponentScan(basePackages = { "nyoibo.inkstone.upload" })
 public class NyoiboApp {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
+		SpringApplication.run(NyoiboApp.class, args);
 		LoggerFactory.getLogger(NyoiboApp.class).begin().headerAction(MessageMethod.EVENT).info("application start!");
 	}
 }
