@@ -1,12 +1,11 @@
 package nyoibo.inkstone.upload.web.pages;
 
-import static com.lazerycode.selenium.util.AssignDriver.initQueryObjects;
 
 import org.openqa.selenium.By;
 
-import com.lazerycode.selenium.util.Query;
-
+import nyoibo.inkstone.upload.selenium.AssignDriver;
 import nyoibo.inkstone.upload.selenium.DriverBase;
+import nyoibo.inkstone.upload.selenium.Query;
 
 /**
  * <p>Title:InkstoneHomePage.java</p>  
@@ -24,7 +23,7 @@ public class InkstoneHomePage {
 	private Query imFeelingLucky = new Query().defaultLocator(By.name("btnI"));
 
 	public InkstoneHomePage() throws Exception {
-		initQueryObjects(this, DriverBase.getDriver());
+		AssignDriver.initQueryObjects(this, DriverBase.getDriver());
 	}
 
 	public InkstoneHomePage enterSearchTerm(String searchTerm) {

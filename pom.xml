@@ -30,7 +30,7 @@
 		<query.version>2.0.0-BETA3</query.version>
 		<!--Plugin Versions -->
 		<driver-binary-downloader-maven-plugin.version>1.0.17</driver-binary-downloader-maven-plugin.version>
-		<maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+		<!-- <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version> -->
 		<maven-failsafe-plugin.version>2.22.1</maven-failsafe-plugin.version>
 		<!--Configuration Properties -->
 		<overwrite.binaries>false</overwrite.binaries>
@@ -121,6 +121,12 @@
 			<version>${selenium.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.appium/java-client -->
+		<dependency>
+			<groupId>io.appium</groupId>
+			<artifactId>java-client</artifactId>
+			<version>7.0.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
@@ -133,93 +139,21 @@
 			<version>${assertj-core.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.lazerycode.selenium</groupId>
-			<artifactId>query</artifactId>
-			<version>${query.version}</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>${maven-compiler-plugin.version}</version>
-					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
-						<encoding>${project.build.sourceEncoding}</encoding>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-maven-plugin</artifactId>
-					<configuration>
-						<fork>true</fork>
-					</configuration>
-					<version>${maven-compiler-plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>com.lazerycode.selenium</groupId>
-					<artifactId>driver-binary-downloader-maven-plugin</artifactId>
-					<version>${driver-binary-downloader-maven-plugin.version}</version>
-					<configuration>
-						<rootStandaloneServerDirectory>${project.basedir}/src/test/resources/selenium_standalone_binaries</rootStandaloneServerDirectory>
-						<downloadedZipFileDirectory>${project.basedir}/src/test/resources/selenium_standalone_zips</downloadedZipFileDirectory>
-						<customRepositoryMap>${project.basedir}/src/test/resources/RepositoryMap.xml</customRepositoryMap>
-						<overwriteFilesThatExist>${overwrite.binaries}</overwriteFilesThatExist>
-						<onlyGetDriversForHostOperatingSystem>false</onlyGetDriversForHostOperatingSystem>
-						<fileDownloadRetryAttempts>${retry.attempts}</fileDownloadRetryAttempts>
-						<fileDownloadReadTimeout>${read.timeout}</fileDownloadReadTimeout>
-						<operatingSystems>
-							<windows>true</windows>
-							<linux>true</linux>
-							<mac>true</mac>
-						</operatingSystems>
-					</configuration>
-					<executions>
-						<execution>
-							<goals>
-								<goal>selenium</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-failsafe-plugin</artifactId>
-					<version>${maven-failsafe-plugin.version}</version>
-					<configuration>
-						<parallel>methods</parallel>
-						<threadCount>${threads}</threadCount>
-						<systemPropertyVariables>
-							<browser>${browser}</browser>
-							<screenshotDirectory>${project.build.directory}/screenshots</screenshotDirectory>
-							<remoteDriver>${remote}</remoteDriver>
-							<gridURL>${seleniumGridURL}</gridURL>
-							<desiredPlatform>${platform}</desiredPlatform>
-							<desiredBrowserVersion>${browserVersion}</desiredBrowserVersion>
-							<proxyEnabled>${proxyEnabled}</proxyEnabled>
-							<proxyHost>${proxyHost}</proxyHost>
-							<proxyPort>${proxyPort}</proxyPort>
-							<headless>${headless}</headless>
-
-							<!--Set properties passed in by the driver binary downloader -->
-							<webdriver.chrome.driver>${webdriver.chrome.driver}</webdriver.chrome.driver>
-							<webdriver.ie.driver>${webdriver.ie.driver}</webdriver.ie.driver>
-							<webdriver.opera.driver>${webdriver.opera.driver}</webdriver.opera.driver>
-							<webdriver.gecko.driver>${webdriver.gecko.driver}</webdriver.gecko.driver>
-							<webdriver.edge.driver>${webdriver.edge.driver}</webdriver.edge.driver>
-						</systemPropertyVariables>
-					</configuration>
-					<!-- <executions> <execution> <goals> <goal>integration-test</goal> 
-						This goal makes the build fail if you have test failures <goal>verify</goal> 
-						</goals> </execution> </executions> -->
-				</plugin>
-			</plugins>
-		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<fork>true</fork>
+				</configuration>
+			</plugin>
+		</plugins>
 		<defaultGoal>compile</defaultGoal>
 	</build>
 
