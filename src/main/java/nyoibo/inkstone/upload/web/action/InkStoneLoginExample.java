@@ -1,5 +1,8 @@
 package nyoibo.inkstone.upload.web.action;
 
+import java.util.HashSet;
+
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -32,18 +35,24 @@ public class InkStoneLoginExample {
         driver.get("https://github.com/login");
         InkstoneHomePage googleHomePage = new InkstoneHomePage();
 
-        // Check the title of the page
+        
         System.out.println("Page title is: " + driver.getTitle());
 
         googleHomePage.enterCredential();
 
-        // Google's search is rendered dynamically with JavaScript.
-        // Wait for the page to load, timeout after 10 seconds
-        WebDriverWait wait = new WebDriverWait(driver, 10, 100);
-        wait.until(pageTitleStartsWith("Cheese"));
+        WebDriverWait wait = new WebDriverWait(driver, 5, 100);
+        wait.until(pageTitleStartsWith("Github"));
 
-        // Should see: "cheese! - Google Search"
+		HashSet<Cookie> cookies = (HashSet<Cookie>) driver.manage().getCookies();
+		for (Cookie cookie : cookies) {
+			System.out.println(cookie.getName());
+			System.out.println(cookie.getValue());
+		}  
+        
+        
         System.out.println("Page title is: " + driver.getTitle());
+        
+        driver.manage().deleteAllCookies();
 	}
 
 }
