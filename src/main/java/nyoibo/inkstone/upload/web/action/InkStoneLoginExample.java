@@ -29,18 +29,13 @@ public class InkStoneLoginExample {
 	    DriverBase.instantiateDriverObject();
 		WebDriver driver = DriverBase.getDriver();
 
-        // And now use this to visit Google
-        driver.get("http://www.baidu.com");
-        // Alternatively the same thing can be done like this
-        // driver.navigate().to("http://www.google.com");
-
+        driver.get("https://github.com/login");
         InkstoneHomePage googleHomePage = new InkstoneHomePage();
 
         // Check the title of the page
         System.out.println("Page title is: " + driver.getTitle());
 
-        googleHomePage.enterSearchTerm("Cheese")
-                .submitSearch();
+        googleHomePage.enterCredential();
 
         // Google's search is rendered dynamically with JavaScript.
         // Wait for the page to load, timeout after 10 seconds

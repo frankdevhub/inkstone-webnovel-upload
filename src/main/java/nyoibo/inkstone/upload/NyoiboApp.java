@@ -27,6 +27,6 @@ public class NyoiboApp {
 		SpringApplication.run(NyoiboApp.class, args);
 		LoggerFactory.getLogger(NyoiboApp.class).begin().headerAction(MessageMethod.EVENT).info("application start!");
 
-		 new InkStoneLoginExample().test();
+		new InkStoneLoginExample().test();
 	}
 }

@@ -1,4 +1,4 @@
-package nyoibo.inkstone.upload;
+package nyoibo.inkstone.upload.test;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

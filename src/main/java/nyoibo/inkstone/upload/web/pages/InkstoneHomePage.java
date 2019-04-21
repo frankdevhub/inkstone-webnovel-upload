@@ -18,15 +18,36 @@ import nyoibo.inkstone.upload.selenium.Query;
  */
 
 public class InkstoneHomePage {
-	private Query searchBar = new Query().defaultLocator(By.name("q"));
+	/*private Query searchBar = new Query().defaultLocator(By.name("q"));
 	private Query googleSearch = new Query().defaultLocator(By.name("btnK"));
-	private Query imFeelingLucky = new Query().defaultLocator(By.name("btnI"));
-
+	private Query imFeelingLucky = new Query().defaultLocator(By.name("btnI"));*/
+	
+	private static String USERNAME = "frankdevhub@126.com";
+	private static String PASSWORD = "arrowhead2@icbc";
+	
+	private Query userNameTextBox = new Query().defaultLocator(By.name("login"));
+	private Query passwordTextBox = new Query().defaultLocator(By.name("password"));
+	private Query submitButton  = new Query().defaultLocator(By.name("commit"));
+	
+    
 	public InkstoneHomePage() throws Exception {
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver());
 	}
 
-	public InkstoneHomePage enterSearchTerm(String searchTerm) {
+	
+	public InkstoneHomePage enterCredential() {
+		userNameTextBox.findWebElement().clear();
+		passwordTextBox.findWebElement().clear();
+		
+		userNameTextBox.findWebElement().sendKeys(USERNAME);
+		passwordTextBox.findWebElement().sendKeys(PASSWORD);
+		
+		submitButton.findWebElement().submit();
+		
+		return this;
+	}
+
+	/*public InkstoneHomePage enterSearchTerm(String searchTerm) {
 		searchBar.findWebElement().clear();
 		searchBar.findWebElement().sendKeys(searchTerm);
 
@@ -41,5 +62,5 @@ public class InkstoneHomePage {
 
 	public void getLucky() {
 		imFeelingLucky.findWebElement().click();
-	}
+	}*/
 }
