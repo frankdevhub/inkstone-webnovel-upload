@@ -7,6 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.message.MessageMethod;
+import nyoibo.inkstone.upload.web.action.InkStoneLoginExample;
 
 /**
  * <p>Title:App.java</p>  
@@ -25,5 +26,7 @@ public class NyoiboApp {
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(NyoiboApp.class, args);
 		LoggerFactory.getLogger(NyoiboApp.class).begin().headerAction(MessageMethod.EVENT).info("application start!");
+
+		 new InkStoneLoginExample().test();
 	}
 }

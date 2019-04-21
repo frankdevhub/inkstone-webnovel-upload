@@ -1,8 +1,8 @@
 package nyoibo.inkstone.upload.web.action;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.stereotype.Component;
 
 import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.web.pages.InkstoneHomePage;
@@ -19,8 +19,8 @@ import nyoibo.inkstone.upload.web.pages.InkstoneHomePage;
  * @date:2019-04-21 01:34
  */
 
-@Component
 public class InkStoneLoginExample {
+	
 	private ExpectedCondition<Boolean> pageTitleStartsWith(final String searchString) {
 		return driver -> driver.getTitle().toLowerCase().startsWith(searchString.toLowerCase());
 	}

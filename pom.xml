@@ -102,7 +102,6 @@
 			<scope>test</scope>
 		</dependency>
 
-
 		<!-- Selenium Web Test -->
 		<!-- https://mvnrepository.com/artifact/org.openqa.selenium.webdriver/webdriver-common -->
 		<dependency>
@@ -206,15 +205,9 @@
 							<webdriver.edge.driver>${webdriver.edge.driver}</webdriver.edge.driver>
 						</systemPropertyVariables>
 					</configuration>
-					<!-- <executions>
-						<execution>
-							<goals>
-								<goal>integration-test</goal>
-								This goal makes the build fail if you have test failures
-								<goal>verify</goal>
-							</goals>
-						</execution>
-					</executions> -->
+					<!-- <executions> <execution> <goals> <goal>integration-test</goal> 
+						This goal makes the build fail if you have test failures <goal>verify</goal> 
+						</goals> </execution> </executions> -->
 				</plugin>
 			</plugins>
 		</pluginManagement>
