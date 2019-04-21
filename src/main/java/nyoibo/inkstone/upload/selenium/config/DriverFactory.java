@@ -34,9 +34,13 @@ public class DriverFactory {
     private final Integer proxyPort = Integer.getInteger("proxyPort");
     private final String proxyDetails = String.format("%s:%d", proxyHostname, proxyPort);
 
+    private static final String CHROME_DRIVER_PATH = "src/main/resources/chromedriver.exe";
+    
 	public DriverFactory() {
+		/*System.setProperty("webdriver.chrome.driver",
+				"C:\\Users\\Administrator\\AppData\\Local\\Google\\Chrome\\Application\\chromedriver.exe");*/
 		System.setProperty("webdriver.chrome.driver",
-				"C:\\Users\\Administrator\\AppData\\Local\\Google\\Chrome\\Application\\chromedriver.exe");
+				CHROME_DRIVER_PATH);
 		DriverType driverType = DriverType.CHROME;
 		String browser = System.getProperty("browser", driverType.toString()).toUpperCase();
 		try {

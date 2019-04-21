@@ -53,6 +53,7 @@ public class InkStoneLoginExample {
         System.out.println("Page title is: " + driver.getTitle());
         
         driver.manage().deleteAllCookies();
+        driver.quit();
 	}
 
 }
