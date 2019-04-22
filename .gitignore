@@ -4,6 +4,8 @@
 /.settings
 /out
 *.iml
+/data
+/build
 
 *.class
 
