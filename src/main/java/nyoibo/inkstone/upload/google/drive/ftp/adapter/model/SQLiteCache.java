@@ -33,9 +33,9 @@ import org.springframework.jdbc.core.RowMapper;
  * @date:2019-04-23 16:33
  */
 
-public class SQLiteCache {
+public class SQLiteCache implements Cache{
 
-	private static final Log LOG = LogFactory.getLog(SQLiteCache.class);
+	private static final Log LOGGER = LogFactory.getLog(SQLiteCache.class);
 
 	private static final String TABLE_FILES = "files";
 
@@ -60,14 +60,14 @@ public class SQLiteCache {
 		final String pathname = "data/cache";
 		File dataDir = new File(pathname);
 		if (!dataDir.exists()) {
-			LOG.info("Creating cache '" + dataDir + "'...");
+			LOGGER.info("Creating cache '" + dataDir + "'...");
 			if (!dataDir.mkdirs()) {
 				throw new RuntimeException("Could not create database folder " + dataDir.getAbsolutePath());
 			}
 		}
 
 		String dataFile = pathname + "/" + account + ".db";
-		LOG.info("Loading database '" + dataFile + "'...");
+		LOGGER.info("Loading database '" + dataFile + "'...");
 
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName("org.sqlite.JDBC");
@@ -105,9 +105,9 @@ public class SQLiteCache {
 			queries.add("create index idx_filename on " + TABLE_FILES + " (filename)");
 			jdbcTemplate.batchUpdate(queries.toArray(new String[0]));
 
-			LOG.info("Database created");
+			LOGGER.info("Database created");
 		} else {
-			LOG.info("Database found");
+			LOGGER.info("Database found");
 		}
 	}
 
@@ -115,7 +115,7 @@ public class SQLiteCache {
 	public GFile getFile(String id) {
 		r.lock();
 		try {
-			LOG.trace("getFile(" + id + ")");
+			LOGGER.trace("getFile(" + id + ")");
 			return jdbcTemplate.queryForObject("select * from " + TABLE_FILES + " where id=?", new Object[] { id },
 					rowMapper);
 		} catch (EmptyResultDataAccessException ex) {
@@ -195,7 +195,7 @@ public class SQLiteCache {
 				connection.commit();
 				return ret;
 			} catch (Exception ex) {
-				LOG.error("Error executing transaction. " + ex.getMessage());
+				LOGGER.error("Error executing transaction. " + ex.getMessage());
 				/*
 				 * for (int i = 0; i < queries.size(); i++) {
 				 * LOG.error("Query '" + queries.get(i) + "' " + (args != null

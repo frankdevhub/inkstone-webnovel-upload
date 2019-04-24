@@ -31,7 +31,7 @@ import org.apache.ftpserver.usermanager.impl.WritePermission;
 
 class FtpUserManager extends AbstractUserManager {
 
-	private static final Log LOG = LogFactory.getLog(FtpUserManager.class);
+	private static final Log LOGGER = LogFactory.getLog(FtpUserManager.class);
 	private final Properties configuration;
 	private Map<String, BaseUser> users = new HashMap<>();
 
@@ -83,8 +83,8 @@ class FtpUserManager extends AbstractUserManager {
 		authorities.add(new WritePermission());
 		authorities.add(new ConcurrentLoginPermission(10, 5));
 		user.setAuthorities(authorities);
-		LOG.info("FTP User Manager configured for user '" + user.getName() + "'");
-		LOG.info("FTP rights '" + rights + "'");
+		LOGGER.info("FTP User Manager configured for user '" + user.getName() + "'");
+		LOGGER.info("FTP rights '" + rights + "'");
 		return user;
 	}
 
@@ -138,7 +138,7 @@ class FtpUserManager extends AbstractUserManager {
 
 	@Override
 	public void save(User user) {
-		LOG.info("save");
+		LOGGER.info("save");
 	}
 
 	@Override

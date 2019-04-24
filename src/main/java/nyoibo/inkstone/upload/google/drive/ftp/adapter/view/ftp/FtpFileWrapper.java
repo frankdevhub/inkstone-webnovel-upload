@@ -8,6 +8,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ftpserver.ftplet.FtpFile;
 
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.controller.Controller;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.model.GFile;
+
 /**
  * <p>Title:FtpFileWrapper.java</p>  
  * <p>Description: </p>  

@@ -12,6 +12,13 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.model.Cache;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.model.GFile;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.model.GoogleDrive;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.service.FtpGdriveSynchService;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.utils.CallbackInputStream;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.utils.CallbackOutputStream;
+
 /**
  * <p>Title:Controller.java</p>  
  * <p>Description: </p>  
@@ -23,7 +30,7 @@ import org.apache.commons.logging.LogFactory;
  */
 
 public class Controller {
-	  private static final Log LOG = LogFactory.getLog(Controller.class);
+	  private static final Log LOGGER = LogFactory.getLog(Controller.class);
 	    private final GoogleDrive googleDrive;
 	    private final FtpGdriveSynchService updaterService;
 	    private final Cache cache;
@@ -55,7 +62,7 @@ public class Controller {
 
 	        if (lastAction.times > 2) {
 	            if (System.currentTimeMillis() < (lastAction.date.getTime() + 10000)) {
-	                LOG.info("Forcing update for folder '" + folderId + "'");
+	            	LOGGER.info("Forcing update for folder '" + folderId + "'");
 	                updaterService.updateFolderNow(folderId);
 	            }
 	            lastAction.times = 0;
@@ -65,19 +72,19 @@ public class Controller {
 	    }
 
 	    public boolean renameFile(GFile gFile, String newName) {
-	        LOG.info("Renaming file " + gFile.getId());
+	    	LOGGER.info("Renaming file " + gFile.getId());
 	        return touch(gFile, new GFile(newName));
 	    }
 
 	    public boolean updateLastModified(GFile gFile, long time) {
-	        LOG.info("Updating last modified date for " + gFile.getId() + " to " + new Date(time));
+	    	LOGGER.info("Updating last modified date for " + gFile.getId() + " to " + new Date(time));
 	        GFile patch = new GFile(null);
 	        patch.setLastModified(time);
 	        return touch(gFile, patch);
 	    }
 
 	    private boolean touch(GFile ftpFile, GFile patch) {
-	        LOG.info("Patching file... " + ftpFile.getId());
+	    	LOGGER.info("Patching file... " + ftpFile.getId());
 	        if (patch.getName() == null && patch.getLastModified() <= 0) {
 	            throw new IllegalArgumentException("Patching doesn't contain valid name nor modified date");
 	        }
@@ -91,7 +98,7 @@ public class Controller {
 
 	    public boolean trashFile(GFile file) {
 	        String fileId = file.getId();
-	        LOG.info("Trashing file " + file.getId() + "...");
+	        LOGGER.info("Trashing file " + file.getId() + "...");
 	        if (googleDrive.trashFile(fileId).getTrashed()) {
 	            cache.deleteFile(fileId);
 	            return true;
@@ -100,19 +107,17 @@ public class Controller {
 	    }
 
 	    public boolean mkdir(String parentFileId, GFile gFile) {
-	        LOG.info("Creating directory " + gFile.getId() + "...");
+	    	LOGGER.info("Creating directory " + gFile.getId() + "...");
 	        GFile newDir = googleDrive.mkdir(parentFileId, gFile.getName());
 	        cache.addOrUpdateFile(newDir);
 	        return true;
 	    }
-
-	    // TODO: Implement offset?
+	    
 	    public InputStream createInputStream(GFile gFile) {
-	        LOG.info("Downloading file " + gFile.getId() + "...");
-
-	        // return this wrapper just to be aware when there is a connection error
+	    	LOGGER.info("Downloading file " + gFile.getId() + "...");
+	    	
 	        return new CallbackInputStream(googleDrive.downloadFile(gFile), (na) -> {
-	            LOG.info("Input stream closed");
+	        	LOGGER.info("Input stream closed");
 	            return null;
 	        });
 	    }
@@ -133,7 +138,7 @@ public class Controller {
 	        
 	        final Future<GFile> fileUploadFuture = outputStreamRequest.getFutureGFile()
 	                .thenApply(uploadedFile -> {
-	                    LOG.info("File uploaded. Updating local cache...");
+	                	LOGGER.info("File uploaded. Updating local cache...");
 	                    uploadedFile.setRevision(cache.getRevision());
 	                    if (cache.addOrUpdateFile(uploadedFile) <= 0) {
 	                        throw new RuntimeException("Error synchronizing file to cache");
@@ -148,7 +153,7 @@ public class Controller {
 	                fileUploadFuture.get(10, TimeUnit.SECONDS);
 	                return null;
 	            } catch (Exception e) {
-	                LOG.error("Error waiting for upload to complete", e);
+	            	LOGGER.error("Error waiting for upload to complete", e);
 	                return e;
 	            }
 	        });

@@ -33,7 +33,7 @@ import com.google.api.services.drive.DriveScopes;
  */
 
 public class GoogleDriveFactory {
-	private static final Log logger = LogFactory.getLog(GoogleDriveFactory.class);
+	private static final Log LOGGER = LogFactory.getLog(GoogleDriveFactory.class);
 
 	private static final String APPLICATION_NAME = "nyoibo-inkstone-google-drive";
 
@@ -74,7 +74,7 @@ public class GoogleDriveFactory {
 			drive = new Drive.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME)
 					.build();
 
-			logger.info("Google drive webservice client initialized.");
+			LOGGER.info("Google drive webservice client initialized.");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

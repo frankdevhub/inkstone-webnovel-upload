@@ -9,6 +9,14 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.ftpserver.FtpServerFactory;
 import org.apache.ftpserver.ftplet.FtpException;
 
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.controller.Controller;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.model.Cache;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.model.GoogleDrive;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.model.GoogleDriveFactory;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.model.SQLiteCache;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.service.FtpGdriveSynchService;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.view.ftp.GFtpServerFactory;
+
 /**
  * <p>Title:GoogleDriveFtpAdapter.java</p>  
  * <p>Description: </p>  
@@ -20,7 +28,7 @@ import org.apache.ftpserver.ftplet.FtpException;
  */
 
 public class GoogleDriveFtpAdapter {
-	 private static final Log LOG = LogFactory.getLog(GoogleDriveFtpAdapter.class);
+	 private static final Log LOGGER = LogFactory.getLog(GoogleDriveFtpAdapter.class);
 
 	    private final org.apache.ftpserver.FtpServer server;
 	    private final FtpGdriveSynchService cacheUpdater;
@@ -58,7 +66,7 @@ public class GoogleDriveFtpAdapter {
 	        try {
 	            cacheUpdater.start();
 	            server.start();
-	            LOG.info("Application started!");
+	            LOGGER.info("Application started!");
 	        } catch (FtpException e) {
 	            throw new RuntimeException(e);
 	        }
@@ -67,6 +75,6 @@ public class GoogleDriveFtpAdapter {
 	    void stop() {
 	        cacheUpdater.stop();
 	        server.stop();
-	        LOG.info("Application stopped.");
+	        LOGGER.info("Application stopped.");
 	    }
 }

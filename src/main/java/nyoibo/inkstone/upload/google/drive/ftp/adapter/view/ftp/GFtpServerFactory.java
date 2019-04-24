@@ -13,6 +13,10 @@ import org.apache.ftpserver.command.CommandFactoryFactory;
 import org.apache.ftpserver.ftplet.Ftplet;
 import org.apache.ftpserver.listener.ListenerFactory;
 
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.controller.Controller;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.model.Cache;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.service.FtpGdriveSynchService;
+
 /**
  * <p>Title:GFtpServerFactory.java</p>  
  * <p>Description: </p>  
@@ -25,7 +29,7 @@ import org.apache.ftpserver.listener.ListenerFactory;
 
 public class GFtpServerFactory extends FtpServerFactory {
 
-	private static final Log LOG = LogFactory.getLog(GFtpServerFactory.class);
+	private static final Log LOGGER = LogFactory.getLog(GFtpServerFactory.class);
 	private static final String DEFAULT_ILLEGAL_CHARS_REGEX = "\\/|[\\x00-\\x1F\\x7F]|\\`|\\?|\\*|\\\\|\\<|\\>|\\||\\\"|\\:";
 	private final Controller controller;
 	private final Cache model;
@@ -42,7 +46,7 @@ public class GFtpServerFactory extends FtpServerFactory {
 		this.configuration = configuration;
 		this.illegalChars = Pattern
 				.compile(configuration.getProperty("os.illegalCharacters", DEFAULT_ILLEGAL_CHARS_REGEX));
-		LOG.info("Configured illegalchars '" + illegalChars + "'");
+		LOGGER.info("Configured illegalchars '" + illegalChars + "'");
 		init();
 	}
 
@@ -65,7 +69,7 @@ public class GFtpServerFactory extends FtpServerFactory {
 
 		int port = Integer.parseInt(configuration.getProperty("port", String.valueOf(1821)));
 		String serverAddress = configuration.getProperty("server", "");
-		LOG.info("FTP server configured at '" + serverAddress + ":" + port + "'");
+		LOGGER.info("FTP server configured at '" + serverAddress + ":" + port + "'");
 		ListenerFactory listenerFactory = new ListenerFactory();
 		listenerFactory.setPort(port);
 		if (!serverAddress.isEmpty()) {

@@ -15,6 +15,11 @@ import org.apache.commons.logging.LogFactory;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.model.Cache;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.model.GChange;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.model.GFile;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.model.GoogleDrive;
+
 /**
  * <p>Title:FtpGdriveSynchService.java</p>  
  * <p>Description: </p>  
@@ -26,7 +31,7 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
  */
 
 public final class FtpGdriveSynchService {
-	private static final Log LOG = LogFactory.getLog(FtpGdriveSynchService.class);
+	private static final Log LOGGER = LogFactory.getLog(FtpGdriveSynchService.class);
 
 	private GoogleDrive googleDrive;
 
@@ -67,7 +72,7 @@ public final class FtpGdriveSynchService {
 	}
 
 	public void stop() {
-		LOG.info("Stopping synch service...");
+		LOGGER.info("Stopping synch service...");
 		executor.shutdownNow();
 		timer.cancel();
 	}
@@ -84,17 +89,17 @@ public final class FtpGdriveSynchService {
 					// sync pending folders
 					syncPendingFolders();
 				} catch (Exception e) {
-					LOG.error(e.getMessage(), e);
+					LOGGER.error(e.getMessage(), e);
 					try {
 						if (e.getCause() instanceof GoogleJsonResponseException) {
 							int code = ((GoogleJsonResponseException) e).getDetails().getCode();
 							if (code == 401) {
-								LOG.error("Unauthorized. Cancelling timer..." + e.getMessage(), e);
+								LOGGER.error("Unauthorized. Cancelling timer..." + e.getMessage(), e);
 								timer.cancel();
 							}
 						}
 					} catch (Exception e1) {
-						LOG.error("Could not handle exception: " + e.getMessage(), e);
+						LOGGER.error("Could not handle exception: " + e.getMessage(), e);
 					}
 				}
 			}
@@ -102,29 +107,28 @@ public final class FtpGdriveSynchService {
 			private void checkForRemoteChanges() {
 
 				String revision = cache.getRevision();
-				LOG.debug("Local revision: " + revision);
+				LOGGER.debug("Local revision: " + revision);
 				if (revision == null) {
 					revision = googleDrive.getStartRevision();
 					cache.updateRevision(revision);
-					LOG.debug("New revision: " + revision);
+					LOGGER.debug("New revision: " + revision);
 				}
 
 				List<GChange> googleChanges;
 				while ((googleChanges = googleDrive.getAllChanges(revision)).size() > 0) {
 
-					LOG.info("Remote changes: " + googleChanges.size());
+					LOGGER.info("Remote changes: " + googleChanges.size());
 
 					for (GChange change : googleChanges) {
 						processChange(change);
 						revision = change.getRevision();
 					}
 
-					// update revision to start next time there
 					cache.updateRevision(revision);
-					LOG.info("New revision: " + revision);
+					LOGGER.info("New revision: " + revision);
 				}
 
-				LOG.debug("No remote changes...");
+				LOGGER.debug("No remote changes...");
 			}
 
 			private void processChange(GChange change) {
@@ -132,46 +136,43 @@ public final class FtpGdriveSynchService {
 				if (change.isRemoved() || change.getFile().getTrashed()) {
 					final GFile localFile = cache.getFile(change.getFileId());
 					if (localFile != null) {
-						LOG.info("Remote deletion: " + localFile.getId());
+						LOGGER.info("Remote deletion: " + localFile.getId());
 						int deletedFiles = cache.deleteFile(localFile.getId());
-						LOG.debug("Total records deleted: " + deletedFiles);
+						LOGGER.debug("Total records deleted: " + deletedFiles);
 					}
 					return;
 				}
 
 				final GFile localFile = cache.getFile(change.getFileId());
 				if (localFile == null) {
-					// TODO: arreglar el path?
 					GFile changedFile = change.getFile();
 					if (!changedFile.isDirectory()) {
-						// if it's a directory we don't set revision so it's
-						// synchronized afterwards
 						changedFile.setRevision(change.getRevision());
 					}
-					LOG.info("New remote file: " + changedFile.getId());
+					LOGGER.info("New remote file: " + changedFile.getId());
 					cache.addOrUpdateFile(changedFile);
 				} else {
 					// File updated
 					GFile changedFile = change.getFile();
 					changedFile.setRevision(change.getRevision());
 					cache.addOrUpdateFile(changedFile);
-					LOG.info("Remote update: " + localFile);
+					LOGGER.info("Remote update: " + localFile);
 				}
 			}
 
 			private void syncPendingFolders() {
-				LOG.debug("Checking for pending folders to synchronize...");
+				LOGGER.debug("Checking for pending folders to synchronize...");
 				try {
 					// always sync pending directories first
 					List<String> unsynchChilds;
 					while (!(unsynchChilds = cache.getAllFoldersWithoutRevision()).isEmpty()) {
 
-						LOG.info("Folders to synchronize: " + unsynchChilds.size());
+						LOGGER.info("Folders to synchronize: " + unsynchChilds.size());
 
 						List<Callable<Void>> tasks = new ArrayList<>();
 						for (int i = 0; i < 10 && i < unsynchChilds.size(); i++) {
 							final String unsynchChild = unsynchChilds.get(i);
-							LOG.debug("Creating synch task for '" + unsynchChild + "'...");
+							LOGGER.debug("Creating synch task for '" + unsynchChild + "'...");
 							tasks.add(new Callable<Void>() {
 								final String folderId = unsynchChild;
 
@@ -183,33 +184,27 @@ public final class FtpGdriveSynchService {
 							});
 						}
 
-						LOG.debug("Executing " + tasks.size() + " tasks...");
+						LOGGER.debug("Executing " + tasks.size() + " tasks...");
 						List<Future<Void>> futures = executor.invokeAll(tasks);
-						LOG.debug("Waiting for all executions to finish...");
+						LOGGER.debug("Waiting for all executions to finish...");
 						while (!futures.isEmpty()) {
 							Thread.sleep(200);
-							LOG.trace(".");
+							LOGGER.trace(".");
 							futures.removeIf(Future::isDone);
 						}
 
-						LOG.debug("All executions finished to run");
+						LOGGER.debug("All executions finished to run");
 						syncPendingFolders();
 					}
 				} catch (InterruptedException e) {
-					LOG.error(e.getMessage(), e);
+					LOGGER.error(e.getMessage(), e);
 				}
-				LOG.debug("Synchronization finalized OK");
+				LOGGER.debug("Synchronization finalized OK");
 			}
 		};
 
 	}
 
-	/**
-	 * Get remote folder and it's children and updates database
-	 *
-	 * @param folderId
-	 *            el id de la carpeta remota ("root" para especificar la raiz)
-	 */
 	private void synchFolder(String folderId) {
 		try {
 			GFile remoteFile;
@@ -220,12 +215,12 @@ public final class FtpGdriveSynchService {
 			}
 
 			if (remoteFile == null || remoteFile.getTrashed()) {
-				LOG.info("Remote deletion: " + folderId);
+				LOGGER.info("Remote deletion: " + folderId);
 				final int deleted = cache.deleteFile(folderId);
 				if (deleted > 0) {
-					LOG.info("Local deletion: " + folderId);
+					LOGGER.info("Local deletion: " + folderId);
 				} else {
-					LOG.info("Location deletion: 0");
+					LOGGER.info("Location deletion: 0");
 				}
 				return;
 			}
@@ -236,14 +231,14 @@ public final class FtpGdriveSynchService {
 
 			// Log action
 			if (cache.getFile(folderId) == null) {
-				LOG.info("Adding folder '" + remoteFile.getId() + "'");
+				LOGGER.info("Adding folder '" + remoteFile.getId() + "'");
 			} else {
-				LOG.info("Updating folder '" + remoteFile.getId() + "'");
+				LOGGER.info("Updating folder '" + remoteFile.getId() + "'");
 			}
 
 			String largestChangeId = cache.getRevision();
 
-			LOG.debug("Recreating childs for folder '" + folderId + "'");
+			LOGGER.debug("Recreating childs for folder '" + folderId + "'");
 			List<GFile> newChilds = googleDrive.list(folderId);
 			for (GFile file : newChilds) {
 				if (!file.isDirectory())
@@ -252,10 +247,10 @@ public final class FtpGdriveSynchService {
 
 			remoteFile.setRevision(largestChangeId);
 
-			LOG.info("Adding folder: '" + remoteFile.getId() + "' childs: " + newChilds.size());
+			LOGGER.info("Adding folder: '" + remoteFile.getId() + "' childs: " + newChilds.size());
 			cache.updateChilds(remoteFile, newChilds);
 		} catch (Error e) {
-			LOG.fatal(e.getMessage(), e);
+			LOGGER.fatal(e.getMessage(), e);
 		}
 	}
 

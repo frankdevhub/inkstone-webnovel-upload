@@ -1,7 +1,5 @@
 package nyoibo.inkstone.upload.google.drive.ftp.adapter.model;
 
-import org.andresoviedo.google_drive_ftp_adapter.model.GFile;
-
 /**
  * <p>Title:GChange.java</p>  
  * <p>Description: </p>  

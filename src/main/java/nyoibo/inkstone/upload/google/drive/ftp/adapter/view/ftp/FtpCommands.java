@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 public class FtpCommands {
 	public static class MFMT extends AbstractCommand {
 
-		private final Logger LOG = LoggerFactory.getLogger(MFMT.class);
+		private final Logger LOGGER = LoggerFactory.getLogger(MFMT.class);
 
 		public void execute(final FtpIoSession session, final FtpServerContext context, final FtpRequest request) {
 			session.resetState();
@@ -61,7 +61,7 @@ public class FtpCommands {
 				try {
 					file = session.getFileSystemView().getFile(fileName);
 				} catch (Exception ex) {
-					LOG.debug("Exception getting the file object: " + fileName, ex);
+					LOGGER.debug("Exception getting the file object: " + fileName, ex);
 				}
 
 				if (file == null || !file.doesExist()) {

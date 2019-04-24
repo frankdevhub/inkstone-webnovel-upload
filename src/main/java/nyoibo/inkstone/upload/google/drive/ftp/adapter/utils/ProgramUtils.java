@@ -20,7 +20,7 @@ import org.apache.commons.logging.LogFactory;
  */
 
 public final class ProgramUtils {
-	private static final Log LOG = LogFactory.getLog(ProgramUtils.class);
+	private static final Log LOGGER = LogFactory.getLog(ProgramUtils.class);
 	private final File file;
 
 	public ProgramUtils(String executionStatusFilename) {
@@ -86,7 +86,7 @@ public final class ProgramUtils {
 
 		public void start() {
 			reset();
-			LOG.info("Started at " + time);
+			LOGGER.info("Started at " + time);
 		}
 
 		public void reset() {
@@ -100,7 +100,7 @@ public final class ProgramUtils {
 			requestTimes++;
 			if (newTime < expiratonTime) {
 				if (requestTimes >= maxRequestPerSecond) {
-					LOG.info("Reached limit! sleeping " + (expiratonTime - newTime) + " millis,,,");
+					LOGGER.info("Reached limit! sleeping " + (expiratonTime - newTime) + " millis,,,");
 					try {
 						Thread.sleep(expiratonTime - newTime);
 					} catch (InterruptedException ex) {
