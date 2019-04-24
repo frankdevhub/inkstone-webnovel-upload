@@ -68,7 +68,7 @@ public class Controller {
 	            lastAction.times = 0;
 	            lastAction.date = new Date();
 	        }
-	        // patch
+	       
 	    }
 
 	    public boolean renameFile(GFile gFile, String newName) {

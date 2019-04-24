@@ -83,10 +83,8 @@ public final class FtpGdriveSynchService {
 			@Override
 			public void run() {
 				try {
-					// check google drive changes
 					checkForRemoteChanges();
-
-					// sync pending folders
+					
 					syncPendingFolders();
 				} catch (Exception e) {
 					LOGGER.error(e.getMessage(), e);
@@ -163,7 +161,6 @@ public final class FtpGdriveSynchService {
 			private void syncPendingFolders() {
 				LOGGER.debug("Checking for pending folders to synchronize...");
 				try {
-					// always sync pending directories first
 					List<String> unsynchChilds;
 					while (!(unsynchChilds = cache.getAllFoldersWithoutRevision()).isEmpty()) {
 

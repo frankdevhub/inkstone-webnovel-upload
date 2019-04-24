@@ -28,53 +28,75 @@ import nyoibo.inkstone.upload.google.drive.ftp.adapter.view.ftp.GFtpServerFactor
  */
 
 public class GoogleDriveFtpAdapter {
-	 private static final Log LOGGER = LogFactory.getLog(GoogleDriveFtpAdapter.class);
+	private static final Log LOGGER = LogFactory.getLog(GoogleDriveFtpAdapter.class);
 
-	    private final org.apache.ftpserver.FtpServer server;
-	    private final FtpGdriveSynchService cacheUpdater;
+	private final org.apache.ftpserver.FtpServer server;
+	private final FtpGdriveSynchService cacheUpdater;
+    private final Cache cache;
+	private final Controller controller;
+    private final GoogleDriveFactory googleDriveFactory;
+	
+	GoogleDriveFtpAdapter(Properties configuration) {
 
-	    GoogleDriveFtpAdapter(Properties configuration) {
+		int port = Integer.parseInt(configuration.getProperty("port", String.valueOf(1821)));
+		if (!available(port)) {
+			throw new IllegalArgumentException("Invalid argument. Port '" + port + "' already in used");
+		}
 
-	        int port = Integer.parseInt(configuration.getProperty("port", String.valueOf(1821)));
-	        if (!available(port)) {
-	            throw new IllegalArgumentException("Invalid argument. Port '" + port + "' already in used");
-	        }
+		cache = new SQLiteCache(configuration);
+		googleDriveFactory = new GoogleDriveFactory(configuration);
+		googleDriveFactory.init();
 
-	        Cache cache = new SQLiteCache(configuration);
-	        GoogleDriveFactory googleDriveFactory = new GoogleDriveFactory(configuration);
-	        googleDriveFactory.init();
+		GoogleDrive googleDrive = new GoogleDrive(googleDriveFactory.getDrive());
+		cacheUpdater = new FtpGdriveSynchService(cache, googleDrive);
+		controller = new Controller(cache, googleDrive, cacheUpdater);
 
-	        GoogleDrive googleDrive = new GoogleDrive(googleDriveFactory.getDrive());
-	        cacheUpdater = new FtpGdriveSynchService(cache, googleDrive);
-	        Controller controller = new Controller(cache, googleDrive, cacheUpdater);
+		FtpServerFactory serverFactory = new GFtpServerFactory(controller, cache, configuration, cacheUpdater);
+		server = serverFactory.createServer();
 
-	        // FTP Setup
-	        FtpServerFactory serverFactory = new GFtpServerFactory(controller, cache, configuration, cacheUpdater);
-	        server = serverFactory.createServer();
+	}
 
-	    }
+	private static boolean available(int port) {
+		try (Socket ignored = new Socket("localhost", port)) {
+			return false;
+		} catch (IOException ignored) {
+			return true;
+		}
+	}
 
-	    private static boolean available(int port) {
-	        try (Socket ignored = new Socket("localhost", port)) {
-	            return false;
-	        } catch (IOException ignored) {
-	            return true;
-	        }
-	    }
+	void start() {
+		try {
+			cacheUpdater.start();
+			server.start();
+			LOGGER.info("Application started!");
+		} catch (FtpException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-	    void start() {
-	        try {
-	            cacheUpdater.start();
-	            server.start();
-	            LOGGER.info("Application started!");
-	        } catch (FtpException e) {
-	            throw new RuntimeException(e);
-	        }
-	    }
+	void stop() {
+		cacheUpdater.stop();
+		server.stop();
+		LOGGER.info("Application stopped.");
+	}
+	
+	public org.apache.ftpserver.FtpServer getServer() {
+		return server;
+	}
 
-	    void stop() {
-	        cacheUpdater.stop();
-	        server.stop();
-	        LOGGER.info("Application stopped.");
-	    }
+	public FtpGdriveSynchService getCacheUpdater() {
+		return cacheUpdater;
+	}
+
+	public Cache getCache() {
+		return cache;
+	}
+
+	public Controller getController() {
+		return controller;
+	}
+
+	public GoogleDriveFactory getGoogleDriveFactory() {
+		return googleDriveFactory;
+	}
 }

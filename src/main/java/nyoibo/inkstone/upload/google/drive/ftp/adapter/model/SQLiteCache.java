@@ -55,7 +55,6 @@ public class SQLiteCache implements Cache{
 
 	public SQLiteCache(Properties configuration) {
 
-		// initialize the data store factory
 		String account = configuration.getProperty("account", "default");
 		final String pathname = "data/cache";
 		File dataDir = new File(pathname);

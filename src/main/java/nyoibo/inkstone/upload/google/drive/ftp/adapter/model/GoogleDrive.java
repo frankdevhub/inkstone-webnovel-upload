@@ -80,7 +80,6 @@ public class GoogleDrive {
 
 			List<GFile> childIds = new ArrayList<>();
 
-			// Request to get list of files from google
 			Files.List request = drive.files().list().setFields("nextPageToken, files(" + REQUEST_FILE_FIELDS + ")");
 			request.setQ("trashed = false and '" + id + "' in parents");
 
@@ -89,7 +88,6 @@ public class GoogleDrive {
 					throw new InterruptedException("Interrupted before fetching file metadata");
 				}
 
-				// control we are not exceeding number of requests/second
 				bandwidthController.newRequest();
 				FileList files = request.execute();
 
@@ -102,7 +100,6 @@ public class GoogleDrive {
 			return childIds;
 		} catch (GoogleJsonResponseException e) {
 			if (e.getStatusCode() == 404) {
-				// last page unavailable?
 				return null;
 			}
 			throw new RuntimeException("Error while getting list of files", e);
