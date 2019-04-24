@@ -39,7 +39,7 @@
         <level value="error"/>
     </logger>
 
-    <logger name="org.andresoviedo.google_drive_ftp_adapter.service.FtpGdriveSynchService">
+    <logger name="nyoibo.inkstone.upload.google.drive.ftp.adapter.service.FtpGdriveSynchService">
         <level value="info"/>
     </logger>
 
