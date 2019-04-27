@@ -3,12 +3,10 @@ package nyoibo.inkstone.upload.google.drive.ftp.adapter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 
 import nyoibo.inkstone.upload.NyoiboApp;
 import nyoibo.inkstone.upload.google.drive.ftp.adapter.utils.JarUtils;
@@ -32,7 +30,7 @@ public class GoogleDriveFtpAdapterFactory {
 		if (googleDriveFtpAdapter == null) {
 			synchronized (GoogleDriveFtpAdapter.class) {
 				if (googleDriveFtpAdapter == null) {
-					init();
+					initDriveAdapter();
 					return googleDriveFtpAdapter;
 				}
 			}
@@ -40,19 +38,14 @@ public class GoogleDriveFtpAdapterFactory {
 		return googleDriveFtpAdapter;
 	}
 
-	private static void init() {
+	private static void initDriveAdapter() {
 		JarUtils.printManifestAttributesToString();
 
 		LOGGER.info("Program info: " + JarUtils.getManifestAttributesAsMap());
-		LOGGER.info("Started with args '" + Arrays.asList(args) + "'...");
 		LOGGER.info("Loading configuration...");
 
 		Properties configuration = loadPropertiesFromClasspath();
 		configuration.putAll(loadProperties("configuration.properties"));
-		if (args.length == 1 && !"configuration.properties".equals(args[0])) {
-			configuration.putAll(loadProperties(args[0]));
-		}
-		configuration.putAll(readCommandLineConfiguration(args));
 
 		LOGGER.info("Creating application with configuration '" + configuration + "'");
 		googleDriveFtpAdapter = new GoogleDriveFtpAdapter(configuration);
@@ -123,7 +116,7 @@ public class GoogleDriveFtpAdapterFactory {
 				try {
 					configurationStream.close();
 				} catch (Exception ex) {
-					LOG.error(ex.getMessage(), ex);
+					LOGGER.error(ex.getMessage(), ex);
 				}
 			}
 		}
