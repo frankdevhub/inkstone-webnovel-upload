@@ -1,7 +1,17 @@
 package nyoibo.inkstone.upload.google.drive.ftp.adapter;
 
-import nyoibo.inkstone.upload.data.logging.Logger;
-import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+
+import nyoibo.inkstone.upload.NyoiboApp;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.utils.JarUtils;
 
 /**
  * <p>Title:GoogleDriveFtpAdapterFactory.java</p>  
@@ -14,7 +24,7 @@ import nyoibo.inkstone.upload.data.logging.LoggerFactory;
  */
 
 public class GoogleDriveFtpAdapterFactory {
-	public static final Logger LOGGER = LoggerFactory.getLogger(GoogleDriveFtpAdapterFactory.class);
+	public static final Log LOGGER = LogFactory.getLog(GoogleDriveFtpAdapterFactory.class);
 
 	private static GoogleDriveFtpAdapter googleDriveFtpAdapter;
 
@@ -31,7 +41,92 @@ public class GoogleDriveFtpAdapterFactory {
 	}
 
 	private static void init() {
+		JarUtils.printManifestAttributesToString();
+
+		LOGGER.info("Program info: " + JarUtils.getManifestAttributesAsMap());
+		LOGGER.info("Started with args '" + Arrays.asList(args) + "'...");
+		LOGGER.info("Loading configuration...");
+
+		Properties configuration = loadPropertiesFromClasspath();
+		configuration.putAll(loadProperties("configuration.properties"));
+		if (args.length == 1 && !"configuration.properties".equals(args[0])) {
+			configuration.putAll(loadProperties(args[0]));
+		}
+		configuration.putAll(readCommandLineConfiguration(args));
+
+		LOGGER.info("Creating application with configuration '" + configuration + "'");
+		googleDriveFtpAdapter = new GoogleDriveFtpAdapter(configuration);
+
+		registerShutdownHook();
+
+		start();
 
 	}
 
+	private static void start() {
+		googleDriveFtpAdapter.start();
+	}
+
+	private static void stop() {
+		googleDriveFtpAdapter.stop();
+	}
+
+	private static void registerShutdownHook() {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				LOGGER.info("Shuting down...");
+				GoogleDriveFtpAdapterFactory.stop();
+				LOGGER.info("Good bye!");
+			}
+		});
+	}
+
+	private static Properties loadProperties(String propertiesFilename) {
+		Properties properties = new Properties();
+		FileInputStream inStream = null;
+		try {
+			LOGGER.info("Loading properfiles file '" + propertiesFilename + "'...");
+			inStream = new FileInputStream(propertiesFilename);
+			properties.load(inStream);
+		} catch (Exception ex) {
+			LOGGER.warn("Exception loading file '" + propertiesFilename + "'.");
+		} finally {
+			if (inStream != null) {
+				try {
+					inStream.close();
+				} catch (Exception ex) {
+					LOGGER.error(ex.getMessage(), ex);
+				}
+			}
+		}
+		LOGGER.info("Properfiles loaded: '" + properties + "'");
+		return properties;
+	}
+
+	static Properties loadPropertiesFromClasspath() {
+		Properties properties = new Properties();
+
+		InputStream configurationStream = NyoiboApp.class.getResourceAsStream("/configuration.properties");
+		if (configurationStream == null) {
+			return properties;
+		}
+
+		try {
+			LOGGER.info("Loading properties from classpath...");
+			properties.load(configurationStream);
+			LOGGER.info("Properties loaded: '" + properties + "'");
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (configurationStream != null) {
+				try {
+					configurationStream.close();
+				} catch (Exception ex) {
+					LOG.error(ex.getMessage(), ex);
+				}
+			}
+		}
+		return properties;
+	}
 }
