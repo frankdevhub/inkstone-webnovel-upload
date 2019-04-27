@@ -39,20 +39,24 @@ public class GoogleDriveFtpAdapterFactory {
 	}
 
 	private static void initDriveAdapter() {
-		JarUtils.printManifestAttributesToString();
+		try {
+			JarUtils.printManifestAttributesToString();
+			LOGGER.info("Program info: " + JarUtils.getManifestAttributesAsMap());
+			LOGGER.info("Loading configuration...");
 
-		LOGGER.info("Program info: " + JarUtils.getManifestAttributesAsMap());
-		LOGGER.info("Loading configuration...");
+			Properties configuration = loadPropertiesFromClasspath();
+			configuration.putAll(loadProperties("configuration.properties"));
 
-		Properties configuration = loadPropertiesFromClasspath();
-		configuration.putAll(loadProperties("configuration.properties"));
+			LOGGER.info("Creating application with configuration '" + configuration + "'");
+			googleDriveFtpAdapter = new GoogleDriveFtpAdapter(configuration);
 
-		LOGGER.info("Creating application with configuration '" + configuration + "'");
-		googleDriveFtpAdapter = new GoogleDriveFtpAdapter(configuration);
+			registerShutdownHook();
 
-		registerShutdownHook();
+			start();
 
-		start();
+		} catch (Exception e) {
+			LOGGER.error("Error loading app", e);
+		}
 
 	}
 
