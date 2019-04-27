@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.GoogleDriveFtpAdapterFactory;
 import nyoibo.inkstone.upload.message.MessageMethod;
 
 /**
@@ -26,7 +27,7 @@ import nyoibo.inkstone.upload.message.MessageMethod;
 public class NyoiboApp {
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(NyoiboApp.class, args);
-		//GoogleDriveFtpAdapterFactory.getInstance();
+		GoogleDriveFtpAdapterFactory.getInstance();
 		LoggerFactory.getLogger(NyoiboApp.class).begin().headerAction(MessageMethod.EVENT).info("application start!");
 	}
 }
