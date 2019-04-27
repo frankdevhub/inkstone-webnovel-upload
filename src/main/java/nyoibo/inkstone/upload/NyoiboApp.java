@@ -1,13 +1,13 @@
 package nyoibo.inkstone.upload;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
-
 
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.message.MessageMethod;
-import nyoibo.inkstone.upload.web.action.InkStoneLoginExample;
 
 /**
  * <p>Title:App.java</p>  
@@ -21,6 +21,7 @@ import nyoibo.inkstone.upload.web.action.InkStoneLoginExample;
  */
 
 @SpringBootApplication
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
 @ComponentScan(basePackages = { "nyoibo.inkstone.upload" })
 public class NyoiboApp {
 	public static void main(String[] args) throws Exception {
