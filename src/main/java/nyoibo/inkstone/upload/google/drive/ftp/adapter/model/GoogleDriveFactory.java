@@ -45,6 +45,8 @@ public class GoogleDriveFactory {
 	
 	private AuthorizationCodeInstalledApp authorizationApp;
 
+	private GoogleAuthorizationCodeFlow authorizationFlow;
+
 	private Drive drive;
 
 	public GoogleDriveFactory(Properties configuration) {
@@ -99,9 +101,9 @@ public class GoogleDriveFactory {
 		scopes.add(DriveScopes.DRIVE);
 		scopes.add(DriveScopes.DRIVE_METADATA);
 
-		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets, scopes)
-				.setDataStoreFactory(dataStoreFactory).build();
-		this.authorizationApp = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver());
+		this.authorizationFlow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets,
+				scopes).setDataStoreFactory(dataStoreFactory).build();
+		this.authorizationApp = new AuthorizationCodeInstalledApp(authorizationFlow, new LocalServerReceiver());
 
 		return this.authorizationApp.authorize("user");
 	}
@@ -114,4 +116,7 @@ public class GoogleDriveFactory {
 		return authorizationApp;
 	}
 
+	public GoogleAuthorizationCodeFlow getAuthorizationFlow() {
+		return authorizationFlow;
+	}
 }
