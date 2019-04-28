@@ -36,6 +36,9 @@ public class GoogleDriveFtpAdapter {
 	private final Controller controller;
     private final GoogleDriveFactory googleDriveFactory;
 	
+	private static boolean init = false;
+    
+
 	GoogleDriveFtpAdapter(Properties configuration) {
 
 		int port = Integer.parseInt(configuration.getProperty("port", String.valueOf(1821)));
@@ -53,9 +56,17 @@ public class GoogleDriveFtpAdapter {
 
 		FtpServerFactory serverFactory = new GFtpServerFactory(controller, cache, configuration, cacheUpdater);
 		server = serverFactory.createServer();
+		
+		init = true;
 
 	}
 
+	public String getRedirectUri() throws IOException {
+		if (init)
+			return getGoogleDriveFactory().getAuthorizationApp().getReceiver().getRedirectUri();
+		return null;
+	}
+	
 	private static boolean available(int port) {
 		try (Socket ignored = new Socket("localhost", port)) {
 			return false;
@@ -98,5 +109,9 @@ public class GoogleDriveFtpAdapter {
 
 	public GoogleDriveFactory getGoogleDriveFactory() {
 		return googleDriveFactory;
+	}
+	
+	public static boolean isInit() {
+		return init;
 	}
 }
