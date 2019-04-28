@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.catalina.valves.CrawlerSessionManagerValve;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -44,6 +45,8 @@ public class GoogleDriveFactory {
 	private final HttpTransport httpTransport;
 
 	private Drive drive;
+
+	private Credential credential;
 
 	public GoogleDriveFactory(Properties configuration) {
 
@@ -100,10 +103,17 @@ public class GoogleDriveFactory {
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY,
 				clientSecrets, scopes).setDataStoreFactory(dataStoreFactory).build();
 
-		return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
+		Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
+		this.credential = credential;
+		return credential;
 	}
 
 	public Drive getDrive() {
 		return drive;
 	}
+
+	public Credential getCredential() {
+		return credential;
+	}
+
 }

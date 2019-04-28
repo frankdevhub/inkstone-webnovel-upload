@@ -30,7 +30,7 @@ public class GoogleDriveFtpAdapterFactory {
 		if (googleDriveFtpAdapter == null) {
 			synchronized (GoogleDriveFtpAdapter.class) {
 				if (googleDriveFtpAdapter == null) {
-					initDriveAdapter();
+					init();
 					return googleDriveFtpAdapter;
 				}
 			}
@@ -38,7 +38,7 @@ public class GoogleDriveFtpAdapterFactory {
 		return googleDriveFtpAdapter;
 	}
 
-	private static void initDriveAdapter() {
+	private static void init() {
 		try {
 			JarUtils.printManifestAttributesToString();
 			LOGGER.info("Program info: " + JarUtils.getManifestAttributesAsMap());
