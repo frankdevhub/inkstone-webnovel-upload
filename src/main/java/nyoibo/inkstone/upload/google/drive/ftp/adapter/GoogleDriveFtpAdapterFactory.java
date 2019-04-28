@@ -1,10 +1,12 @@
 package nyoibo.inkstone.upload.google.drive.ftp.adapter;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -28,7 +30,9 @@ public class GoogleDriveFtpAdapterFactory {
 	public static final Log LOGGER = LogFactory.getLog(GoogleDriveFtpAdapterFactory.class);
 
 	private static GoogleDriveFtpAdapter googleDriveFtpAdapter;
-
+	
+	private static final String DATA_FOLDER = "data";
+	
 	public static GoogleDriveFtpAdapter getInstance() {
 		if (googleDriveFtpAdapter == null) {
 			synchronized (GoogleDriveFtpAdapter.class) {
@@ -54,8 +58,18 @@ public class GoogleDriveFtpAdapterFactory {
 		return null;
 	}
 
+	
+	private static void cleanDataFolders() {
+		try {
+			FileUtils.forceDelete(new File(DATA_FOLDER));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private static void init() {
 		try {
+			cleanDataFolders();
 			JarUtils.printManifestAttributesToString();
 			LOGGER.info("Program info: " + JarUtils.getManifestAttributesAsMap());
 			LOGGER.info("Loading configuration...");
