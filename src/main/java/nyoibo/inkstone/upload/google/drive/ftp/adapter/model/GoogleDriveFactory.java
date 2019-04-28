@@ -9,7 +9,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -43,9 +42,7 @@ public class GoogleDriveFactory {
 
 	private final HttpTransport httpTransport;
 	
-	private AuthorizationCodeInstalledApp authorizationApp;
-
-	private GoogleAuthorizationCodeFlow authorizationFlow;
+	private AuthorizationCodeInstalledAppExtend authorizationApp;
 
 	private Drive drive;
 
@@ -64,7 +61,7 @@ public class GoogleDriveFactory {
 			throw new RuntimeException("Error intializing google drive API", e);
 		}
 	}
-
+	
 	public static Drive build(Credential credential) throws Exception {
 		final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 		return new Drive.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
@@ -101,9 +98,9 @@ public class GoogleDriveFactory {
 		scopes.add(DriveScopes.DRIVE);
 		scopes.add(DriveScopes.DRIVE_METADATA);
 
-		this.authorizationFlow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets,
+		GoogleAuthorizationCodeFlow flow =  new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets,
 				scopes).setDataStoreFactory(dataStoreFactory).build();
-		this.authorizationApp = new AuthorizationCodeInstalledApp(authorizationFlow, new LocalServerReceiver());
+		this.authorizationApp = new AuthorizationCodeInstalledAppExtend(flow, new LocalServerReceiver());
 
 		return this.authorizationApp.authorize("user");
 	}
@@ -112,11 +109,7 @@ public class GoogleDriveFactory {
 		return drive;
 	}
 
-	public AuthorizationCodeInstalledApp getAuthorizationApp() {
+	public AuthorizationCodeInstalledAppExtend getAuthorizationApp() {
 		return authorizationApp;
-	}
-
-	public GoogleAuthorizationCodeFlow getAuthorizationFlow() {
-		return authorizationFlow;
 	}
 }

@@ -28,8 +28,8 @@ public class NyoiboApp {
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(NyoiboApp.class, args);
 		GoogleDriveFtpAdapterFactory.getInstance();
-		System.out.println("get instance========");
-		System.out.println(GoogleDriveFtpAdapterFactory.getInstance().getRedirectUri());
 		LoggerFactory.getLogger(NyoiboApp.class).begin().headerAction(MessageMethod.EVENT).info("application start!");
+		LoggerFactory.getLogger(NyoiboApp.class).begin().headerAction(MessageMethod.EVENT).info(
+				String.format("google drive redirect uri:\\n%s", GoogleDriveFtpAdapterFactory.getAuthorizationUrl()));
 	}
 }

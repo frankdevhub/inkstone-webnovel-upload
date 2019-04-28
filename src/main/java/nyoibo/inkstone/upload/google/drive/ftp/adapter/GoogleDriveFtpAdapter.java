@@ -8,7 +8,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ftpserver.FtpServerFactory;
 import org.apache.ftpserver.ftplet.FtpException;
-import org.thymeleaf.util.StringUtils;
 
 import nyoibo.inkstone.upload.google.drive.ftp.adapter.controller.Controller;
 import nyoibo.inkstone.upload.google.drive.ftp.adapter.model.Cache;
@@ -62,15 +61,6 @@ public class GoogleDriveFtpAdapter {
 
 	}
 
-	public String getRedirectUri() throws IOException {
-		if (init) {
-			String uri = googleDriveFactory.getAuthorizationFlow().newAuthorizationUrl().getRedirectUri();
-			System.out.println(StringUtils.isEmpty(uri));
-			return uri;
-		}
-		return null;
-	}
-	
 	private static boolean available(int port) {
 		try (Socket ignored = new Socket("localhost", port)) {
 			return false;

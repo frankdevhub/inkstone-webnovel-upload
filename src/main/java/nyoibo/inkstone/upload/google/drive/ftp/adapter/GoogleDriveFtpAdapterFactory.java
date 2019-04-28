@@ -8,7 +8,10 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
+
 import nyoibo.inkstone.upload.NyoiboApp;
+import nyoibo.inkstone.upload.google.drive.ftp.adapter.model.GoogleDriveFactory;
 import nyoibo.inkstone.upload.google.drive.ftp.adapter.utils.JarUtils;
 
 /**
@@ -36,6 +39,19 @@ public class GoogleDriveFtpAdapterFactory {
 			}
 		}
 		return googleDriveFtpAdapter;
+	}
+
+	
+	@SuppressWarnings("static-access")
+	public static String getAuthorizationUrl() throws IOException {
+		if (getInstance().isInit()) {
+			GoogleDriveFactory driveFactory = getInstance().getGoogleDriveFactory();
+			AuthorizationCodeRequestUrl url = driveFactory.getAuthorizationApp().getRequestUrl();
+			if(url==null)
+				throw new NullPointerException("AuthorizationRequestUrl is null");
+			return url.toString();
+		}
+		return null;
 	}
 
 	private static void init() {
