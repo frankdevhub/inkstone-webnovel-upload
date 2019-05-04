@@ -3,12 +3,14 @@ package nyoibo.inkstone.upload.utils;
 import java.sql.Timestamp;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.springframework.scheduling.config.Task;
 
 /**
  * <p>Title:InkstoneCustomThreadPoolExecutor.java</p>  
@@ -23,14 +25,14 @@ import org.apache.log4j.Logger;
 public class InkstoneCustomThreadPoolExecutor extends ThreadPoolExecutor {
 
 	private static final Logger LOGGER = Logger.getLogger(InkstoneCustomThreadPoolExecutor.class);
-	private LinkedBlockingQueue<FutureTask<Map>> workBlockingQueue = new LinkedBlockingQueue<FutureTask<Map>>();
+	private BlockingQueue<FutureTask<Map>> workBlockingQueue = new LinkedBlockingQueue<FutureTask<Map>>();
 
 	public InkstoneCustomThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
 			BlockingQueue<Runnable> workQueue) {
 		super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
 	}
 
-	public LinkedBlockingQueue<FutureTask<Map>> getWorkBlockingQueue() {
+	public BlockingQueue<FutureTask<Map>> getWorkBlockingQueue() {
 		return workBlockingQueue;
 	}
 
@@ -48,9 +50,9 @@ public class InkstoneCustomThreadPoolExecutor extends ThreadPoolExecutor {
 		LOGGER.info("After the task execution");
 	}
 
-	public void addToThreadPool(FutureTask<Boolean> task) {
+	public void addToThreadPool(FutureTask<Map> task) {
 		BlockingQueue<Runnable> waitThreadQueue = this.getQueue();
-		LinkedBlockingQueue<FutureTask<Map>> workThreadQueue = this.getWorkBlockingQueue();
+		BlockingQueue<FutureTask<Map>> workThreadQueue = this.getWorkBlockingQueue();
 
 		if (!waitThreadQueue.contains(task) && !workThreadQueue.contains(task)) {
 			Timestamp recordtime = new Timestamp(System.currentTimeMillis());
@@ -58,13 +60,11 @@ public class InkstoneCustomThreadPoolExecutor extends ThreadPoolExecutor {
 			// add to workThreadQueue");
 			// downloadThread.setName("th_"+downloadRecord.getName());
 			this.execute(task);
-			System.out.println("WAIT QUEUE"+this.getQueue().size());
-			System.out.println("WORKQUEUE"+this.getWorkBlockingQueue().size());
+
 		} else {
 			// LOGGER.info("i_workThread:recordId="+downloadRecord.getId()+",name="+downloadRecord.getName()+"
 			// in waitThreadQueue or workThreadQueue");
 		}
 	}
-	
 
 }
