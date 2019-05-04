@@ -30,6 +30,6 @@ public class NyoiboApp {
 		GoogleDriveFtpAdapterFactory.getInstance();
 		LoggerFactory.getLogger(NyoiboApp.class).begin().headerAction(MessageMethod.EVENT).info("application start!");
 		LoggerFactory.getLogger(NyoiboApp.class).begin().headerAction(MessageMethod.EVENT).info(
-				String.format("google drive redirect uri:\\n%s", GoogleDriveFtpAdapterFactory.getAuthorizationUrl()));
+				String.format("google drive redirect uri:/n%s", GoogleDriveFtpAdapterFactory.getAuthorizationUrl()));
 	}
 }
