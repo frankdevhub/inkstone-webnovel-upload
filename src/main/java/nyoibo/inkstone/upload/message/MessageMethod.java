@@ -11,7 +11,7 @@ package nyoibo.inkstone.upload.message;
  */
 
 public enum MessageMethod {
-	DELETE, EVENT, GET, PATCH, POST, PUT;
+	DELETE, EVENT, GET, PATCH, POST, ERROR, PUT;
 
 	private MessageMethod() {
 	}

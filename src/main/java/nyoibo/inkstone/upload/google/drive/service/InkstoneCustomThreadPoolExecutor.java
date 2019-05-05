@@ -1,4 +1,4 @@
-package nyoibo.inkstone.upload.utils;
+package nyoibo.inkstone.upload.google.drive.service;
 
 import java.sql.Timestamp;
 import java.util.Map;
