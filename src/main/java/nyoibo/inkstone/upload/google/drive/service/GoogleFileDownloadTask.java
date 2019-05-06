@@ -23,26 +23,11 @@ import nyoibo.inkstone.upload.message.MessageMethod;
  * @date:2019-05-05 00:26
  */
 
-public class GoogleFileDownloadTask  {
+public class GoogleFileDownloadTask  implements Callable<Boolean>{
 
 	private final String localPath;
 	private final InputStream stream;
 	private static final Logger LOGGER = LoggerFactory.getLogger(GoogleFileDownloadTask.class);
-
-	public Callable<Boolean> create() {
-		return new Callable<Boolean>() {
-
-			@Override
-			public Boolean call() throws Exception {
-				try {
-					downloadSource(localPath, stream);
-				} catch (Exception e) {
-					LOGGER.begin().headerAction(MessageMethod.ERROR).error(e.getMessage());
-				}
-				return Boolean.TRUE;
-			}
-		};
-	}
 
 	public GoogleFileDownloadTask(String localPath, InputStream stream) {
 		this.localPath = localPath;
@@ -69,6 +54,16 @@ public class GoogleFileDownloadTask  {
 
 	public String getLocalPath() {
 		return localPath;
+	}
+
+	@Override
+	public Boolean call() throws Exception {
+		try {
+			downloadSource(localPath, stream);
+		} catch (Exception e) {
+			LOGGER.begin().headerAction(MessageMethod.ERROR).error(e.getMessage());
+		}
+		return Boolean.TRUE;
 	}
 
 }

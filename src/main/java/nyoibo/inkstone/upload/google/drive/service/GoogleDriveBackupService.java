@@ -61,7 +61,7 @@ public class GoogleDriveBackupService {
 				InputStream stream = drive.downloadFile(f);
 				String localPath = new StringBuilder().append(localRootFolder).append("/").append(f.getName())
 						.toString();
-				Callable<Boolean> task = new GoogleFileDownloadTask(localPath, stream).create();
+				Callable<Boolean> task = new GoogleFileDownloadTask(localPath, stream);
 				service.submit(task);
 			}
 
@@ -81,7 +81,7 @@ public class GoogleDriveBackupService {
 				InputStream stream = drive.downloadFile(f);
 				String localPath = new StringBuilder().append(local).append("/").append(name).toString();
 
-				Callable<Boolean> task = new GoogleFileDownloadTask(localPath, stream).create();
+				Callable<Boolean> task = new GoogleFileDownloadTask(localPath, stream);
 				service.submit(task);
 			}
 
