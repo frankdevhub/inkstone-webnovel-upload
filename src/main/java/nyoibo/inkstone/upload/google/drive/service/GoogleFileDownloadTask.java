@@ -55,6 +55,8 @@ public class GoogleFileDownloadTask extends Thread implements Callable<Boolean> 
 		bis.close();
 		bos.flush();
 		bos.close();
+
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("File download complete[%s]", filePath));
 	}
 
 	@Override
