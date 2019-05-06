@@ -63,5 +63,9 @@ public class GoogleFileDownloadTask implements Callable<Boolean> {
 		bos.close();
 	}
 
+	public String getLocalPath() {
+		return localPath;
+	}
+
 	
 }
