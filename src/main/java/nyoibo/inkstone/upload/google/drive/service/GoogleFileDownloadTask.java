@@ -23,19 +23,13 @@ import nyoibo.inkstone.upload.message.MessageMethod;
  * @date:2019-05-05 00:26
  */
 
-public class GoogleFileDownloadTask extends FutureTask<Boolean> {
+public class GoogleFileDownloadTask  {
 
 	private final String localPath;
 	private final InputStream stream;
-	private Logger LOGGER = LoggerFactory.getLogger(GoogleFileDownloadTask.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GoogleFileDownloadTask.class);
 
-	public GoogleFileDownloadTask createTask(String localPath, InputStream stream) {
-
-		Callable<Boolean> service = create(localPath, stream);
-		return new GoogleFileDownloadTask(service, localPath, stream);
-	}
-
-	private Callable<Boolean> create(String localPath, InputStream stream) {
+	public Callable<Boolean> create() {
 		return new Callable<Boolean>() {
 
 			@Override
@@ -50,13 +44,12 @@ public class GoogleFileDownloadTask extends FutureTask<Boolean> {
 		};
 	}
 
-	private GoogleFileDownloadTask(Callable<Boolean> callable, String localPath, InputStream stream) {
-		super(callable);
+	public GoogleFileDownloadTask(String localPath, InputStream stream) {
 		this.localPath = localPath;
 		this.stream = stream;
 	}
 
-	private void downloadSource(String localPath, InputStream stream) throws IOException {
+	private static void downloadSource(String localPath, InputStream stream) throws IOException {
 		File downloadFile = new File(localPath);
 		byte[] buffer = new byte[1024];
 		FileOutputStream fos = new FileOutputStream(downloadFile);

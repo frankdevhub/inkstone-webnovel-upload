@@ -62,6 +62,10 @@ public class GoogleDrive {
 		ROOT_FOLDER_ID = getFile("root").getId();
 	}
 
+	public String getROOT_FOLDER_ID() {
+		return ROOT_FOLDER_ID;
+	}
+
 	public String getStartRevision() {
 		return getStartRevision(3);
 	}
