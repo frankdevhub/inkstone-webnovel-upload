@@ -60,9 +60,8 @@ public class GoogleDriveBackupService {
 			} else {
 				InputStream stream = drive.downloadFile(f);
 				String folderPath = new StringBuilder().append(localRootFolder).toString();
-				String filePath = new StringBuilder().append(folderPath).append("/").append(f.getName())
-						.toString();
-				Callable<Boolean> task = new GoogleFileDownloadTask(folderPath,filePath, stream);
+				String filePath = new StringBuilder().append(folderPath).append("/").append(f.getName()).toString();
+				Callable<Boolean> task = new GoogleFileDownloadTask(folderPath, filePath, stream);
 				service.submit(task);
 			}
 
