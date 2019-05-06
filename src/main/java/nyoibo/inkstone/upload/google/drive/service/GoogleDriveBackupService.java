@@ -56,7 +56,7 @@ public class GoogleDriveBackupService {
 		List<GFile> files = drive.list(rootFolderId);
 		for (GFile f : files) {
 			if (f.isDirectory()) {
-				loop(f, drive, f.getName(), localRootFolder, service);
+				loop(f, drive, localRootFolder, service);
 			} else {
 				InputStream stream = drive.downloadFile(f);
 				String folderPath = new StringBuilder().append(localRootFolder).toString();
@@ -70,12 +70,12 @@ public class GoogleDriveBackupService {
 		service.shutdown();
 	}
 
-	private static void loop(GFile file, GoogleDrive drive, String path, String local, ExecutorService service) {
+	private static void loop(GFile file, GoogleDrive drive, String path, ExecutorService service) {
 		List<GFile> files = drive.list(file.getId());
 		for (GFile f : files) {
 			if (f.isDirectory()) {
 				String next = new StringBuilder().append(path).append("/").append(f.getName()).toString();
-				loop(f, drive, next, local, service);
+				loop(f, drive, next, service);
 			} else {
 				String folderPath = new StringBuilder().append(path).toString();
 				InputStream stream = drive.downloadFile(f);
