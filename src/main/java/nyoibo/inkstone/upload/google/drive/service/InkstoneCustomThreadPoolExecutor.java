@@ -19,8 +19,8 @@ import nyoibo.inkstone.upload.message.MessageMethod;
  */
 
 public class InkstoneCustomThreadPoolExecutor {
-	
-   //Nthreads=Ncpu*(1+w/c)
+
+	// Nthreads=Ncpu*(1+w/c)
 	public static ExecutorService googleBackUpPool() {
 
 		int nCPU = Runtime.getRuntime().availableProcessors();
@@ -29,18 +29,9 @@ public class InkstoneCustomThreadPoolExecutor {
 			private final Logger LOGGER = LoggerFactory.getLogger(InkstoneCustomThreadPoolExecutor.class);
 
 			@Override
-			protected void afterExecute(Runnable r, Throwable t) {
-				GoogleFileDownloadTask currentTask = (GoogleFileDownloadTask) r;
-				LOGGER.begin().headerAction(MessageMethod.EVENT)
-						.info(String.format("File download complete:[%s]", currentTask.getLocalPath()));
-				super.afterExecute(r, t);
-			}
-
-			@Override
 			protected void beforeExecute(Thread t, Runnable r) {
-				GoogleFileDownloadTask currentTask = (GoogleFileDownloadTask) r;
 				LOGGER.begin().headerAction(MessageMethod.EVENT)
-						.info(String.format("File download start:[%s]", currentTask.getLocalPath()));
+						.info(String.format("File download start:[%s]", t.getName()));
 				super.beforeExecute(t, r);
 			}
 
@@ -52,5 +43,5 @@ public class InkstoneCustomThreadPoolExecutor {
 		};
 		return service;
 	}
-  
+
 }

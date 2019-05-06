@@ -23,7 +23,7 @@ import nyoibo.inkstone.upload.message.MessageMethod;
  * @date:2019-05-05 00:26
  */
 
-public class GoogleFileDownloadTask  implements Callable<Boolean>{
+public class GoogleFileDownloadTask extends Thread implements Callable<Boolean> {
 
 	private final String localPath;
 	private final InputStream stream;
@@ -32,6 +32,7 @@ public class GoogleFileDownloadTask  implements Callable<Boolean>{
 	public GoogleFileDownloadTask(String localPath, InputStream stream) {
 		this.localPath = localPath;
 		this.stream = stream;
+		setName(localPath);
 	}
 
 	private static void downloadSource(String localPath, InputStream stream) throws IOException {
