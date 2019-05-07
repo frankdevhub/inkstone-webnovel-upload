@@ -93,7 +93,5 @@ public class GoogleDriveBackupService {
 			alive.interrupt();
 	}
 
-	public static void main(String[] args) throws Exception {
-		backup("D:/");
-	}
+
 }

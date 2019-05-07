@@ -53,7 +53,7 @@ public class FtpCommands {
 			try {
 
 				Date time = DateUtils.parseFTPDate(timestamp);
-
+		
 				String fileName = arguments[1].trim();
 
 				FtpFile file = null;
