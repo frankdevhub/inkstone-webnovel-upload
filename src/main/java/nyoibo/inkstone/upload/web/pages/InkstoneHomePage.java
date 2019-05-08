@@ -34,7 +34,6 @@ public class InkstoneHomePage {
 	private Query submitBtn;
 
 	private WebDriver driver;
-
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneHomePage.class);
 
 	private ExpectedCondition<Boolean> pageTitleStartsWith(final String header) {
@@ -61,36 +60,46 @@ public class InkstoneHomePage {
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver());
 	}
 
-	public void login() {
+	private void switchFrame(WebDriverWait wait) {
+		wait.until(new ExpectedCondition<WebElement>() {
+
+			@Override
+			public WebElement apply(WebDriver driver) {
+				return driver.findElement(By.id(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID));
+			}
+		});
+	}
+
+	public InkstoneHomePage login() {
 		driver.get(SeleniumInkstone.INKSTONE_HOME_PAGE_URL);
 		WebDriverWait wait = new WebDriverWait(driver, 10, 100);
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_HOME_HEADER));
 
-		try {
-			LOGGER.begin().headerAction(MessageMethod.EVENT).info("click account icon to login");
-			accountIcon.findWebElement().click();
-			wait = new WebDriverWait(driver, 10, 2000);
-			wait.until(new ExpectedCondition<WebElement>() {
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info("click account icon to login");
+		accountIcon.findWebElement().click();
+		switchFrame(wait);
 
-				@Override
-				public WebElement apply(WebDriver driver) {
-					return driver.findElement(By.id("loginIfr"));
-				}
-			});
+		driver.switchTo().frame(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID);
 
-			driver.switchTo().frame("loginIfr");
+		selectEmailLoginBtn.findWebElement().click();
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe");
+		accountNameInput.findWebElement().clear();
+		accountNameInput.findWebElement().sendKeys(this.accountName);
+		accountPwdInput.findWebElement().clear();
+		accountPwdInput.findWebElement().sendKeys(this.accountPwd);
+		submitBtn.findWebElement().click();
 
-			selectEmailLoginBtn.findWebElement().click();
-			LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe");
-			accountNameInput.findWebElement().clear();
-			accountNameInput.findWebElement().sendKeys(this.accountName);
-			accountPwdInput.findWebElement().clear();
-			accountPwdInput.findWebElement().sendKeys(this.accountPwd);
-			submitBtn.findWebElement().click();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		switchFrame(wait);
+		
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info("login complete");
 
+		return this;
+
+	}
+  
+	public InkstoneHomePage toDashBoard() throws Exception {
+		driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
+		return this;
 	}
 
 }

@@ -31,6 +31,7 @@ public class InkstoneNovelUploadService {
 
 	public void start() {
 		inkstoneHomePage.login();
+		
 	}
 
 	public static void main(String[] args) throws Exception {
