@@ -93,12 +93,10 @@ public class InkstoneHomePage {
 		try {
 			switchFrame(wait);
 		} catch (Exception e) {
-			e.printStackTrace();
 			frame = false;
-		} finally {
-            if(frame)
-            	throw new Exception(SeleniumInkstone.INKSTONE_ACCOUNT_NOT_LOGIN);
 		}
+		if (frame)
+			throw new Exception(SeleniumInkstone.INKSTONE_ACCOUNT_NOT_LOGIN);
 
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("login complete");
 
