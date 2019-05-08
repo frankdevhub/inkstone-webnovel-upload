@@ -52,7 +52,7 @@ public class InkstoneHomePage {
 		}
 
 		accountIcon = new Query()
-				.defaultLocator(By.xpath("[class='" + SeleniumInkstone.INKSTONE_HOME_ACCOUNT_CLASS + "']"));
+				.defaultLocator(By.className("g_hd_link"));
 		selectEmailLoginBtn = new Query()
 				.defaultLocator(By.className(SeleniumInkstone.INKSTONE_LOGIN_PANEL_EMAIL_CLASS));
 		accountNameInput = new Query().defaultLocator(By.name(SeleniumInkstone.INKSTONE_LOGIN_INPUT_EMAIL_NAME));
