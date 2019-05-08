@@ -40,5 +40,6 @@ public class SeleniumInkstone {
 	public static final String INKSTONE_LOGIN_INPUT_EMAIL_NAME = "email";
 	public static final String INKSTONE_LOGIN_INPUT_PWD_NAME = "password";
 	public static final String INKSTONE_LOGIN_SUBMIT_ID = "submit";
+	public static final String INKSTONE_LOHIN_PANEL_SUBMIT_CLASS = "bt bt-block";
 
 }
