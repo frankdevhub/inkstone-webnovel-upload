@@ -21,4 +21,6 @@ public class InkstoneNovelUploadService {
 		this.driver = DriverBase.getDriver();
 	}
 
+	
+	
 }
