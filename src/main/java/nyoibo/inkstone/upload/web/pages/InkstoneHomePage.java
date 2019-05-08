@@ -2,6 +2,7 @@ package nyoibo.inkstone.upload.web.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -12,7 +13,6 @@ import nyoibo.inkstone.upload.selenium.AssignDriver;
 import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.selenium.Query;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
-
 /**
  * <p>Title:InkstoneHomePage.java</p>  
  * <p>Description: </p>  
@@ -24,14 +24,14 @@ import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
  */
 
 public class InkstoneHomePage {
-	private final String accountName;
-	private final String accountPwd;
+	private String accountName;
+	private String accountPwd;
 
-	private final Query accountIcon;
-	private final Query selectEmailLoginBtn;
-	private final Query accountNameInput;
-	private final Query accountPwdInput;
-	private final Query submitBtn;
+	private Query accountIcon;
+	private WebElement selectEmailLoginBtn;
+	private Query accountNameInput;
+	private Query accountPwdInput;
+	private Query submitBtn;
 
 	private WebDriver driver;
 
@@ -40,7 +40,7 @@ public class InkstoneHomePage {
 	private ExpectedCondition<Boolean> pageTitleStartsWith(final String header) {
 		return driver -> driver.getTitle().toLowerCase().startsWith(header.toLowerCase());
 	}
-	
+
 	public InkstoneHomePage(boolean foreign, WebDriver driver) throws Exception {
 		this.driver = driver;
 		if (foreign) {
@@ -51,10 +51,7 @@ public class InkstoneHomePage {
 			this.accountPwd = SeleniumInkstone.INKSTONE_ACCOUNT_PWD_CN;
 		}
 
-		accountIcon = new Query()
-				.defaultLocator(By.className("g_hd_link"));
-		selectEmailLoginBtn = new Query()
-				.defaultLocator(By.className(SeleniumInkstone.INKSTONE_LOGIN_PANEL_EMAIL_CLASS));
+		accountIcon = new Query().defaultLocator(By.className("g_user"));
 		accountNameInput = new Query().defaultLocator(By.name(SeleniumInkstone.INKSTONE_LOGIN_INPUT_EMAIL_NAME));
 		accountPwdInput = new Query().defaultLocator(By.name(SeleniumInkstone.INKSTONE_LOGIN_INPUT_PWD_NAME));
 		submitBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_LOGIN_SUBMIT_ID));
@@ -65,15 +62,26 @@ public class InkstoneHomePage {
 	public void login() {
 		driver.get(SeleniumInkstone.INKSTONE_HOME_PAGE_URL);
 		WebDriverWait wait = new WebDriverWait(driver, 10, 100);
-        wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_HOME_HEADER));
-		
-		accountIcon.findWebElement().click();
-		LOGGER.begin().headerAction(MessageMethod.EVENT).info("click account icon to login");
-		selectEmailLoginBtn.findWebElement().click();
-		LOGGER.begin().headerAction(MessageMethod.EVENT).info("click login with email");
-		accountNameInput.findWebElement().clear();
+		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_HOME_HEADER));
+
+		try {
+			LOGGER.begin().headerAction(MessageMethod.EVENT).info("click account icon to login");
+			accountIcon.findWebElement().click();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		try {
+			selectEmailLoginBtn = driver.findElement(By.cssSelector("a[accesskey=e]"));
+			LOGGER.begin().headerAction(MessageMethod.EVENT).info("click login with email");
+			selectEmailLoginBtn.click();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	/*	accountNameInput.findWebElement().clear();
 		accountNameInput.findWebElement().sendKeys(this.accountName);
-		accountPwdInput.findWebElement().sendKeys(this.accountPwd);
+		accountPwdInput.findWebElement().sendKeys(this.accountPwd);*/
 
 	}
 

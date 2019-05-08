@@ -1,12 +1,23 @@
 package nyoibo.inkstone.upload.selenium.config;
 
 /**
- * <p>Title:SeleniumInkstone.java</p>  
- * <p>Description: </p>  
- * <p>Copyright: Copyright (c) 2019</p>  
- * <p>Company: www.frankdevhub.site</p>
- * <p>github: https://github.com/frankdevhub</p>  
- * @author frankdevhub   
+ * <p>
+ * Title:SeleniumInkstone.java
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2019
+ * </p>
+ * <p>
+ * Company: www.frankdevhub.site
+ * </p>
+ * <p>
+ * github: https://github.com/frankdevhub
+ * </p>
+ * 
+ * @author frankdevhub
  * @date:2019-05-07 15:10
  */
 
@@ -24,8 +35,8 @@ public class SeleniumInkstone {
 	public static final String INKSTONE_ACCOUNT_PWD_EN = "2018Nyoibo";
 
 	// page class and tags
-	public static final String INKSTONE_HOME_ACCOUNT_CLASS = "g_user j_login";
-	public static final String INKSTONE_LOGIN_PANEL_EMAIL_CLASS = "bt bt-block _e";
+	public static final String INKSTONE_HOME_ACCOUNT_CLASS = "g_user";
+	public static final String INKSTONE_LOGIN_PANEL_EMAIL_CLASS = ".bt.bt-block._e";
 	public static final String INKSTONE_LOGIN_INPUT_EMAIL_NAME = "email";
 	public static final String INKSTONE_LOGIN_INPUT_PWD_NAME = "password";
 	public static final String INKSTONE_LOGIN_SUBMIT_ID = "submit";
