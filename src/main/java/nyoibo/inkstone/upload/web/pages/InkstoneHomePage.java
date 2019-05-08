@@ -55,7 +55,7 @@ public class InkstoneHomePage {
 		accountNameInput = new Query().defaultLocator(By.name(SeleniumInkstone.INKSTONE_LOGIN_INPUT_EMAIL_NAME));
 		accountPwdInput = new Query().defaultLocator(By.name(SeleniumInkstone.INKSTONE_LOGIN_INPUT_PWD_NAME));
 		submitBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_LOGIN_SUBMIT_ID));
-
+		
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver());
 	}
 
@@ -65,32 +65,33 @@ public class InkstoneHomePage {
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_HOME_HEADER));
 
 		try {
+
 			LOGGER.begin().headerAction(MessageMethod.EVENT).info("click account icon to login");
 			accountIcon.findWebElement().click();
+
+			wait = new WebDriverWait(driver, 10, 2000);
 
 			wait.until(new ExpectedCondition<WebElement>() {
 
 				@Override
-				public WebElement apply(WebDriver arg0) {
-					return driver.findElement(By.cssSelector(SeleniumInkstone.INKSTONE_LOGIN_PANEL_EMAIL_CLASS));
+				public WebElement apply(WebDriver driver) {
+					return driver.findElement(By.id("loginIfr"));
 				}
-			}).click();
+			});
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
-			selectEmailLoginBtn = driver.findElement(By.cssSelector("a[accesskey=e]"));
-			LOGGER.begin().headerAction(MessageMethod.EVENT).info("click login with email");
+			driver.switchTo().frame("loginIfr");
+			selectEmailLoginBtn = driver
+					.findElement(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_LOGIN_PANEL_EMAIL_CLASS + "']"));
+			LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe");
 			selectEmailLoginBtn.click();
+			
+			accountNameInput.findWebElement().clear();
+			accountNameInput.findWebElement().sendKeys(this.accountName);
+			accountPwdInput.findWebElement().sendKeys(this.accountPwd);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-	/*	accountNameInput.findWebElement().clear();
-		accountNameInput.findWebElement().sendKeys(this.accountName);
-		accountPwdInput.findWebElement().sendKeys(this.accountPwd);*/
 
 	}
 
