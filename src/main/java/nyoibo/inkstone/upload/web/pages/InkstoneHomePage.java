@@ -70,7 +70,7 @@ public class InkstoneHomePage {
 		});
 	}
 
-	public InkstoneHomePage login() {
+	public InkstoneHomePage login() throws Exception {
 		driver.get(SeleniumInkstone.INKSTONE_HOME_PAGE_URL);
 		WebDriverWait wait = new WebDriverWait(driver, 10, 100);
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_HOME_HEADER));
@@ -89,8 +89,17 @@ public class InkstoneHomePage {
 		accountPwdInput.findWebElement().sendKeys(this.accountPwd);
 		submitBtn.findWebElement().click();
 
-		switchFrame(wait);
-		
+		boolean frame = true;
+		try {
+			switchFrame(wait);
+		} catch (Exception e) {
+			e.printStackTrace();
+			frame = false;
+		} finally {
+            if(frame)
+            	throw new Exception(SeleniumInkstone.INKSTONE_ACCOUNT_NOT_LOGIN);
+		}
+
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("login complete");
 
 		return this;

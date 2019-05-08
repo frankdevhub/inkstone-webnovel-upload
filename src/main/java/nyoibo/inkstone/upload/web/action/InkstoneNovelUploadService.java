@@ -29,9 +29,8 @@ public class InkstoneNovelUploadService {
 		this.inkstoneHomePage = new InkstoneHomePage(foreign, driver);
 	}
 
-	public void start() {
-		inkstoneHomePage.login();
-		
+	public void start() throws Exception {
+		inkstoneHomePage.login().toDashBoard();
 	}
 
 	public static void main(String[] args) throws Exception {
