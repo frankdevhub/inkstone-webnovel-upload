@@ -54,8 +54,10 @@ public class InkstoneHomePage {
 		accountIcon = new Query().defaultLocator(By.className("g_user"));
 		accountNameInput = new Query().defaultLocator(By.name(SeleniumInkstone.INKSTONE_LOGIN_INPUT_EMAIL_NAME));
 		accountPwdInput = new Query().defaultLocator(By.name(SeleniumInkstone.INKSTONE_LOGIN_INPUT_PWD_NAME));
+		selectEmailLoginBtn = new Query()
+				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_LOGIN_PANEL_EMAIL_CLASS + "']"));
 		submitBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_LOGIN_SUBMIT_ID));
-		
+
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver());
 	}
 
@@ -77,16 +79,14 @@ public class InkstoneHomePage {
 			});
 
 			driver.switchTo().frame("loginIfr");
-			selectEmailLoginBtn = new Query().defaultLocator(
-					By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_LOGIN_PANEL_EMAIL_CLASS + "']"));
+
 			selectEmailLoginBtn.findWebElement().click();
 			LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe");
 			accountNameInput.findWebElement().clear();
 			accountNameInput.findWebElement().sendKeys(this.accountName);
 			accountPwdInput.findWebElement().clear();
 			accountPwdInput.findWebElement().sendKeys(this.accountPwd);
-			submitBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_LOGIN_SUBMIT_ID));
-			
+			submitBtn.findWebElement().click();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
