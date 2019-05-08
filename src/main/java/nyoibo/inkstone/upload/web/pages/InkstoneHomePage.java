@@ -67,10 +67,19 @@ public class InkstoneHomePage {
 		try {
 			LOGGER.begin().headerAction(MessageMethod.EVENT).info("click account icon to login");
 			accountIcon.findWebElement().click();
+
+			wait.until(new ExpectedCondition<WebElement>() {
+
+				@Override
+				public WebElement apply(WebDriver arg0) {
+					return driver.findElement(By.cssSelector(SeleniumInkstone.INKSTONE_LOGIN_PANEL_EMAIL_CLASS));
+				}
+			}).click();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	
+
 		try {
 			selectEmailLoginBtn = driver.findElement(By.cssSelector("a[accesskey=e]"));
 			LOGGER.begin().headerAction(MessageMethod.EVENT).info("click login with email");
