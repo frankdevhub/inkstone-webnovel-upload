@@ -3,6 +3,7 @@ package nyoibo.inkstone.upload.web.action;
 import org.openqa.selenium.WebDriver;
 
 import nyoibo.inkstone.upload.selenium.DriverBase;
+import nyoibo.inkstone.upload.web.pages.InkstoneHomePage;
 
 /**
  * <p>Title:InkstoneNovelUploadService.java</p>  
@@ -21,6 +22,10 @@ public class InkstoneNovelUploadService {
 		this.driver = DriverBase.getDriver();
 	}
 
-	
-	
+	public static void main(String[] args) throws Exception {
+		DriverBase.instantiateDriverObject();
+		WebDriver driver = DriverBase.getDriver();
+		InkstoneHomePage test = new InkstoneHomePage(false, driver);
+		test.login();
+	}
 }

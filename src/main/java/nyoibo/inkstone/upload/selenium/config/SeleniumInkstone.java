@@ -16,6 +16,7 @@ public class SeleniumInkstone {
 	public static final String INKSTONE_FILE_TITLE_NOT_FOUND = "cannot find title in this chapter";
 
 	// inkstone credential config
+	public static final String INKSTONE_HOME_HEADER = "Webnovel";
 	public static final String INKSTONE_HOME_PAGE_URL = "https://www.webnovel.com";
 	public static final String INKSTONE_ACCOUNT_NAME_CN = "doris.yang@jianlaiglobal.com";
 	public static final String INKSTONE_ACCOUNT_PWD_CN = "Dorisdoris2018";

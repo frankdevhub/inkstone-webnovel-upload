@@ -1,14 +1,14 @@
 package nyoibo.inkstone.upload;
 
+import org.openqa.selenium.WebDriver;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 
-import nyoibo.inkstone.upload.data.logging.LoggerFactory;
-import nyoibo.inkstone.upload.google.drive.ftp.adapter.GoogleDriveFtpAdapterFactory;
-import nyoibo.inkstone.upload.message.MessageMethod;
+import nyoibo.inkstone.upload.selenium.DriverBase;
+import nyoibo.inkstone.upload.web.pages.InkstoneHomePage;
 
 /**
  * <p>Title:App.java</p>  
@@ -27,9 +27,9 @@ import nyoibo.inkstone.upload.message.MessageMethod;
 public class NyoiboApp {
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(NyoiboApp.class, args);
-		GoogleDriveFtpAdapterFactory.getInstance();
-		LoggerFactory.getLogger(NyoiboApp.class).begin().headerAction(MessageMethod.EVENT).info("application start!");
-		LoggerFactory.getLogger(NyoiboApp.class).begin().headerAction(MessageMethod.EVENT).info(
-				String.format("google drive redirect uri:/n%s", GoogleDriveFtpAdapterFactory.getAuthorizationUrl()));
+		//GoogleDriveFtpAdapterFactory.getInstance();
+		//LoggerFactory.getLogger(NyoiboApp.class).begin().headerAction(MessageMethod.EVENT).info("application start!");
+		//LoggerFactory.getLogger(NyoiboApp.class).begin().headerAction(MessageMethod.EVENT).info(
+			//	String.format("google drive redirect uri:/n%s", GoogleDriveFtpAdapterFactory.getAuthorizationUrl()));
 	}
 }
