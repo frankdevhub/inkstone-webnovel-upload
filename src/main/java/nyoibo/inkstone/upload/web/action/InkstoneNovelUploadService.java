@@ -42,8 +42,8 @@ public class InkstoneNovelUploadService {
 	public void start() throws Exception {
 		inkstoneHomePage.login();
 		System.out.println("======go to azure");
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
+		driver.manage().wait(5000L);
+		
 		inkstoneChapterPage.editLatestRaw();
 
 	}

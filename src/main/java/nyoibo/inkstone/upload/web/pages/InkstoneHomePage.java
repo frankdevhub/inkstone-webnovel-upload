@@ -89,7 +89,7 @@ public class InkstoneHomePage {
 		accountPwdInput.findWebElement().clear();
 		accountPwdInput.findWebElement().sendKeys(this.accountPwd);
 		submitBtn.findWebElement().click();
-
+        
 /*		driver.switchTo().parentFrame();
 
 		boolean error = false;
@@ -106,6 +106,9 @@ public class InkstoneHomePage {
 		}
 
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("login complete");*/
+		
+		driver.manage().wait(5000L);
+		
 		return this;
 
 	}
