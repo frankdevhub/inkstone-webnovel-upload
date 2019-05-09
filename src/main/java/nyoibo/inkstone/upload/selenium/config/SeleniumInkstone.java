@@ -9,13 +9,18 @@ public class SeleniumInkstone {
 	// inkstone credential config
 	public static final String INKSTONE_HOME_HEADER = "Webnovel";
 	public static final String INKSTONE_HOME_PAGE_URL = "https://www.webnovel.com";
-	public static final String INKSTONE_PRO_DASHBOARD = "https://inkstone.webnovel.com/dashboard";
+	public static final String INKSTONE_PRO_DASHBOARD = "https://inkstone.webnovel.com/dashboard.html";
+	public static final String INKSTONE_PRO_BOOK = "https://inkstone.webnovel.com/book";
 	public static final String INKSTONE_ACCOUNT_NAME_CN = "doris.yang@jianlaiglobal.com";
-	public static final String INKSTONE_ACCOUNT_PWD_CN = "Dorisdoris20181";
+	public static final String INKSTONE_ACCOUNT_PWD_CN = "Dorisdoris2018";
 	public static final String INKSTONE_ACCOUNT_NAME_EN = "doris.y.sh@hotmail.com";
 	public static final String INKSTONE_ACCOUNT_PWD_EN = "2018Nyoibo";
 
-	// page class and tags
+	// inkstone titles
+	public static final String INKSTONE_TRANSLATION = "Chapter translation-Inkstone";
+	public static final String INKSTONE_CHAPTERS = "Badge in Azure-Inkstone";
+
+	// login page
 	public static final String INKSTONE_HOME_ACCOUNT_CLASS = "g_user";
 	public static final String INKSTONE_MAIL_LOGIN_FRAME_ID = "loginIfr";
 	public static final String INKSTONE_LOGIN_PANEL_EMAIL_CLASS = "bt bt-block _e";
@@ -24,4 +29,11 @@ public class SeleniumInkstone {
 	public static final String INKSTONE_LOGIN_SUBMIT_ID = "submit";
 	public static final String INKSTONE_LOHIN_PANEL_SUBMIT_CLASS = "bt bt-block";
 
+	// dashboard raw page
+	public static final String INKSTONE_PROJECT_RAW_DIV_CLASS = "book-menu fs16 cf  mb_g";
+	// translate page
+	public static final String INKSTONE_TRANSLATE_ID = "claim";
+	public static final String INKSTONE_TRANSLATE_ALERT_CLASS = "ui-dialog-container ui-dialog-confirm ui-dialog-animation";
+	public static final String INKSTONE_TRANSLATE_SUBMIT_CLASS = "ui-button ui-button-warning";
+	
 }

@@ -106,14 +106,9 @@ public class InkstoneHomePage {
 		}
 
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("login complete");
-
 		return this;
 
 	}
   
-	public InkstoneHomePage toDashBoard() throws Exception {
-		driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
-		return this;
-	}
 
 }
