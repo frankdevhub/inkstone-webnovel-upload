@@ -28,7 +28,7 @@ import org.openqa.selenium.safari.SafariOptions;
  * @date:2019-04-21 01:20
  */
 
-public enum DriverType implements DriverSetup{
+public enum DriverType implements DriverSetup {
 	FIREFOX {
 		public RemoteWebDriver getWebDriverObject(DesiredCapabilities capabilities) {
 			FirefoxOptions options = new FirefoxOptions();

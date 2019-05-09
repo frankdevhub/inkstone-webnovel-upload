@@ -1,39 +1,18 @@
 package nyoibo.inkstone.upload.selenium.config;
 
-/**
- * <p>
- * Title:SeleniumInkstone.java
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2019
- * </p>
- * <p>
- * Company: www.frankdevhub.site
- * </p>
- * <p>
- * github: https://github.com/frankdevhub
- * </p>
- * 
- * @author frankdevhub
- * @date:2019-05-07 15:10
- */
 
 public class SeleniumInkstone {
 	// inkstone service exception
 	public static final String INKSTONE_FILE_UPLOAD_MULTI_TITLE = "find multiple titles in this chapter";
 	public static final String INKSTONE_FILE_TITLE_NOT_FOUND = "cannot find title in this chapter";
-    public static final String INKSTONE_ACCOUNT_NOT_LOGIN = "user didnot login";
-	
-	
+	public static final String INKSTONE_ACCOUNT_NOT_LOGIN = "user didnot login";
+
 	// inkstone credential config
 	public static final String INKSTONE_HOME_HEADER = "Webnovel";
 	public static final String INKSTONE_HOME_PAGE_URL = "https://www.webnovel.com";
 	public static final String INKSTONE_PRO_DASHBOARD = "https://inkstone.webnovel.com/dashboard";
 	public static final String INKSTONE_ACCOUNT_NAME_CN = "doris.yang@jianlaiglobal.com";
-	public static final String INKSTONE_ACCOUNT_PWD_CN = "Dorisdoris20181";
+	public static final String INKSTONE_ACCOUNT_PWD_CN = "Dorisdoris2018";
 	public static final String INKSTONE_ACCOUNT_NAME_EN = "doris.y.sh@hotmail.com";
 	public static final String INKSTONE_ACCOUNT_PWD_EN = "2018Nyoibo";
 

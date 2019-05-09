@@ -56,7 +56,7 @@ public class InkstoneHomePage {
 		selectEmailLoginBtn = new Query()
 				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_LOGIN_PANEL_EMAIL_CLASS + "']"));
 		submitBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_LOGIN_SUBMIT_ID));
-
+		
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver());
 	}
 
@@ -95,7 +95,7 @@ public class InkstoneHomePage {
 		} catch (Exception e) {
 			frame = false;
 		}
-		if (frame)
+		if (!frame)
 			throw new Exception(SeleniumInkstone.INKSTONE_ACCOUNT_NOT_LOGIN);
 
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("login complete");
