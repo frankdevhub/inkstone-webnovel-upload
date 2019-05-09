@@ -26,7 +26,7 @@ public class InkstoneNovelUploadService {
 	}
 
 	public void start() throws Exception {
-		inkstoneHomePage.login().toDashBoard();
+		inkstoneHomePage.login();
 	}
 
 	public static void main(String[] args) throws Exception {

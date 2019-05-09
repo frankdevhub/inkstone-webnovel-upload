@@ -95,14 +95,16 @@ public class InkstoneHomePage {
 		boolean error = false;
 		try {
 			driver.findElement(By.cssSelector(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID));
-		} catch (Exception e) {
+		} catch (org.openqa.selenium.NoSuchElementException e) {
 			e.printStackTrace();
 			error = true;
 		}
+		System.out.println(error);
+
 		if (!error) {
 			throw new Exception(SeleniumInkstone.INKSTONE_ACCOUNT_NOT_LOGIN);
 		}
-		
+
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("login complete");
 
 		return this;

@@ -11,7 +11,7 @@ public class SeleniumInkstone {
 	public static final String INKSTONE_HOME_PAGE_URL = "https://www.webnovel.com";
 	public static final String INKSTONE_PRO_DASHBOARD = "https://inkstone.webnovel.com/dashboard";
 	public static final String INKSTONE_ACCOUNT_NAME_CN = "doris.yang@jianlaiglobal.com";
-	public static final String INKSTONE_ACCOUNT_PWD_CN = "Dorisdoris2018";
+	public static final String INKSTONE_ACCOUNT_PWD_CN = "Dorisdoris20181";
 	public static final String INKSTONE_ACCOUNT_NAME_EN = "doris.y.sh@hotmail.com";
 	public static final String INKSTONE_ACCOUNT_PWD_EN = "2018Nyoibo";
 
