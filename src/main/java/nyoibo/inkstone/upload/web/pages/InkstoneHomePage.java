@@ -92,13 +92,17 @@ public class InkstoneHomePage {
 
 		driver.switchTo().parentFrame();
 
+		boolean error = false;
 		try {
 			driver.findElement(By.cssSelector(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID));
 		} catch (Exception e) {
 			e.printStackTrace();
+			error = true;
+		}
+		if (!error) {
 			throw new Exception(SeleniumInkstone.INKSTONE_ACCOUNT_NOT_LOGIN);
 		}
-
+		
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("login complete");
 
 		return this;
