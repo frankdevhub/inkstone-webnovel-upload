@@ -2,8 +2,6 @@ package nyoibo.inkstone.upload.web.action;
 
 import org.openqa.selenium.WebDriver;
 
-import nyoibo.inkstone.upload.data.logging.Logger;
-import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.web.pages.InkstoneHomePage;
 
@@ -20,8 +18,6 @@ import nyoibo.inkstone.upload.web.pages.InkstoneHomePage;
 public class InkstoneNovelUploadService {
 	private final WebDriver driver;
 	private final InkstoneHomePage inkstoneHomePage;
-
-	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneNovelUploadService.class);
 
 	public InkstoneNovelUploadService(boolean foreign) throws Exception {
 		DriverBase.instantiateDriverObject();

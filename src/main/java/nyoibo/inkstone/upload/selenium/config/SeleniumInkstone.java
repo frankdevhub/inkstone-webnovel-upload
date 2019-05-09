@@ -1,6 +1,5 @@
 package nyoibo.inkstone.upload.selenium.config;
 
-
 public class SeleniumInkstone {
 	// inkstone service exception
 	public static final String INKSTONE_FILE_UPLOAD_MULTI_TITLE = "find multiple titles in this chapter";

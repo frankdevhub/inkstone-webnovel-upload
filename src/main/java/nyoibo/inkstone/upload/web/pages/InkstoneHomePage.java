@@ -56,18 +56,19 @@ public class InkstoneHomePage {
 		selectEmailLoginBtn = new Query()
 				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_LOGIN_PANEL_EMAIL_CLASS + "']"));
 		submitBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_LOGIN_SUBMIT_ID));
-		
+
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver());
 	}
 
-	private void switchFrame(WebDriverWait wait) {
-		wait.until(new ExpectedCondition<WebElement>() {
+	private WebElement switchFrame(WebDriverWait wait) {
+		WebElement element = wait.until(new ExpectedCondition<WebElement>() {
 
 			@Override
 			public WebElement apply(WebDriver driver) {
 				return driver.findElement(By.id(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID));
 			}
 		});
+		return element;
 	}
 
 	public InkstoneHomePage login() throws Exception {
@@ -89,14 +90,14 @@ public class InkstoneHomePage {
 		accountPwdInput.findWebElement().sendKeys(this.accountPwd);
 		submitBtn.findWebElement().click();
 
-		boolean frame = true;
+		driver.switchTo().parentFrame();
+
 		try {
-			switchFrame(wait);
+			driver.findElement(By.cssSelector(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID));
 		} catch (Exception e) {
-			frame = false;
-		}
-		if (!frame)
+			e.printStackTrace();
 			throw new Exception(SeleniumInkstone.INKSTONE_ACCOUNT_NOT_LOGIN);
+		}
 
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("login complete");
 
