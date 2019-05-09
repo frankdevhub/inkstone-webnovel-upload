@@ -42,14 +42,13 @@ public class InkstoneNovelUploadService {
 		Thread.sleep(2000);
 		wait = new WebDriverWait(driver, 10, 100);
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_PRO_DASHBOARD));
-		
+
 		System.out.println("======go to azure");
 		driver.get("https://inkstone.webnovel.com/book/detail/cbid/8628176105001205");
 
 		inkstoneChapterPage.editLatestRaw();
 
 	}
-
 	
 	public static void main(String[] args) throws Exception {
 		InkstoneNovelUploadService test = new InkstoneNovelUploadService(false);

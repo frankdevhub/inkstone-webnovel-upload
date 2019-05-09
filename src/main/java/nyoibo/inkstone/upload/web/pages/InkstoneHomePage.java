@@ -90,7 +90,7 @@ public class InkstoneHomePage {
 		accountPwdInput.findWebElement().sendKeys(this.accountPwd);
 		submitBtn.findWebElement().click();
 
-		driver.switchTo().parentFrame();
+/*		driver.switchTo().parentFrame();
 
 		boolean error = false;
 		try {
@@ -105,7 +105,7 @@ public class InkstoneHomePage {
 			throw new Exception(SeleniumInkstone.INKSTONE_ACCOUNT_NOT_LOGIN);
 		}
 
-		LOGGER.begin().headerAction(MessageMethod.EVENT).info("login complete");
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info("login complete");*/
 		return this;
 
 	}
