@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.selenium.AssignDriver;
 import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.selenium.Query;
@@ -66,6 +67,10 @@ public class InkstoneChapterPage {
 	}
 
 	public void editLatestRaw() {
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info("get to book chapters");
+		driver.get("https://inkstone.webnovel.com/book/detail/cbid/8628176105001205");
+		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_CHAPTERS));
+		
 		String xpath = "//div[@class='" + SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS + "']/p/child::node()[1]";
 		driver.findElement(By.xpath(xpath)).click();
 

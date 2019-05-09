@@ -19,7 +19,9 @@ public class SeleniumInkstone {
 	// inkstone titles
 	public static final String INKSTONE_TRANSLATION = "Chapter translation-Inkstone";
 	public static final String INKSTONE_CHAPTERS = "Badge in Azure-Inkstone";
-
+    public static final String INKSTONE_DASHBOARD = "Dashboard-Inkstone";
+	
+	
 	// login page
 	public static final String INKSTONE_HOME_ACCOUNT_CLASS = "g_user";
 	public static final String INKSTONE_MAIL_LOGIN_FRAME_ID = "loginIfr";
