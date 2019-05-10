@@ -68,9 +68,15 @@ public class InkstoneChapterPage {
 
 	public void editLatestRaw() {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("get to book chapters");
+		
+		//first login need nav 2
+		driver.get("https://inkstone.webnovel.com/book/detail/cbid/8628176105001205");
+		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_DASHBOARD));
+
 		driver.get("https://inkstone.webnovel.com/book/detail/cbid/8628176105001205");
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_CHAPTERS));
-
+		
+		//
 		String xpath = "//div[@class='" + SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS + "']/p/child::node()[1]";
 		driver.findElement(By.xpath(xpath)).click();
 

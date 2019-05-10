@@ -38,8 +38,6 @@ public class InkstoneNovelUploadService {
 	
 	public void start() throws Exception {
 		inkstoneHomePage.login();
-		System.out.println("======go to azure");
-
 		inkstoneChapterPage.editLatestRaw();
 
 	}
