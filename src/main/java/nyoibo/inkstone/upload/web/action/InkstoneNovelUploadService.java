@@ -1,13 +1,10 @@
 package nyoibo.inkstone.upload.web.action;
 
-import java.util.concurrent.TimeUnit;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.selenium.DriverBase;
-import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 import nyoibo.inkstone.upload.web.pages.InkstoneChapterPage;
 import nyoibo.inkstone.upload.web.pages.InkstoneHomePage;
 
@@ -42,8 +39,7 @@ public class InkstoneNovelUploadService {
 	public void start() throws Exception {
 		inkstoneHomePage.login();
 		System.out.println("======go to azure");
-		driver.manage().wait(5000L);
-		
+
 		inkstoneChapterPage.editLatestRaw();
 
 	}

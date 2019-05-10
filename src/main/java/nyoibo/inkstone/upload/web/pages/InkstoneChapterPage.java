@@ -70,16 +70,16 @@ public class InkstoneChapterPage {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("get to book chapters");
 		driver.get("https://inkstone.webnovel.com/book/detail/cbid/8628176105001205");
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_CHAPTERS));
-		
+
 		String xpath = "//div[@class='" + SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS + "']/p/child::node()[1]";
 		driver.findElement(By.xpath(xpath)).click();
 
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_TRANSLATION));
 		selectTranslate();
 	}
-	
+
 	private void editChapter() {
-       
+
 	}
 
 	private void toBookChapterViews() {
@@ -96,8 +96,6 @@ public class InkstoneChapterPage {
 	private void saveChapter() {
 
 	}
-	
-	
 	
 	
 	

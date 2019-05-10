@@ -1,5 +1,7 @@
 package nyoibo.inkstone.upload.web.pages;
 
+import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -107,7 +109,7 @@ public class InkstoneHomePage {
 
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("login complete");*/
 		
-		driver.manage().wait(5000L);
+		driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
 		
 		return this;
 
