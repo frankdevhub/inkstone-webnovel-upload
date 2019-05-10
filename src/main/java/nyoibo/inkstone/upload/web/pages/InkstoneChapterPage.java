@@ -45,7 +45,7 @@ public class InkstoneChapterPage {
 		this.conFirmTransBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_SUBMIT_CLASS));
 		this.dashBoardBtn = new Query().defaultLocator(By.xpath("//nav/child::node()[1]"));
 
-		wait = new WebDriverWait(driver, 10, 100);
+		wait = new WebDriverWait(driver, 10);
 
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver());
 	}
