@@ -32,16 +32,16 @@ public class InkstoneChapterPage {
 
 	private WebDriver driver;
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneChapterPage.class);
-    private final String bookUrl;
-	
+	private final String bookUrl;
+
 	private WebDriverWait wait;
-	
+
 	public InkstoneChapterPage(WebDriver driver, String bookUrl) throws Exception {
 		this.driver = driver;
 		this.rawDiv = new Query()
 				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS + "']"));
 		this.transBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_ID));
-		this.conFirmTransBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_SUBMIT_CLASS));
+		this.conFirmTransBtn = new Query().defaultLocator(By.cssSelector("[class='"+SeleniumInkstone.INKSTONE_TRANSLATE_ALERT_CLASS+"']"));
 		this.bookUrl = bookUrl;
 
 		wait = new WebDriverWait(driver, 10);
@@ -66,7 +66,7 @@ public class InkstoneChapterPage {
 
 	public void editLatestRaw() {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("get to book chapters");
-		
+
 		driver.get(bookUrl);
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_DASHBOARD));
 		driver.get(bookUrl);
@@ -89,15 +89,14 @@ public class InkstoneChapterPage {
 
 	private void selectTranslate() {
 		transBtn.findWebElement().click();
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info("click translate button");
 		switchTransDialog(wait);
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch translate dialog");
 		conFirmTransBtn.findWebElement().click();
 	}
 
 	private void saveChapter() {
 
 	}
-	
-	
-	
-	
+
 }

@@ -24,27 +24,27 @@ public class InkstoneNovelUploadService {
 	private final InkstoneChapterPage inkstoneChapterPage;
 
 	private WebDriverWait wait;
-	
-	public InkstoneNovelUploadService(boolean foreign,String bookUrl) throws Exception {
+
+	public InkstoneNovelUploadService(boolean foreign, String bookUrl) throws Exception {
 		DriverBase.instantiateDriverObject();
 		this.driver = DriverBase.getDriver();
 		this.inkstoneHomePage = new InkstoneHomePage(foreign, driver);
-		this.inkstoneChapterPage = new InkstoneChapterPage(driver,bookUrl);
+		this.inkstoneChapterPage = new InkstoneChapterPage(driver, bookUrl);
 	}
 
 	private ExpectedCondition<Boolean> pageTitleStartsWith(final String header) {
 		return driver -> driver.getTitle().toLowerCase().startsWith(header.toLowerCase());
 	}
-	
+
 	public void start() throws Exception {
 		inkstoneHomePage.login();
 		inkstoneChapterPage.editLatestRaw();
 
 	}
-	
+
 	public static void main(String[] args) throws Exception {
 		String bookUrl = "https://inkstone.webnovel.com/book/detail/cbid/8628176105001205";
-		InkstoneNovelUploadService test = new InkstoneNovelUploadService(false,bookUrl);
+		InkstoneNovelUploadService test = new InkstoneNovelUploadService(false, bookUrl);
 		test.start();
 	}
 }
