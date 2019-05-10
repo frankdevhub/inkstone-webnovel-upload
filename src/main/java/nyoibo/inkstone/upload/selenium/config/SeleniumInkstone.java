@@ -21,7 +21,6 @@ public class SeleniumInkstone {
 	public static final String INKSTONE_CHAPTERS = "Badge in Azure-Inkstone";
     public static final String INKSTONE_DASHBOARD = "Dashboard-Inkstone";
 	
-	
 	// login page
 	public static final String INKSTONE_HOME_ACCOUNT_CLASS = "g_user";
 	public static final String INKSTONE_MAIL_LOGIN_FRAME_ID = "loginIfr";
@@ -33,6 +32,10 @@ public class SeleniumInkstone {
 
 	// dashboard raw page
 	public static final String INKSTONE_PROJECT_RAW_DIV_CLASS = "book-menu fs16 cf  mb_g";
+	public static final String INKSTONE_DASHBOARD_BTN_CLASS = "g_sd_option _on";
+	public static final String INKSTONE_DASHBOARD_BTN_TITLE = "Dashboard";
+	
+	
 	// translate page
 	public static final String INKSTONE_TRANSLATE_ID = "claim";
 	public static final String INKSTONE_TRANSLATE_ALERT_CLASS = "ui-dialog-container ui-dialog-confirm ui-dialog-animation";

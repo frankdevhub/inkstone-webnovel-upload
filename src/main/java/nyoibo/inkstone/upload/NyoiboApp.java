@@ -1,14 +1,10 @@
 package nyoibo.inkstone.upload;
 
-import org.openqa.selenium.WebDriver;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
-
-import nyoibo.inkstone.upload.selenium.DriverBase;
-import nyoibo.inkstone.upload.web.pages.InkstoneHomePage;
 
 /**
  * <p>Title:App.java</p>  

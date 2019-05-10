@@ -29,6 +29,7 @@ public class InkstoneChapterPage {
 	private final Query rawDiv;
 	private final Query transBtn;
 	private final Query conFirmTransBtn;
+	private final Query dashBoardBtn;
 
 	private WebDriver driver;
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneChapterPage.class);
@@ -42,6 +43,8 @@ public class InkstoneChapterPage {
 				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS + "']"));
 		this.transBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_ID));
 		this.conFirmTransBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_SUBMIT_CLASS));
+		this.dashBoardBtn = new Query().defaultLocator(By.xpath("//nav/child::node()[1]"));
+
 		wait = new WebDriverWait(driver, 10, 100);
 
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver());
@@ -53,10 +56,10 @@ public class InkstoneChapterPage {
 
 	private WebElement switchTransDialog(WebDriverWait wait) {
 		WebElement element = wait.until(new ExpectedCondition<WebElement>() {
-
 			@Override
 			public WebElement apply(WebDriver driver) {
-				return driver.findElement(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_ALERT_CLASS));
+				return driver.findElement(
+						By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_TRANSLATE_ALERT_CLASS + "']"));
 			}
 		});
 		return element;
@@ -69,14 +72,12 @@ public class InkstoneChapterPage {
 	public void editLatestRaw() {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("get to book chapters");
 		
-		//first login need nav 2
 		driver.get("https://inkstone.webnovel.com/book/detail/cbid/8628176105001205");
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_DASHBOARD));
-
-		driver.get("https://inkstone.webnovel.com/book/detail/cbid/8628176105001205");
+		
+		dashBoardBtn.findWebElement().click();
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_CHAPTERS));
 		
-		//
 		String xpath = "//div[@class='" + SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS + "']/p/child::node()[1]";
 		driver.findElement(By.xpath(xpath)).click();
 
