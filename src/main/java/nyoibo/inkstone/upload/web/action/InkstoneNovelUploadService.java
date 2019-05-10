@@ -25,11 +25,11 @@ public class InkstoneNovelUploadService {
 
 	private WebDriverWait wait;
 	
-	public InkstoneNovelUploadService(boolean foreign) throws Exception {
+	public InkstoneNovelUploadService(boolean foreign,String bookUrl) throws Exception {
 		DriverBase.instantiateDriverObject();
 		this.driver = DriverBase.getDriver();
 		this.inkstoneHomePage = new InkstoneHomePage(foreign, driver);
-		this.inkstoneChapterPage = new InkstoneChapterPage(driver);
+		this.inkstoneChapterPage = new InkstoneChapterPage(driver,bookUrl);
 	}
 
 	private ExpectedCondition<Boolean> pageTitleStartsWith(final String header) {
@@ -43,7 +43,8 @@ public class InkstoneNovelUploadService {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		InkstoneNovelUploadService test = new InkstoneNovelUploadService(false);
+		String bookUrl = "https://inkstone.webnovel.com/book/detail/cbid/8628176105001205";
+		InkstoneNovelUploadService test = new InkstoneNovelUploadService(false,bookUrl);
 		test.start();
 	}
 }

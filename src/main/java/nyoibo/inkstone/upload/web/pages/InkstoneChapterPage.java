@@ -29,21 +29,20 @@ public class InkstoneChapterPage {
 	private final Query rawDiv;
 	private final Query transBtn;
 	private final Query conFirmTransBtn;
-	private final Query dashBoardBtn;
 
 	private WebDriver driver;
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneChapterPage.class);
-    
+    private final String bookUrl;
+	
 	private WebDriverWait wait;
 	
-	public InkstoneChapterPage(WebDriver driver) throws Exception {
-
+	public InkstoneChapterPage(WebDriver driver, String bookUrl) throws Exception {
 		this.driver = driver;
 		this.rawDiv = new Query()
 				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS + "']"));
 		this.transBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_ID));
 		this.conFirmTransBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_SUBMIT_CLASS));
-		this.dashBoardBtn = new Query().defaultLocator(By.xpath("//nav/child::node()[1]"));
+		this.bookUrl = bookUrl;
 
 		wait = new WebDriverWait(driver, 10);
 
@@ -65,19 +64,14 @@ public class InkstoneChapterPage {
 		return element;
 	}
 
-	public void toBookProjectDashBoard(String bookCBID) {
-		driver.get(bookCBID);
-	}
-
 	public void editLatestRaw() {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("get to book chapters");
 		
-		driver.get("https://inkstone.webnovel.com/book/detail/cbid/8628176105001205");
+		driver.get(bookUrl);
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_DASHBOARD));
-		
-		dashBoardBtn.findWebElement().click();
+		driver.get(bookUrl);
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_CHAPTERS));
-		
+
 		String xpath = "//div[@class='" + SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS + "']/p/child::node()[1]";
 		driver.findElement(By.xpath(xpath)).click();
 
@@ -96,7 +90,6 @@ public class InkstoneChapterPage {
 	private void selectTranslate() {
 		transBtn.findWebElement().click();
 		switchTransDialog(wait);
-
 		conFirmTransBtn.findWebElement().click();
 	}
 
