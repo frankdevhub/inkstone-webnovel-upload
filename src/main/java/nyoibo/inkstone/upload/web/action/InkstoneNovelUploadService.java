@@ -1,5 +1,7 @@
 package nyoibo.inkstone.upload.web.action;
 
+import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -28,6 +30,7 @@ public class InkstoneNovelUploadService {
 	public InkstoneNovelUploadService(boolean foreign, String bookUrl) throws Exception {
 		DriverBase.instantiateDriverObject();
 		this.driver = DriverBase.getDriver();
+		
 		this.inkstoneHomePage = new InkstoneHomePage(foreign, driver);
 		this.inkstoneChapterPage = new InkstoneChapterPage(driver, bookUrl);
 	}
@@ -42,5 +45,17 @@ public class InkstoneNovelUploadService {
 
 	}
 	
-
+	public static void main(String[] args) {
+		InkstoneNovelUploadService test = null;
+		try {
+			String bookUrl = "https://inkstone.webnovel.com/book/detail/cbid/8628176105001205";
+			test = new InkstoneNovelUploadService(false, bookUrl);
+			test.start();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			//test.driver.quit();
+		}
+	}
 }

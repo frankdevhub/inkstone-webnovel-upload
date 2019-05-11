@@ -7,7 +7,8 @@ public class SeleniumInkstone {
 	public static final String INKSTONE_ACCOUNT_NOT_LOGIN = "user didnot login";
 
 	// inkstone credential config
-	public static final String INKSTONE_HOME_HEADER = "Webnovel";
+	public static final String INKSTONE = "https://inkstone.webnovel.com";
+	public static final String INKSTONE_HOME_TITLE = "Inkstone-QiDian International's novel translation platform";
 	public static final String INKSTONE_HOME_PAGE_URL = "https://www.webnovel.com";
 	public static final String INKSTONE_PRO_DASHBOARD = "https://inkstone.webnovel.com/dashboard.html";
 	public static final String INKSTONE_PRO_BOOK = "https://inkstone.webnovel.com/book";
@@ -22,8 +23,9 @@ public class SeleniumInkstone {
     public static final String INKSTONE_DASHBOARD = "Dashboard-Inkstone";
 	
 	// login page
+    public static final String INKSTONE_SIGN_BTN_CLASS="bt j_login";
 	public static final String INKSTONE_HOME_ACCOUNT_CLASS = "g_user";
-	public static final String INKSTONE_MAIL_LOGIN_FRAME_ID = "loginIfr";
+	public static final String INKSTONE_MAIL_LOGIN_FRAME_ID = "loginIframe";
 	public static final String INKSTONE_LOGIN_PANEL_EMAIL_CLASS = "bt bt-block _e";
 	public static final String INKSTONE_LOGIN_INPUT_EMAIL_NAME = "email";
 	public static final String INKSTONE_LOGIN_INPUT_PWD_NAME = "password";
@@ -39,6 +41,6 @@ public class SeleniumInkstone {
 	// translate page
 	public static final String INKSTONE_TRANSLATE_ID = "claim";
 	public static final String INKSTONE_TRANSLATE_ALERT_CLASS = "ui-dialog-container ui-dialog-confirm ui-dialog-animation";
-	public static final String INKSTONE_TRANSLATE_SUBMIT_CLASS = "ui-button ui-button-warning";
+	public static final String INKSTONE_TRANSLATE_TAKE_CLASS = "ui-button ui-button-warning";
 	
 }

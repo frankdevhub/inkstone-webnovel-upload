@@ -41,7 +41,8 @@ public class InkstoneChapterPage {
 		this.rawDiv = new Query()
 				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS + "']"));
 		this.transBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_ID));
-		this.conFirmTransBtn = new Query().defaultLocator(By.cssSelector("[class='"+SeleniumInkstone.INKSTONE_TRANSLATE_ALERT_CLASS+"']"));
+		this.conFirmTransBtn = new Query()
+				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_TRANSLATE_TAKE_CLASS + "']"));
 		this.bookUrl = bookUrl;
 
 		wait = new WebDriverWait(driver, 10, 1000);
@@ -93,6 +94,7 @@ public class InkstoneChapterPage {
 		switchTransDialog(wait);
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch translate dialog");
 		conFirmTransBtn.findWebElement().click();
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info("click yes to take this chapter");
 	}
 
 	private void saveChapter() {

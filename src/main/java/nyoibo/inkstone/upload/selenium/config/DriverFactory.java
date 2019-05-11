@@ -84,7 +84,7 @@ public class DriverFactory {
         System.out.println(" ");
 
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
-
+        desiredCapabilities = DesiredCapabilities.chrome();
         if (proxyEnabled) {
             Proxy proxy = new Proxy();
             proxy.setProxyType(MANUAL);
@@ -111,6 +111,8 @@ public class DriverFactory {
 		} else {
 			driver = driverType.getWebDriverObject(desiredCapabilities);
 		}
+		desiredCapabilities.setCapability("pageLoadStrategy", "none");
+		
 	}
 }
 

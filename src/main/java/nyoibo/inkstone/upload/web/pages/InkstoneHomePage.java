@@ -27,7 +27,7 @@ public class InkstoneHomePage {
 	private String accountName;
 	private String accountPwd;
   
-	private Query accountIcon;
+	private Query signIntoBtn;
 	private Query selectEmailLoginBtn;
 	private Query accountNameInput;
 	private Query accountPwdInput;
@@ -50,7 +50,8 @@ public class InkstoneHomePage {
 			this.accountPwd = SeleniumInkstone.INKSTONE_ACCOUNT_PWD_CN;
 		}
 
-		accountIcon = new Query().defaultLocator(By.className("g_user"));
+		signIntoBtn = new Query()
+				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_SIGN_BTN_CLASS + "']"));
 		accountNameInput = new Query().defaultLocator(By.name(SeleniumInkstone.INKSTONE_LOGIN_INPUT_EMAIL_NAME));
 		accountPwdInput = new Query().defaultLocator(By.name(SeleniumInkstone.INKSTONE_LOGIN_INPUT_PWD_NAME));
 		selectEmailLoginBtn = new Query()
@@ -73,14 +74,11 @@ public class InkstoneHomePage {
 
 	public InkstoneHomePage login() throws Exception {
 		LOGGER.begin().headerMethod(MessageMethod.EVENT).info("navigate to homepage");
-		driver.get(SeleniumInkstone.INKSTONE_HOME_PAGE_URL);
+		driver.get(SeleniumInkstone.INKSTONE);
 		WebDriverWait wait = new WebDriverWait(driver, 10, 100);
-		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_HOME_HEADER));
+		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_HOME_TITLE));
 
-		LOGGER.begin().headerAction(MessageMethod.EVENT).info("click account icon to login");
-		accountIcon.findWebElement().click();
-		switchFrame(wait);
-
+		signIntoBtn.findWebElement().click();
 		driver.switchTo().frame(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID);
 		selectEmailLoginBtn.findWebElement().click();
 		
@@ -95,5 +93,7 @@ public class InkstoneHomePage {
 
 	}
   
+	
+	
 
 }
