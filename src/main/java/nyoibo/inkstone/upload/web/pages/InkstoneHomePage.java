@@ -26,7 +26,7 @@ import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 public class InkstoneHomePage {
 	private String accountName;
 	private String accountPwd;
-
+  
 	private Query accountIcon;
 	private Query selectEmailLoginBtn;
 	private Query accountNameInput;
@@ -72,6 +72,7 @@ public class InkstoneHomePage {
 	}
 
 	public InkstoneHomePage login() throws Exception {
+		LOGGER.begin().headerMethod(MessageMethod.EVENT).info("navigate to homepage");
 		driver.get(SeleniumInkstone.INKSTONE_HOME_PAGE_URL);
 		WebDriverWait wait = new WebDriverWait(driver, 10, 100);
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_HOME_HEADER));
@@ -81,33 +82,14 @@ public class InkstoneHomePage {
 		switchFrame(wait);
 
 		driver.switchTo().frame(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID);
-
 		selectEmailLoginBtn.findWebElement().click();
+		
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe");
 		accountNameInput.findWebElement().clear();
 		accountNameInput.findWebElement().sendKeys(this.accountName);
 		accountPwdInput.findWebElement().clear();
 		accountPwdInput.findWebElement().sendKeys(this.accountPwd);
 		submitBtn.findWebElement().click();
-        
-/*		driver.switchTo().parentFrame();
-
-		boolean error = false;
-		try {
-			driver.findElement(By.cssSelector(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID));
-		} catch (org.openqa.selenium.NoSuchElementException e) {
-			e.printStackTrace();
-			error = true;
-		}
-		System.out.println(error);
-
-		if (!error) {
-			throw new Exception(SeleniumInkstone.INKSTONE_ACCOUNT_NOT_LOGIN);
-		}
-
-		LOGGER.begin().headerAction(MessageMethod.EVENT).info("login complete");*/
-		
-		//driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
 		
 		return this;
 

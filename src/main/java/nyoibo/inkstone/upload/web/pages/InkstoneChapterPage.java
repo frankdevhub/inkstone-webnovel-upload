@@ -44,7 +44,7 @@ public class InkstoneChapterPage {
 		this.conFirmTransBtn = new Query().defaultLocator(By.cssSelector("[class='"+SeleniumInkstone.INKSTONE_TRANSLATE_ALERT_CLASS+"']"));
 		this.bookUrl = bookUrl;
 
-		wait = new WebDriverWait(driver, 10);
+		wait = new WebDriverWait(driver, 10, 1000);
 
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver());
 	}
@@ -80,7 +80,7 @@ public class InkstoneChapterPage {
 	}
 
 	private void editChapter() {
-
+   
 	}
 
 	private void toBookChapterViews() {

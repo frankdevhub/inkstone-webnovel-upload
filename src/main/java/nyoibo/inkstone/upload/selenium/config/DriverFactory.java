@@ -3,8 +3,10 @@ package nyoibo.inkstone.upload.selenium.config;
 
 import static org.openqa.selenium.Proxy.ProxyType.MANUAL;
 import static org.openqa.selenium.remote.CapabilityType.PROXY;
+
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -42,6 +44,7 @@ public class DriverFactory {
 		System.setProperty("webdriver.chrome.driver",
 				CHROME_DRIVER_PATH);
 		DriverType driverType = DriverType.CHROME;
+	    
 		String browser = System.getProperty("browser", driverType.toString()).toUpperCase();
 		try {
 			driverType = DriverType.valueOf(browser);
@@ -57,7 +60,7 @@ public class DriverFactory {
         if (null == driver) {
             instantiateWebDriver(selectedDriverType);
         }
-
+      
         return driver;
     }
 
@@ -73,7 +76,6 @@ public class DriverFactory {
     }
 
     private void instantiateWebDriver(DriverType driverType) throws MalformedURLException {
-        //TODO add in a real logger instead of System.out
         System.out.println(" ");
         System.out.println("Local Operating System: " + operatingSystem);
         System.out.println("Local Architecture: " + systemArchitecture);
@@ -88,27 +90,27 @@ public class DriverFactory {
             proxy.setProxyType(MANUAL);
             proxy.setHttpProxy(proxyDetails);
             proxy.setSslProxy(proxyDetails);
-            desiredCapabilities.setCapability(PROXY, proxy);
-        }
+			desiredCapabilities.setCapability(PROXY, proxy);
+		}
 
-        if (useRemoteWebDriver) {
-            URL seleniumGridURL = new URL(System.getProperty("gridURL"));
-            String desiredBrowserVersion = System.getProperty("desiredBrowserVersion");
-            String desiredPlatform = System.getProperty("desiredPlatform");
+		if (useRemoteWebDriver) {
+			URL seleniumGridURL = new URL(System.getProperty("gridURL"));
+			String desiredBrowserVersion = System.getProperty("desiredBrowserVersion");
+			String desiredPlatform = System.getProperty("desiredPlatform");
 
-            if (null != desiredPlatform && !desiredPlatform.isEmpty()) {
-                desiredCapabilities.setPlatform(Platform.valueOf(desiredPlatform.toUpperCase()));
-            }
+			if (null != desiredPlatform && !desiredPlatform.isEmpty()) {
+				desiredCapabilities.setPlatform(Platform.valueOf(desiredPlatform.toUpperCase()));
+			}
 
-            if (null != desiredBrowserVersion && !desiredBrowserVersion.isEmpty()) {
-                desiredCapabilities.setVersion(desiredBrowserVersion);
-            }
+			if (null != desiredBrowserVersion && !desiredBrowserVersion.isEmpty()) {
+				desiredCapabilities.setVersion(desiredBrowserVersion);
+			}
 
-            desiredCapabilities.setBrowserName(selectedDriverType.toString());
-            driver = new RemoteWebDriver(seleniumGridURL, desiredCapabilities);
-        } else {
-            driver = driverType.getWebDriverObject(desiredCapabilities);
-        }
-    }
+			desiredCapabilities.setBrowserName(selectedDriverType.toString());
+			driver = new RemoteWebDriver(seleniumGridURL, desiredCapabilities);
+		} else {
+			driver = driverType.getWebDriverObject(desiredCapabilities);
+		}
+	}
 }
 
