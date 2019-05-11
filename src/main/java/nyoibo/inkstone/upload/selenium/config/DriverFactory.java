@@ -60,7 +60,7 @@ public class DriverFactory {
         if (null == driver) {
             instantiateWebDriver(selectedDriverType);
         }
-      
+        
         return driver;
     }
 
@@ -72,47 +72,24 @@ public class DriverFactory {
         if (null != driver) {
             driver.quit();
             driver = null;
-        }
-    }
-
-    private void instantiateWebDriver(DriverType driverType) throws MalformedURLException {
-        System.out.println(" ");
-        System.out.println("Local Operating System: " + operatingSystem);
-        System.out.println("Local Architecture: " + systemArchitecture);
-        System.out.println("Selected Browser: " + selectedDriverType);
-        System.out.println("Connecting to Selenium Grid: " + useRemoteWebDriver);
-        System.out.println(" ");
-
-        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
-        desiredCapabilities = DesiredCapabilities.chrome();
-        if (proxyEnabled) {
-            Proxy proxy = new Proxy();
-            proxy.setProxyType(MANUAL);
-            proxy.setHttpProxy(proxyDetails);
-            proxy.setSslProxy(proxyDetails);
-			desiredCapabilities.setCapability(PROXY, proxy);
 		}
+	}
 
-		if (useRemoteWebDriver) {
-			URL seleniumGridURL = new URL(System.getProperty("gridURL"));
-			String desiredBrowserVersion = System.getProperty("desiredBrowserVersion");
-			String desiredPlatform = System.getProperty("desiredPlatform");
+	private void instantiateWebDriver(DriverType driverType) throws MalformedURLException {
+		System.out.println(" ");
+		System.out.println("Local Operating System: " + operatingSystem);
+		System.out.println("Local Architecture: " + systemArchitecture);
+		System.out.println("Selected Browser: " + selectedDriverType);
+		System.out.println("Connecting to Selenium Grid: " + useRemoteWebDriver);
+		System.out.println(" ");
 
-			if (null != desiredPlatform && !desiredPlatform.isEmpty()) {
-				desiredCapabilities.setPlatform(Platform.valueOf(desiredPlatform.toUpperCase()));
-			}
+		DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+		desiredCapabilities = DesiredCapabilities.chrome();
 
-			if (null != desiredBrowserVersion && !desiredBrowserVersion.isEmpty()) {
-				desiredCapabilities.setVersion(desiredBrowserVersion);
-			}
+		driver = driverType.getWebDriverObject(desiredCapabilities);
 
-			desiredCapabilities.setBrowserName(selectedDriverType.toString());
-			driver = new RemoteWebDriver(seleniumGridURL, desiredCapabilities);
-		} else {
-			driver = driverType.getWebDriverObject(desiredCapabilities);
-		}
-		desiredCapabilities.setCapability("pageLoadStrategy", "none");
-		
+		desiredCapabilities.setCapability("pageLoadStrategy", "eager");
+
 	}
 }
 

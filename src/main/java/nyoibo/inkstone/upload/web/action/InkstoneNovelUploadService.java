@@ -1,7 +1,5 @@
 package nyoibo.inkstone.upload.web.action;
 
-import java.util.concurrent.TimeUnit;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -54,7 +52,7 @@ public class InkstoneNovelUploadService {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally{
+		} finally {
 			//test.driver.quit();
 		}
 	}

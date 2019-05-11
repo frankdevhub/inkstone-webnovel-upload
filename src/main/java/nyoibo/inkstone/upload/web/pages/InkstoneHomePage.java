@@ -1,6 +1,7 @@
 package nyoibo.inkstone.upload.web.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -8,6 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.data.rest.StatusCode;
 import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.selenium.AssignDriver;
 import nyoibo.inkstone.upload.selenium.DriverBase;
@@ -72,28 +74,42 @@ public class InkstoneHomePage {
 		return element;
 	}
 
-	public InkstoneHomePage login() throws Exception {
+	public void login() throws Exception {
 		LOGGER.begin().headerMethod(MessageMethod.EVENT).info("navigate to homepage");
 		driver.get(SeleniumInkstone.INKSTONE);
-		WebDriverWait wait = new WebDriverWait(driver, 10, 100);
-		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_HOME_TITLE));
 
-		signIntoBtn.findWebElement().click();
-		driver.switchTo().frame(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID);
-		selectEmailLoginBtn.findWebElement().click();
-		
-		LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe");
-		accountNameInput.findWebElement().clear();
-		accountNameInput.findWebElement().sendKeys(this.accountName);
-		accountPwdInput.findWebElement().clear();
-		accountPwdInput.findWebElement().sendKeys(this.accountPwd);
-		submitBtn.findWebElement().click();
-		
-		return this;
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, 5, 100);
+			wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_HOME_TITLE));
+		} catch (Exception e) {
+			JavascriptExecutor jsExec = (JavascriptExecutor) driver;
+			String function = "return document.readyState";
+			String code = (String) jsExec.executeScript(function);
+
+			System.out.println(code);
+
+			if (!code.isEmpty() && code.equals("complete")) {
+				String title = driver.getTitle();
+				if (title.equals(SeleniumInkstone.INKSTONE_DASHBOARD)) {
+					return;
+				} else {
+					signIntoBtn.findWebElement().click();
+					driver.switchTo().frame(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID);
+					selectEmailLoginBtn.findWebElement().click();
+
+					LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe");
+					accountNameInput.findWebElement().clear();
+					accountNameInput.findWebElement().sendKeys(this.accountName);
+					accountPwdInput.findWebElement().clear();
+					accountPwdInput.findWebElement().sendKeys(this.accountPwd);
+					submitBtn.findWebElement().click();
+				}
+			} else {
+				throw e;
+			}
+
+		}
 
 	}
-  
-	
-	
 
 }

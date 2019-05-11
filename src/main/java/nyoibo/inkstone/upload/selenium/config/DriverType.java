@@ -41,12 +41,13 @@ public enum DriverType implements DriverSetup {
 	CHROME {
 		public RemoteWebDriver getWebDriverObject(DesiredCapabilities capabilities) {
 			HashMap<String, Object> chromePreferences = new HashMap<>();
-			chromePreferences.put("profile.password_manager_enabled", false);
 
+			chromePreferences.put("profile.default_content_settings.javascript", 2);
+			chromePreferences.put("profile.default_content_settings.images", 2);
 			ChromeOptions options = new ChromeOptions();
 			options.merge(capabilities);
-			options.addArguments("--no-default-browser-check");
 			options.addArguments("disable-infobars");
+			options.addArguments("user-data-dir=C:/Users/Administrator/AppData/Local/Google/Chrome/User Data");
 			options.setExperimentalOption("prefs", chromePreferences);
 
 			return new ChromeDriver(options);

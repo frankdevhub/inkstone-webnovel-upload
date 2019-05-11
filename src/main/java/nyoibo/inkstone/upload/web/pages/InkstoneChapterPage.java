@@ -33,7 +33,8 @@ public class InkstoneChapterPage {
 	private WebDriver driver;
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneChapterPage.class);
 	private final String bookUrl;
-
+    private final Query projectBtn;
+    
 	private WebDriverWait wait;
 
 	public InkstoneChapterPage(WebDriver driver, String bookUrl) throws Exception {
@@ -44,7 +45,7 @@ public class InkstoneChapterPage {
 		this.conFirmTransBtn = new Query()
 				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_TRANSLATE_TAKE_CLASS + "']"));
 		this.bookUrl = bookUrl;
-
+		this.projectBtn = new Query().defaultLocator(By.cssSelector(SeleniumInkstone.INKSTONE_DASHBOARD_PRO_BTTN_PATH));
 		wait = new WebDriverWait(driver, 10, 1000);
 
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver());
@@ -67,14 +68,11 @@ public class InkstoneChapterPage {
 
 	public void editLatestRaw() {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("get to book chapters");
-
-		driver.get(bookUrl);
-		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_DASHBOARD));
 		driver.get(bookUrl);
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_CHAPTERS));
 
-		String xpath = "//div[@class='" + SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS + "']/p/child::node()[1]";
-		driver.findElement(By.xpath(xpath)).click();
+		String firstRawChapter = "//div[@class='" + SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS + "']/p/child::node()[1]";
+		driver.findElement(By.xpath(firstRawChapter)).click();
 
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_TRANSLATION));
 		selectTranslate();
