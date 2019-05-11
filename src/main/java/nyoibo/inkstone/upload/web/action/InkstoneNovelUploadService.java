@@ -40,6 +40,7 @@ public class InkstoneNovelUploadService {
 	public void start() throws Exception {
 		inkstoneHomePage.login();
 		inkstoneChapterPage.editLatestRaw();
+		inkstoneChapterPage.doTranslate();
 
 	}
 	

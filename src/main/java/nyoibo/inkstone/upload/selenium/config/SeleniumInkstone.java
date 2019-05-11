@@ -42,5 +42,9 @@ public class SeleniumInkstone {
 	public static final String INKSTONE_TRANSLATE_ID = "claim";
 	public static final String INKSTONE_TRANSLATE_ALERT_CLASS = "ui-dialog-container ui-dialog-confirm ui-dialog-animation";
 	public static final String INKSTONE_TRANSLATE_TAKE_CLASS = "ui-button ui-button-warning";
+	public static final String INKSTONE_TRANSLATE_SAVE_ID= "dosave";
+	public static final String INKSTONE_TRANSLATE_NEXT_ID = "";
+	public static final String INKSTONE_TRANSLATE_EDIT_TITLE_ID = "editTitle";
+	public static final String INKSTONE_TRANSLATE_EDIT_CONTENT_ID = "editContent";
 	
 }

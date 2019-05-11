@@ -63,17 +63,6 @@ public class InkstoneHomePage {
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver());
 	}
 
-	private WebElement switchFrame(WebDriverWait wait) {
-		WebElement element = wait.until(new ExpectedCondition<WebElement>() {
-
-			@Override
-			public WebElement apply(WebDriver driver) {
-				return driver.findElement(By.id(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID));
-			}
-		});
-		return element;
-	}
-
 	public void login() throws Exception {
 		LOGGER.begin().headerMethod(MessageMethod.EVENT).info("navigate to homepage");
 		driver.get(SeleniumInkstone.INKSTONE);
