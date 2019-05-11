@@ -42,17 +42,5 @@ public class InkstoneNovelUploadService {
 
 	}
 	
-	public static void main(String[] args) {
-		InkstoneNovelUploadService test = null;
-		try {
-			String bookUrl = "https://inkstone.webnovel.com/book/detail/cbid/8628176105001205";
-			test = new InkstoneNovelUploadService(false, bookUrl);
-			test.start();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally{
-			test.driver.quit();
-		}
-	}
+
 }
