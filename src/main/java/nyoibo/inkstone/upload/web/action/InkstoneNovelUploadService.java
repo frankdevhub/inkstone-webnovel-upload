@@ -33,10 +33,6 @@ public class InkstoneNovelUploadService {
 		this.inkstoneChapterPage = new InkstoneChapterPage(driver, bookUrl);
 	}
 
-	private ExpectedCondition<Boolean> pageTitleStartsWith(final String header) {
-		return driver -> driver.getTitle().toLowerCase().startsWith(header.toLowerCase());
-	}
-
 	public void start() throws Exception {
 		inkstoneHomePage.login();
 		inkstoneChapterPage.editLatestRaw();

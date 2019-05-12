@@ -90,7 +90,8 @@ public class InkstoneChapterPage {
 		driver.get(bookUrl);
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_CHAPTERS));
 
-		String firstRawChapter = "//div[@class='" + SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS + "']/p[1]/a[1]";
+		String firstRawChapter = "//div[@class='" + SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS
+				+ "']/child::node()/child::node()[1]";
 		driver.findElement(By.xpath(firstRawChapter)).click();
 
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_TRANSLATION));
