@@ -42,6 +42,15 @@ public class InkstoneHomePage {
 		return driver -> driver.getTitle().toLowerCase().startsWith(header.toLowerCase());
 	}
 
+	private void waitSignInBtn(WebDriverWait wait){
+		wait.until(new ExpectedCondition<WebElement>() {
+			@Override
+			public WebElement apply(WebDriver driver) {
+				return signIntoBtn.findWebElement();
+			}
+		});
+	}
+	
 	public InkstoneHomePage(boolean foreign, WebDriver driver) throws Exception {
 		this.driver = driver;
 		if (foreign) {
@@ -70,12 +79,12 @@ public class InkstoneHomePage {
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, 5, 100);
 			wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_HOME_TITLE));
+			waitSignInBtn(wait);
+			
 		} catch (Exception e) {
 			JavascriptExecutor jsExec = (JavascriptExecutor) driver;
 			String function = "return document.readyState";
 			String code = (String) jsExec.executeScript(function);
-
-			System.out.println(code);
 
 			if (!code.isEmpty() && code.equals("complete")) {
 				String title = driver.getTitle();
