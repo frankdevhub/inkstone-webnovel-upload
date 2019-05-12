@@ -54,7 +54,7 @@ public class ScreenshotListener extends TestListenerAdapter {
 		}
 	}
 
-	@Override
+	/*@Override
 	public void onTestFailure(ITestResult failingTest) {
 		try {
 			WebDriver driver = DriverBase.getDriver();
@@ -76,5 +76,5 @@ public class ScreenshotListener extends TestListenerAdapter {
 			System.err.println("Unable to capture screenshot...");
 			ex.printStackTrace();
 		}
-	}
+	}*/
 }

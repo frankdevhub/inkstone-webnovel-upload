@@ -1,5 +1,6 @@
 package nyoibo.inkstone.upload.selenium.config;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -30,7 +31,7 @@ import org.openqa.selenium.safari.SafariOptions;
 
 public enum DriverType implements DriverSetup {
 	FIREFOX {
-		public RemoteWebDriver getWebDriverObject(DesiredCapabilities capabilities) {
+		public RemoteWebDriver getWebDriverObject(DesiredCapabilities capabilities,String thread) {
 			FirefoxOptions options = new FirefoxOptions();
 			options.merge(capabilities);
 			options.setHeadless(HEADLESS);
@@ -39,22 +40,27 @@ public enum DriverType implements DriverSetup {
 		}
 	},
 	CHROME {
-		public RemoteWebDriver getWebDriverObject(DesiredCapabilities capabilities) {
+		public RemoteWebDriver getWebDriverObject(DesiredCapabilities capabilities,String thread) throws IOException {
 			HashMap<String, Object> chromePreferences = new HashMap<>();
 
 			chromePreferences.put("profile.default_content_settings.javascript", 2);
 			chromePreferences.put("profile.default_content_settings.images", 2);
+			
+			String dataName = ChromeDataConfig.createDataName(thread);
+			String local = ChromeDataConfig.getLocal();
+			ChromeDataConfig.config(thread, local, dataName);
+			
 			ChromeOptions options = new ChromeOptions();
 			options.merge(capabilities);
 			options.addArguments("disable-infobars");
-			options.addArguments("user-data-dir=C:/Users/Administrator/AppData/Local/Google/Chrome/User Data");
+			options.addArguments("user-data-dir=" + local + dataName + "");
 			options.setExperimentalOption("prefs", chromePreferences);
 
 			return new ChromeDriver(options);
 		}
 	},
 	IE {
-		public RemoteWebDriver getWebDriverObject(DesiredCapabilities capabilities) {
+		public RemoteWebDriver getWebDriverObject(DesiredCapabilities capabilities,String thread) {
 			InternetExplorerOptions options = new InternetExplorerOptions();
 			options.merge(capabilities);
 			options.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
@@ -70,7 +76,7 @@ public enum DriverType implements DriverSetup {
 		}
 	},
 	EDGE {
-		public RemoteWebDriver getWebDriverObject(DesiredCapabilities capabilities) {
+		public RemoteWebDriver getWebDriverObject(DesiredCapabilities capabilities,String thread) {
 			EdgeOptions options = new EdgeOptions();
 			options.merge(capabilities);
 
@@ -78,7 +84,7 @@ public enum DriverType implements DriverSetup {
 		}
 	},
 	SAFARI {
-		public RemoteWebDriver getWebDriverObject(DesiredCapabilities capabilities) {
+		public RemoteWebDriver getWebDriverObject(DesiredCapabilities capabilities,String thread) {
 			SafariOptions options = new SafariOptions();
 			options.merge(capabilities);
 
@@ -86,7 +92,7 @@ public enum DriverType implements DriverSetup {
 		}
 	},
 	OPERA {
-		public RemoteWebDriver getWebDriverObject(DesiredCapabilities capabilities) {
+		public RemoteWebDriver getWebDriverObject(DesiredCapabilities capabilities,String thread) {
 			OperaOptions options = new OperaOptions();
 			options.merge(capabilities);
 

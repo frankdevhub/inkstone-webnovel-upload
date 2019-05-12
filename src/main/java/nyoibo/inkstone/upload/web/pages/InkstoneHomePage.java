@@ -9,7 +9,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
-import nyoibo.inkstone.upload.data.rest.StatusCode;
 import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.selenium.AssignDriver;
 import nyoibo.inkstone.upload.selenium.DriverBase;
@@ -51,7 +50,7 @@ public class InkstoneHomePage {
 		});
 	}
 	
-	public InkstoneHomePage(boolean foreign, WebDriver driver) throws Exception {
+	public InkstoneHomePage(boolean foreign, WebDriver driver,String bookName) throws Exception {
 		this.driver = driver;
 		if (foreign) {
 			this.accountName = SeleniumInkstone.INKSTONE_ACCOUNT_NAME_EN;
@@ -69,7 +68,7 @@ public class InkstoneHomePage {
 				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_LOGIN_PANEL_EMAIL_CLASS + "']"));
 		submitBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_LOGIN_SUBMIT_ID));
 
-		AssignDriver.initQueryObjects(this, DriverBase.getDriver());
+		AssignDriver.initQueryObjects(this, DriverBase.getDriver(bookName));
 	}
 
 	public void login() throws Exception {
@@ -79,7 +78,17 @@ public class InkstoneHomePage {
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, 5, 100);
 			wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_HOME_TITLE));
-			waitSignInBtn(wait);
+
+			signIntoBtn.findWebElement().click();
+			driver.switchTo().frame(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID);
+			selectEmailLoginBtn.findWebElement().click();
+
+			LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe");
+			accountNameInput.findWebElement().clear();
+			accountNameInput.findWebElement().sendKeys(this.accountName);
+			accountPwdInput.findWebElement().clear();
+			accountPwdInput.findWebElement().sendKeys(this.accountPwd);
+			submitBtn.findWebElement().click();
 			
 		} catch (Exception e) {
 			JavascriptExecutor jsExec = (JavascriptExecutor) driver;
@@ -90,17 +99,6 @@ public class InkstoneHomePage {
 				String title = driver.getTitle();
 				if (title.equals(SeleniumInkstone.INKSTONE_DASHBOARD)) {
 					return;
-				} else {
-					signIntoBtn.findWebElement().click();
-					driver.switchTo().frame(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID);
-					selectEmailLoginBtn.findWebElement().click();
-
-					LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe");
-					accountNameInput.findWebElement().clear();
-					accountNameInput.findWebElement().sendKeys(this.accountName);
-					accountPwdInput.findWebElement().clear();
-					accountPwdInput.findWebElement().sendKeys(this.accountPwd);
-					submitBtn.findWebElement().click();
 				}
 			} else {
 				throw e;

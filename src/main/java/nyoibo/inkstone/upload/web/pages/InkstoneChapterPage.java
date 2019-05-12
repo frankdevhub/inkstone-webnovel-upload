@@ -1,5 +1,6 @@
 package nyoibo.inkstone.upload.web.pages;
 
+import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -26,15 +27,14 @@ import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 
 public class InkstoneChapterPage {
 
-	private final Query rawDiv;
 	private final Query transBtn;
 	private final Query saveBtn;
 	private final Query conFirmTransBtn;
-
+    private final Query firstRawChapter;
+	
 	private WebDriver driver;
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneChapterPage.class);
 	private final String bookUrl;
-    private final Query projectBtn;
     
     private final Query editTitle;
     private final Query editContext;
@@ -43,15 +43,14 @@ public class InkstoneChapterPage {
 
 	private String sourceChapName; 
 	
-	public InkstoneChapterPage(WebDriver driver, String bookUrl) throws Exception {
+	public InkstoneChapterPage(WebDriver driver, String bookUrl,String bookName) throws Exception {
 		this.driver = driver;
-		this.rawDiv = new Query()
-				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS + "']"));
+		this.firstRawChapter = new Query().defaultLocator(By.xpath("//div[@class='"
+				+ SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS + "']/child::node()[1]/child::node()[1]"));
 		this.transBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_ID));
 		this.conFirmTransBtn = new Query()
 				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_TRANSLATE_TAKE_CLASS + "']"));
 		this.bookUrl = bookUrl;
-		this.projectBtn = new Query().defaultLocator(By.cssSelector(SeleniumInkstone.INKSTONE_DASHBOARD_PRO_BTTN_PATH));
 		this.saveBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_SAVE_ID));
 
 		this.editTitle = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_EDIT_TITLE_ID));
@@ -59,7 +58,7 @@ public class InkstoneChapterPage {
 
 		wait = new WebDriverWait(driver, 10, 1000);
 
-		AssignDriver.initQueryObjects(this, DriverBase.getDriver());
+		AssignDriver.initQueryObjects(this, DriverBase.getDriver(bookName));
 	}
 
 	private ExpectedCondition<Boolean> pageTitleStartsWith(final String header) {
@@ -86,14 +85,14 @@ public class InkstoneChapterPage {
 	}
 
 	public void editLatestRaw() {
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info("navigate to inkstone dashboard");
+		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_DASHBOARD));
+
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("get to book chapters view");
 		driver.get(bookUrl);
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_CHAPTERS));
 
-		String firstRawChapter = "//div[@class='" + SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS
-				+ "']/child::node()/child::node()[1]";
-		driver.findElement(By.xpath(firstRawChapter)).click();
-
+		firstRawChapter.findWebElement().click();
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_TRANSLATION));
 		selectTranslate();
 	}
@@ -111,16 +110,23 @@ public class InkstoneChapterPage {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("proceed to translate status");
 	}
 	
-	public void doTranslate(){
+	public void doTranslate() throws Exception {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("doing translate");
 		WebElement titleElement = editTitle.findWebElement();
-		sourceChapName = titleElement.getText();
-		System.out.println("==========" + sourceChapName);
+		WebElement contextElement = editContext.findWebElement();
+		
+		sourceChapName = titleElement.getAttribute("value");
+		if (StringUtils.isEmpty(sourceChapName))
+			throw new Exception("chapter name is empty");
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("translating:[%s]", sourceChapName));
+		titleElement.clear();
+		contextElement.clear();
+		
+		titleElement.sendKeys("test");
+		contextElement.sendKeys("1111");
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("sumbit translate");
 
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("proceed to edit status");
 	}
-	
-	
 
 }

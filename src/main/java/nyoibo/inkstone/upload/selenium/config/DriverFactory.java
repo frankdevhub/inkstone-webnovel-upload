@@ -1,14 +1,8 @@
 package nyoibo.inkstone.upload.selenium.config;
 
 
-import static org.openqa.selenium.Proxy.ProxyType.MANUAL;
-import static org.openqa.selenium.remote.CapabilityType.PROXY;
+import java.io.IOException;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.openqa.selenium.Platform;
-import org.openqa.selenium.Proxy;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -31,11 +25,6 @@ public class DriverFactory {
     private final String operatingSystem = System.getProperty("os.name").toUpperCase();
     private final String systemArchitecture = System.getProperty("os.arch");
     private final boolean useRemoteWebDriver = Boolean.getBoolean("remoteDriver");
-    private final boolean proxyEnabled = Boolean.getBoolean("proxyEnabled");
-    private final String proxyHostname = System.getProperty("proxyHost");
-    private final Integer proxyPort = Integer.getInteger("proxyPort");
-    private final String proxyDetails = String.format("%s:%d", proxyHostname, proxyPort);
-
     private static final String CHROME_DRIVER_PATH = "src/main/resources/chromedriver.exe";
     
 	public DriverFactory() {
@@ -56,13 +45,13 @@ public class DriverFactory {
 		selectedDriverType = driverType;
 	}
 
-    public RemoteWebDriver getDriver() throws Exception {
-        if (null == driver) {
-            instantiateWebDriver(selectedDriverType);
-        }
-        
-        return driver;
-    }
+	public RemoteWebDriver getDriver(String thread) throws Exception {
+		if (null == driver) {
+			instantiateWebDriver(selectedDriverType, thread);
+		}
+
+		return driver;
+	}
 
     public RemoteWebDriver getStoredDriver() {
         return driver;
@@ -75,7 +64,7 @@ public class DriverFactory {
 		}
 	}
 
-	private void instantiateWebDriver(DriverType driverType) throws MalformedURLException {
+	private void instantiateWebDriver(DriverType driverType, String thread) throws IOException {
 		System.out.println(" ");
 		System.out.println("Local Operating System: " + operatingSystem);
 		System.out.println("Local Architecture: " + systemArchitecture);
@@ -86,7 +75,7 @@ public class DriverFactory {
 		DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
 		desiredCapabilities = DesiredCapabilities.chrome();
 
-		driver = driverType.getWebDriverObject(desiredCapabilities);
+		driver = driverType.getWebDriverObject(desiredCapabilities, thread);
 
 		desiredCapabilities.setCapability("pageLoadStrategy", "eager");
 

@@ -1,7 +1,6 @@
 package nyoibo.inkstone.upload.web.action;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.selenium.DriverBase;
@@ -23,34 +22,42 @@ public class InkstoneNovelUploadService {
 	private final InkstoneHomePage inkstoneHomePage;
 	private final InkstoneChapterPage inkstoneChapterPage;
 
+	private final String bookName;
+	
 	private WebDriverWait wait;
 
-	public InkstoneNovelUploadService(boolean foreign, String bookUrl) throws Exception {
+	public InkstoneNovelUploadService(boolean foreign, String bookUrl, String bookName) throws Exception {
 		DriverBase.instantiateDriverObject();
-		this.driver = DriverBase.getDriver();
-		
-		this.inkstoneHomePage = new InkstoneHomePage(foreign, driver);
-		this.inkstoneChapterPage = new InkstoneChapterPage(driver, bookUrl);
+		this.driver = DriverBase.getDriver(bookName);
+		this.bookName = bookName;
+		this.inkstoneHomePage = new InkstoneHomePage(foreign, driver, bookName);
+		this.inkstoneChapterPage = new InkstoneChapterPage(driver, bookUrl, bookName);
 	}
 
 	public void start() throws Exception {
 		inkstoneHomePage.login();
 		inkstoneChapterPage.editLatestRaw();
 		inkstoneChapterPage.doTranslate();
-
 	}
-	
+
 	public static void main(String[] args) {
 		InkstoneNovelUploadService test = null;
+		InkstoneNovelUploadService test2 = null;
 		try {
 			String bookUrl = "https://inkstone.webnovel.com/book/detail/cbid/8628176105001205";
-			test = new InkstoneNovelUploadService(false, bookUrl);
+			String bookName = "Azure";
+			test = new InkstoneNovelUploadService(false, bookUrl,bookName);
+			test2 = new InkstoneNovelUploadService(false, bookUrl,bookName);
+			System.out.println("=========");
+			System.out.println(test.driver==test2.driver);
+			
 			test.start();
+			test2.start();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			//test.driver.quit();
+			test.driver.quit();
 		}
 	}
 }

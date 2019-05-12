@@ -36,7 +36,6 @@ public class SeleniumInkstone {
 	public static final String INKSTONE_PROJECT_RAW_DIV_CLASS = "book-menu fs16 cf  mb_g";
 	public static final String INKSTONE_DASHBOARD_BTN_CLASS = "g_sd_option _on";
 	public static final String INKSTONE_DASHBOARD_BTN_TITLE = "Dashboard";
-	public static final String INKSTONE_DASHBOARD_PRO_BTTN_PATH = "//nav[1]/child::node()[1]";
 	
 	// translate page
 	public static final String INKSTONE_TRANSLATE_ID = "claim";

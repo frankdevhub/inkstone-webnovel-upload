@@ -34,8 +34,8 @@ public class DriverBase {
         });
     }
 
-    public static RemoteWebDriver getDriver() throws Exception {
-        return driverFactoryThread.get().getDriver();
+    public static RemoteWebDriver getDriver(String thread) throws Exception {
+        return driverFactoryThread.get().getDriver(thread);
     }
 
     public static void clearCookies() {
