@@ -64,7 +64,7 @@ public class DriverFactory {
 		}
 	}
 
-	private void instantiateWebDriver(DriverType driverType, String thread) throws IOException {
+	private void instantiateWebDriver(DriverType driverType, String path) throws IOException {
 		System.out.println(" ");
 		System.out.println("Local Operating System: " + operatingSystem);
 		System.out.println("Local Architecture: " + systemArchitecture);
@@ -75,7 +75,7 @@ public class DriverFactory {
 		DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
 		desiredCapabilities = DesiredCapabilities.chrome();
 
-		driver = driverType.getWebDriverObject(desiredCapabilities, thread);
+		driver = driverType.getWebDriverObject(desiredCapabilities, path);
 
 		desiredCapabilities.setCapability("pageLoadStrategy", "eager");
 

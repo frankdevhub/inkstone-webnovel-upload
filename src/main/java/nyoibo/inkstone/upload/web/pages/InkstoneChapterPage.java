@@ -1,5 +1,7 @@
 package nyoibo.inkstone.upload.web.pages;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -41,9 +43,10 @@ public class InkstoneChapterPage {
     
 	private WebDriverWait wait;
 
-	private String sourceChapName; 
-	
-	public InkstoneChapterPage(WebDriver driver, String bookUrl,String bookName) throws Exception {
+	private ConcurrentHashMap<String,Integer> process;
+
+	public InkstoneChapterPage(WebDriver driver, String bookUrl, String bookName,
+			ConcurrentHashMap<String, Integer> process) throws Exception {
 		this.driver = driver;
 		this.firstRawChapter = new Query().defaultLocator(By.xpath("//div[@class='"
 				+ SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS + "']/child::node()[1]/child::node()[1]"));
@@ -56,6 +59,7 @@ public class InkstoneChapterPage {
 		this.editTitle = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_EDIT_TITLE_ID));
 		this.editContext = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_EDIT_CONTENT_ID));
 
+		this.process = process;
 		wait = new WebDriverWait(driver, 10, 1000);
 
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver(bookName));
@@ -115,7 +119,7 @@ public class InkstoneChapterPage {
 		WebElement titleElement = editTitle.findWebElement();
 		WebElement contextElement = editContext.findWebElement();
 		
-		sourceChapName = titleElement.getAttribute("value");
+		String sourceChapName = titleElement.getAttribute("value");
 		if (StringUtils.isEmpty(sourceChapName))
 			throw new Exception("chapter name is empty");
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("translating:[%s]", sourceChapName));

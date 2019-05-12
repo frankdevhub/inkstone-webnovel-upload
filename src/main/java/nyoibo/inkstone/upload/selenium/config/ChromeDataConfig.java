@@ -34,18 +34,20 @@ public class ChromeDataConfig {
 		return path;
 	}
 
-	public static void config(String thread, String root,String folderName) throws IOException {
+	public static String config(String root, String dataName) throws IOException {
 		FileUtils configUtils = new FileUtils();
-		String destDir = root + "/" + folderName;
+		String destDir = root + "/" + dataName;
 
 		File rootFile = new File(root);
 		File destFile = new File(destDir);
 		configUtils.copyDirectory(rootFile, destFile);
+
+		return destDir;
 	}
 
-	public static void cleanData(String thread) throws IOException {
+	public static void cleanData(String dataName) throws IOException {
 		FileUtils configUtils = new FileUtils();
-		String path = getLocal() + "/" + thread;
+		String path = getLocal() + "/" + dataName;
 		File data = new File(path);
 
 		configUtils.deleteDirectory(data);

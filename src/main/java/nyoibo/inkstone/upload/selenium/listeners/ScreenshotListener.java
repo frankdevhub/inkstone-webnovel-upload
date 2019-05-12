@@ -7,11 +7,7 @@ import java.io.IOException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.Augmenter;
-import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
-
-import nyoibo.inkstone.upload.selenium.DriverBase;
 
 /**
  * <p>Title:ScreenshotListener.java</p>  

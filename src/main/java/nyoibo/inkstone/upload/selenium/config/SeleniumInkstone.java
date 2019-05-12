@@ -1,6 +1,17 @@
 package nyoibo.inkstone.upload.selenium.config;
 
 public class SeleniumInkstone {
+	//service checkpoint
+	public static final String INKSTONE_TRANS_STATUS_RAW = "raw";
+	public static final String INKSTONE_TRANS_STATUS_INPROGRESS = "inprogress";
+	public static final String INKSTONE_TRANS_STATUS_TRANSLATEING ="translating";
+	public static final String INKSTONE_TRANS_STATUS_EDITING = "editing";
+	public static final String INKSTONE_TRANS_STATUS_READY_PUBLISH = "readytopublish";
+	
+	public static final String INKSTONE_TRANS_LOCAL_FOLDER_RAW = "raw";
+	public static final String INKSTONE_TRANS_LOCAL_FOLDER_INPROGRESS = "inprogress";
+	public static final String INKSTONE_TRANS_LOCAL_FOLDER_READYPUBLISH = "readytopublish";
+	
 	// inkstone service exception
 	public static final String INKSTONE_FILE_UPLOAD_MULTI_TITLE = "find multiple titles in this chapter";
 	public static final String INKSTONE_FILE_TITLE_NOT_FOUND = "cannot find title in this chapter";
