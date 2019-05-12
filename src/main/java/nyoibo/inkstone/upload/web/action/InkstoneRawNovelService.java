@@ -31,10 +31,10 @@ public class InkstoneRawNovelService implements Runnable{
 	
 	private ConcurrentHashMap<String, Integer> process;
 
-	private void configChromeData() throws IOException {
+	private String configChromeData() throws IOException {
 		String root = ChromeDataConfig.getLocal();
 		String dataName = ChromeDataConfig.createDataName(this.thread);
-		ChromeDataConfig.config(root, dataName);
+		return ChromeDataConfig.config(root, dataName);
 	}
 
 	public InkstoneRawNovelService(boolean foreign, String bookUrl, String bookName,
@@ -42,8 +42,8 @@ public class InkstoneRawNovelService implements Runnable{
 		this.process = process;
 		this.thread = SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW;
 		DriverBase.instantiateDriverObject();
-		configChromeData();
-		this.driver = DriverBase.getDriver(bookName);
+		String path = configChromeData();
+		this.driver = DriverBase.getDriver(path);
 		this.bookName = bookName;
 		this.inkstoneHomePage = new InkstoneHomePage(foreign, driver, bookName);
 		this.inkstoneChapterPage = new InkstoneChapterPage(driver, bookUrl, bookName, process);

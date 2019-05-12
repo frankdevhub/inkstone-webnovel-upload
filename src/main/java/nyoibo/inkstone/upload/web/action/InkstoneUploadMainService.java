@@ -47,15 +47,22 @@ public class InkstoneUploadMainService {
 		return alive;
 	}
 	
-	private void init() {
+	private void init() throws Exception {
 		int nCPU = Runtime.getRuntime().availableProcessors();
 		ExecutorService service = new ThreadPoolExecutor(3, 2 * nCPU, 0L, TimeUnit.MICROSECONDS,
 				new LinkedBlockingQueue<Runnable>(300));
 		this.threadPool = service;
+		String url = "https://inkstone.webnovel.com/book/detail/cbid/8628176105001205";
+		rawService  = new InkstoneRawNovelService(false,url ,"Badge in Azure ( BIA )" , process);
+		service.submit(rawService);
 	}
 	
-	public void start(){
-		init();
-		
+	public void start() throws Exception{
+		init();	
+	}
+	
+	public static void main(String[] args) throws Exception {
+		InkstoneUploadMainService main = new InkstoneUploadMainService();
+		main.start();
 	}
 }

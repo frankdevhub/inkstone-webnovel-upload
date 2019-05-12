@@ -49,6 +49,7 @@ public enum DriverType implements DriverSetup {
 			options.merge(capabilities);
 			options.addArguments("disable-infobars");
 			options.addArguments("user-data-dir=" + path + "");
+			System.out.println(String.format("config chrome data path:[%s]", path));
 			options.setExperimentalOption("prefs", chromePreferences);
 
 			return new ChromeDriver(options);

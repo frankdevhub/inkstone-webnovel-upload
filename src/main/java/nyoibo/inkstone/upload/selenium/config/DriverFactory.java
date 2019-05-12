@@ -45,9 +45,9 @@ public class DriverFactory {
 		selectedDriverType = driverType;
 	}
 
-	public RemoteWebDriver getDriver(String thread) throws Exception {
+	public RemoteWebDriver getDriver(String path) throws Exception {
 		if (null == driver) {
-			instantiateWebDriver(selectedDriverType, thread);
+			instantiateWebDriver(selectedDriverType, path);
 		}
 
 		return driver;
