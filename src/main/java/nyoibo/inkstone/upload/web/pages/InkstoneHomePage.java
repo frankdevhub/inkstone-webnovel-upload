@@ -3,7 +3,6 @@ package nyoibo.inkstone.upload.web.pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -14,6 +13,7 @@ import nyoibo.inkstone.upload.selenium.AssignDriver;
 import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.selenium.Query;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
+import nyoibo.inkstone.upload.utils.WebDriverUtils;
 /**
  * <p>Title:InkstoneHomePage.java</p>  
  * <p>Description: </p>  
@@ -37,18 +37,7 @@ public class InkstoneHomePage {
 	private WebDriver driver;
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneHomePage.class);
 
-	private ExpectedCondition<Boolean> pageTitleStartsWith(final String header) {
-		return driver -> driver.getTitle().toLowerCase().startsWith(header.toLowerCase());
-	}
 
-	private void waitSignInBtn(WebDriverWait wait){
-		wait.until(new ExpectedCondition<WebElement>() {
-			@Override
-			public WebElement apply(WebDriver driver) {
-				return signIntoBtn.findWebElement();
-			}
-		});
-	}
 	
 	public InkstoneHomePage(boolean foreign, WebDriver driver,String bookName) throws Exception {
 		this.driver = driver;
@@ -77,18 +66,20 @@ public class InkstoneHomePage {
 
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, 5, 100);
-			wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_HOME_TITLE));
+			WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_HOME_TITLE, wait);
 
 			signIntoBtn.findWebElement().click();
 			driver.switchTo().frame(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID);
 			selectEmailLoginBtn.findWebElement().click();
 
 			LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe");
-			accountNameInput.findWebElement().clear();
-			accountNameInput.findWebElement().sendKeys(this.accountName);
-			accountPwdInput.findWebElement().clear();
-			accountPwdInput.findWebElement().sendKeys(this.accountPwd);
-			submitBtn.findWebElement().click();
+			WebDriverUtils.findWebElement(accountNameInput).clear();
+			WebDriverUtils.findWebElement(accountNameInput).sendKeys(this.accountName);
+			
+			WebDriverUtils.findWebElement(accountPwdInput).clear();
+			WebDriverUtils.findWebElement(accountPwdInput).sendKeys(this.accountPwd);
+			
+			WebDriverUtils.findWebElement(submitBtn);
 			
 		} catch (Exception e) {
 			JavascriptExecutor jsExec = (JavascriptExecutor) driver;

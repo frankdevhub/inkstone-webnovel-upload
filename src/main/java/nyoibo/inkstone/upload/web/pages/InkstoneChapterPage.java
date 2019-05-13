@@ -6,7 +6,6 @@ import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
@@ -16,6 +15,7 @@ import nyoibo.inkstone.upload.selenium.AssignDriver;
 import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.selenium.Query;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
+import nyoibo.inkstone.upload.utils.WebDriverUtils;
 
 /**
  * <p>Title:InkstoneProjectPage.java</p>  
@@ -67,46 +67,32 @@ public class InkstoneChapterPage {
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver(bookName));
 	}
 
-	private ExpectedCondition<Boolean> pageTitleStartsWith(final String header) {
-		return driver -> driver.getTitle().toLowerCase().startsWith(header.toLowerCase());
-	}
 
 	private void switchTransDialog() {
-		wait.until(new ExpectedCondition<WebElement>() {
-			@Override
-			public WebElement apply(WebDriver driver) {
-				return driver.findElement(
-						By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_TRANSLATE_ALERT_CLASS + "']"));
-			}
-		});
+		WebDriverUtils.doWaitCss("[class='" + SeleniumInkstone.INKSTONE_TRANSLATE_ALERT_CLASS + "']", wait);
 	}
 
 	private void waitForSaveBtn() {
-		wait.until(new ExpectedCondition<WebElement>() {
-			@Override
-			public WebElement apply(WebDriver driver) {
-				return driver.findElement(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_SAVE_ID));
-			}
-		});
+		WebDriverUtils.doWaitId(SeleniumInkstone.INKSTONE_TRANSLATE_SAVE_ID, wait);
 	}
 
 	public void editLatestRaw() {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("navigate to inkstone dashboard");
-		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_DASHBOARD));
+		WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_DASHBOARD, wait);
 
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("get to book chapters view");
 		driver.get(bookUrl);
 		System.out.println("=======" + this.bookName);
-		wait.until(pageTitleStartsWith(this.bookName));
-		
-		firstRawChapter.findWebElement().click();
-		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_TRANSLATION));
+		WebDriverUtils.doWaitTitle(this.bookName, wait);
+
+		WebDriverUtils.findWebElement(firstRawChapter).click();
+		WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_TRANSLATION, wait);
 		selectTranslate();
 	}
 
 	private void selectTranslate() {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("click translate button");
-		transBtn.findWebElement().click();
+		WebDriverUtils.findWebElement(transBtn).click();
 		
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch translate dialog");
 		switchTransDialog();
@@ -119,8 +105,8 @@ public class InkstoneChapterPage {
 	
 	public void doTranslate() throws Exception {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("doing translate");
-		WebElement titleElement = editTitle.findWebElement();
-		WebElement contextElement = editContext.findWebElement();
+		WebElement titleElement = WebDriverUtils.findWebElement(editTitle);
+		WebElement contextElement = WebDriverUtils.findWebElement(editContext);
 		
 		String sourceChapName = titleElement.getAttribute("value");
 		if (StringUtils.isEmpty(sourceChapName))

@@ -59,11 +59,11 @@ public class InkstoneUploadMainService {
 				new LinkedBlockingQueue<Runnable>(300));
 		this.threadPool = service;
 		String url = "https://inkstone.webnovel.com/book/detail/cbid/8628176105001205";
-		rawService = new InkstoneRawNovelService(false, url, "Badge in Azure ( BIA )", process);
+		rawService = new InkstoneRawNovelService(false, url, "Badge in Azure-Inkstone", process);
 		service.submit(rawService);
 		String url2 = "https://inkstone.webnovel.com/book/detail/cbid/10866196606193805";
 		InkstoneRawNovelService rawService1 = new InkstoneRawNovelService(false, url2,
-				"Back Then, I Adored You ( BTIAY )", process);
+				"Back Then, I Adored You-Inkstone", process);
 		service.submit(rawService1);
 		
 		service.shutdown();
