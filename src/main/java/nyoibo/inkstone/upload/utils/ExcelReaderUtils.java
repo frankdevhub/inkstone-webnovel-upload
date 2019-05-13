@@ -90,7 +90,7 @@ public class ExcelReaderUtils {
 			if (xssfSheet == null) {
 				continue;
 			}
-			for (int rowNum = 1; rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
+			for (int rowNum = 0; rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
 				XSSFRow xssfRow = xssfSheet.getRow(rowNum);
 				if (xssfRow != null) {
 					XSSFCell key = xssfRow.getCell(0);
@@ -107,7 +107,7 @@ public class ExcelReaderUtils {
 
 		InputStream is = new FileInputStream(file);
 		HSSFWorkbook hssfWorkbook = new HSSFWorkbook(is);
-		
+
 		for (int numSheet = 0; numSheet < hssfWorkbook.getNumberOfSheets(); numSheet++) {
 			HSSFSheet hssfSheet = hssfWorkbook.getSheetAt(numSheet);
 			if (hssfSheet == null) {

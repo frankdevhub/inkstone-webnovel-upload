@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -75,7 +77,7 @@ public class InkstoneUploadMainService {
 		this.bookName = folder.getName();
 		
 		File[] chapters = folder.listFiles();
-		for (int i = 0; i <= chapters.length; i++) {
+		for (int i = 0; i < chapters.length; i++) {
 			File chap = chapters[i];
 			this.chapters.put(chap.getName(), chap);
 		}
@@ -119,5 +121,6 @@ public class InkstoneUploadMainService {
 	public static void main(String[] args) throws Exception {
 		InkstoneUploadMainService service = new InkstoneUploadMainService();
 		service.start();
+	
 	}
 }
