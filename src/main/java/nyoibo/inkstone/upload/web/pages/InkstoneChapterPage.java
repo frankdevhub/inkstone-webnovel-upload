@@ -19,6 +19,7 @@ import nyoibo.inkstone.upload.selenium.Query;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 import nyoibo.inkstone.upload.utils.WebDriverUtils;
 import nyoibo.inkstone.upload.utils.WordExtractorUtils;
+import nyoibo.inkstone.upload.web.action.InkstoneRawNovelService;
 
 /**
  * <p>Title:InkstoneProjectPage.java</p>  
@@ -54,8 +55,11 @@ public class InkstoneChapterPage {
 
 	private ConcurrentHashMap<String, Integer> process;
 
+	private final InkstoneRawNovelService parent;
+	
 	public InkstoneChapterPage(WebDriver driver, String bookUrl, String bookName,
-			ConcurrentHashMap<String, Integer> process, Map<String, File> chapters) throws Exception {
+			ConcurrentHashMap<String, Integer> process, Map<String, File> chapters, InkstoneRawNovelService parent)
+			throws Exception {
 		this.driver = driver;
 		this.chapters = chapters;
 		this.firstRawChapter = new Query().defaultLocator(By.xpath("//div[@class='"
@@ -71,6 +75,7 @@ public class InkstoneChapterPage {
 		this.nextBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_NEXT_BTN_ID));
 		this.doneBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_DONE_BTN_ID));
 
+		this.parent = parent;
 		this.process = process;
 		this.bookName = bookName;
 		wait = new WebDriverWait(driver, 10, 1000);
@@ -159,7 +164,7 @@ public class InkstoneChapterPage {
 		process.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_EDITING, edit + 1);
 	}
 
-	private void doEdit() {
+	private void doEdit() throws Exception {
 		WebDriverUtils.doWaitQuery(editBtn, wait);
 
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("doing edit");
@@ -183,6 +188,10 @@ public class InkstoneChapterPage {
 			throw new Exception("current chapter cannot be published, please check in in progress item");
 		} catch (Exception e) {
 			LOGGER.begin().headerAction(MessageMethod.EVENT).info("proceed to ready to publish");
+			Integer ready = process.get(SeleniumInkstone.INKSTONE_TRANS_STATUS_READY_PUBLISH);
+			process.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_READY_PUBLISH, ready + 1);
+			
+			parent.doNextChaps();
 		}
 	}
 }
