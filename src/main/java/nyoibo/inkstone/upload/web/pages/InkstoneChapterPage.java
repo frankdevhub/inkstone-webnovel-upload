@@ -99,7 +99,11 @@ public class InkstoneChapterPage {
 		driver.get(bookUrl);
 		WebDriverUtils.doWaitTitle(this.bookName, wait);
 
-		WebDriverUtils.findWebElement(firstRawChapter).click();
+		try {
+			WebDriverUtils.findWebElement(firstRawChapter).click();
+		} catch (Exception e) {
+			throw new Exception("time out or all chapters in raw have been uploaded");
+		}
 		WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_TRANSLATION, wait);
 
 		Integer raw = process.get(SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW);
@@ -143,7 +147,7 @@ public class InkstoneChapterPage {
 
 		File transFile = chapters.get(bookName);
 		if (null == transFile)
-			throw new Exception();
+			throw new Exception("cannot find chapter file please check title and rollback in inprogress item");
 		WordExtractorUtils wordUtils = new WordExtractorUtils();
 		wordUtils.extractFile(transFile);
 
