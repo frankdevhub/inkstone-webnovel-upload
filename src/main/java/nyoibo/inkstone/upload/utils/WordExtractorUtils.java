@@ -1,5 +1,6 @@
 package nyoibo.inkstone.upload.utils;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,11 +32,11 @@ public class WordExtractorUtils {
 	private StringBuilder context = new StringBuilder();
 	private int titleHit = 0;
 
-	public void extractFile(String sourcePath) {
+	public void extractFile(File file) {
 		InputStream is = null;
 		XWPFDocument doc = null;
 		try {
-			is = new FileInputStream(sourcePath);
+			is = new FileInputStream(file);
 			doc = new XWPFDocument(is);
 
 			List<XWPFParagraph> paras = doc.getParagraphs();

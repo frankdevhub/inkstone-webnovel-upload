@@ -1,9 +1,10 @@
 package nyoibo.inkstone.upload.web.pages;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
@@ -37,9 +38,11 @@ public class InkstoneHomePage {
 	private WebDriver driver;
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneHomePage.class);
 
-
+	private ConcurrentHashMap<String, Integer> process;
 	
-	public InkstoneHomePage(boolean foreign, WebDriver driver,String bookName) throws Exception {
+	public InkstoneHomePage(boolean foreign, WebDriver driver, String bookName,
+			ConcurrentHashMap<String, Integer> process) throws Exception {
+		this.process = process;
 		this.driver = driver;
 		if (foreign) {
 			this.accountName = SeleniumInkstone.INKSTONE_ACCOUNT_NAME_EN;
@@ -64,6 +67,7 @@ public class InkstoneHomePage {
 		LOGGER.begin().headerMethod(MessageMethod.EVENT).info("navigate to homepage");
 		driver.get(SeleniumInkstone.INKSTONE);
 
+		process.put("start to login", 1);
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, 5, 100);
 			WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_HOME_TITLE, wait);
@@ -75,11 +79,11 @@ public class InkstoneHomePage {
 			LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe");
 			WebDriverUtils.findWebElement(accountNameInput).clear();
 			WebDriverUtils.findWebElement(accountNameInput).sendKeys(this.accountName);
-			
+
 			WebDriverUtils.findWebElement(accountPwdInput).clear();
 			WebDriverUtils.findWebElement(accountPwdInput).sendKeys(this.accountPwd);
-			
-			WebDriverUtils.findWebElement(submitBtn);
+
+			WebDriverUtils.findWebElement(submitBtn).click();
 			
 		} catch (Exception e) {
 			JavascriptExecutor jsExec = (JavascriptExecutor) driver;
@@ -89,9 +93,11 @@ public class InkstoneHomePage {
 			if (!code.isEmpty() && code.equals("complete")) {
 				String title = driver.getTitle();
 				if (title.equals(SeleniumInkstone.INKSTONE_DASHBOARD)) {
+					process.put("login", 1);
 					return;
 				}
 			} else {
+				process.put("login", -1);
 				throw e;
 			}
 

@@ -1,5 +1,6 @@
 package nyoibo.inkstone.upload.web.action;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,8 +10,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.tomcat.util.threads.ThreadPoolExecutor;
-import org.openqa.selenium.WebDriver;
+
+import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
+import nyoibo.inkstone.upload.utils.ExcelReaderUtils;
 
 /**
  * <p>Title:InkstoneNovelUploadThread.java</p>  
@@ -30,10 +34,17 @@ public class InkstoneUploadMainService {
 	private InkstoneRawNovelService rawService = null;
 	private InkstoneProgressNovelService progressNovelService = null;
 
+	private List<Exception> execptions = new ArrayList();
+	
+	private Map<String,File> chapters = new HashMap<String,File>();
 	private Map<String, String> bookListUrl = new HashMap<String, String>();
 	private ExecutorService threadPool;
 
-	private List<WebDriver> drivers = new ArrayList<>();
+	private String bookListPath = "C:/Users/Administrator/AppData/Local/Google/booklist.xls";
+	
+	private String transFilePath = "C:/Users/Administrator/AppData/Local/Google/Automation";
+	
+	private String bookName;
 	
 	public synchronized static Thread check(String thread) {
 		Thread alive = null;
@@ -52,20 +63,52 @@ public class InkstoneUploadMainService {
 		}
 		return alive;
 	}
+	
+	private void readBookList() throws Exception {
+		File bookListFile = new File(bookListPath);
+		bookListUrl = ExcelReaderUtils.readExcel(bookListFile);
+	}
 
 	private void init() throws Exception {
+		File folder = new File(transFilePath).listFiles()[0];
+		
+		this.bookName = folder.getName();
+		
+		File[] chapters = folder.listFiles();
+		for (int i = 0; i <= chapters.length; i++) {
+			File chap = chapters[i];
+			this.chapters.put(chap.getName(), chap);
+		}
+
+		Integer count = new Integer(chapters.length);
+		total.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW, count);
+		total.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_INPROGRESS, count);
+		total.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_TRANSLATEING, count);
+		total.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_EDITING, count);
+		total.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_READY_PUBLISH, count);
+
+		process.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW, 0);
+		process.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_INPROGRESS, 0);
+		process.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_TRANSLATEING, 0);
+		process.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_EDITING, 0);
+		process.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_READY_PUBLISH, 0);
+
+		process.put("init", 1);
+
 		int nCPU = Runtime.getRuntime().availableProcessors();
 		ExecutorService service = new ThreadPoolExecutor(3, 2 * nCPU, 0L, TimeUnit.MICROSECONDS,
 				new LinkedBlockingQueue<Runnable>(300));
 		this.threadPool = service;
-		String url = "https://inkstone.webnovel.com/book/detail/cbid/8628176105001205";
-		rawService = new InkstoneRawNovelService(false, url, "Badge in Azure-Inkstone", process);
-		service.submit(rawService);
-		String url2 = "https://inkstone.webnovel.com/book/detail/cbid/10866196606193805";
-		InkstoneRawNovelService rawService1 = new InkstoneRawNovelService(false, url2,
-				"Back Then, I Adored You-Inkstone", process);
-		service.submit(rawService1);
-		
+		readBookList();
+		String url = bookListUrl.get(bookName);
+		if (StringUtils.isEmpty(url))
+			throw new Exception(String.format("cannot find book:[%s]", bookName));
+		rawService = new InkstoneRawNovelService(false, url, this.bookName, process, this.chapters);
+
+		Thread rawUpload = new Thread(rawService);
+		rawUpload.setName(bookName);
+		service.submit(rawUpload);
+
 		service.shutdown();
 	}
 
