@@ -42,6 +42,8 @@ public enum DriverType implements DriverSetup {
 		public RemoteWebDriver getWebDriverObject(DesiredCapabilities capabilities,String path)  {
 			HashMap<String, Object> chromePreferences = new HashMap<>();
 
+			System.out.println(String.format("chrome config path:[%s]", path));
+			
 			chromePreferences.put("profile.default_content_settings.javascript", 2);
 			chromePreferences.put("profile.default_content_settings.images", 2);
 

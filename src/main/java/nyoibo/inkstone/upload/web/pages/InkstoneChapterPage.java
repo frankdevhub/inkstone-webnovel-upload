@@ -37,6 +37,7 @@ public class InkstoneChapterPage {
 	private WebDriver driver;
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneChapterPage.class);
 	private final String bookUrl;
+    private final String bookName;
     
     private final Query editTitle;
     private final Query editContext;
@@ -60,6 +61,7 @@ public class InkstoneChapterPage {
 		this.editContext = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_EDIT_CONTENT_ID));
 
 		this.process = process;
+		this.bookName = bookName;
 		wait = new WebDriverWait(driver, 10, 1000);
 
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver(bookName));
@@ -94,8 +96,9 @@ public class InkstoneChapterPage {
 
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("get to book chapters view");
 		driver.get(bookUrl);
-		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_CHAPTERS));
-
+		System.out.println("=======" + this.bookName);
+		wait.until(pageTitleStartsWith(this.bookName));
+		
 		firstRawChapter.findWebElement().click();
 		wait.until(pageTitleStartsWith(SeleniumInkstone.INKSTONE_TRANSLATION));
 		selectTranslate();

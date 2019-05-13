@@ -28,6 +28,8 @@ public class InkstoneRawNovelService implements Runnable{
 
 	private final String bookName;
 	private final String thread;
+
+	private String path;
 	
 	private ConcurrentHashMap<String, Integer> process;
 
@@ -39,15 +41,14 @@ public class InkstoneRawNovelService implements Runnable{
 
 	public InkstoneRawNovelService(boolean foreign, String bookUrl, String bookName,
 			ConcurrentHashMap<String, Integer> process) throws Exception {
+		DriverBase.instantiateDriverObject();
 		this.process = process;
 		this.thread = SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW;
-		DriverBase.instantiateDriverObject();
 		String path = configChromeData();
 		this.driver = DriverBase.getDriver(path);
 		this.bookName = bookName;
 		this.inkstoneHomePage = new InkstoneHomePage(foreign, driver, bookName);
 		this.inkstoneChapterPage = new InkstoneChapterPage(driver, bookUrl, bookName, process);
-
 	}
 
 	@Override
@@ -60,7 +61,5 @@ public class InkstoneRawNovelService implements Runnable{
 			e.printStackTrace();
 			Thread.currentThread().interrupt();
 		}
-
 	}
-
 }

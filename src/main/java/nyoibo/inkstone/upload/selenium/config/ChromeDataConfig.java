@@ -19,7 +19,10 @@ public class ChromeDataConfig {
     public static final String WIN_CHROME_APP = "Application";
     public static final String WIN_CHROME_DATA = "User Data";
     
-	public static String createDataName(String thread) {
+    public static final String WIN_SOURCE = "C:/Users/Administrator/AppData/Local/Google/Chrome/User Data";
+    public static final String WIN_TARGET = "C:/Users/Administrator/AppData/Local/Google/Automation";
+    
+	public synchronized static String createDataName(String thread) {
 		StringBuilder builder = new StringBuilder();
 		long time = System.currentTimeMillis();
 		String timeStr = Long.toString(time);
@@ -28,29 +31,29 @@ public class ChromeDataConfig {
 		return dataName;
 	}
    
-	public static String getLocal() {
+	public synchronized static String getLocal() {
 		String path = null;
-		path = "C:/Users/Administrator/AppData/Local/Google/Chrome/User Data";
-		return path;
+		
+		return WIN_SOURCE;
 	}
 
-	public static String config(String root, String dataName) throws IOException {
-		FileUtils configUtils = new FileUtils();
-		String destDir = root + "/" + dataName;
+	public synchronized static String config(String root, String dataName) throws IOException {
+		String destDir = WIN_TARGET + dataName;
+		System.out.println("dest-name:" + destDir);
 
 		File rootFile = new File(root);
 		File destFile = new File(destDir);
-		configUtils.copyDirectory(rootFile, destFile);
-
+		System.out.println("copy chrome config file");
+		FileUtils.copyDirectory(rootFile, destFile);
 		return destDir;
 	}
 
-	public static void cleanData(String dataName) throws IOException {
+	public synchronized static void cleanData(String dataName) throws IOException {
 		FileUtils configUtils = new FileUtils();
 		String path = getLocal() + "/" + dataName;
 		File data = new File(path);
 
-		configUtils.deleteDirectory(data);
+		FileUtils.deleteDirectory(data);
 	}
    
 }

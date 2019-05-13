@@ -30,7 +30,6 @@ public class SeleniumInkstone {
 
 	// inkstone titles
 	public static final String INKSTONE_TRANSLATION = "Chapter translation-Inkstone";
-	public static final String INKSTONE_CHAPTERS = "Badge in Azure-Inkstone";
     public static final String INKSTONE_DASHBOARD = "Dashboard-Inkstone";
 	
 	// login page
