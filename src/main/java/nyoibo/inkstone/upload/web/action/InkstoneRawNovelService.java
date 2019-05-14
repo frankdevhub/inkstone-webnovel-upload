@@ -56,6 +56,9 @@ public class InkstoneRawNovelService implements Runnable{
 	}
 
 	public void doNextChaps() throws Exception {
+
+		driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
+
 		inkstoneChapterPage.editLatestRaw();
 		inkstoneChapterPage.doTranslate();
 		inkstoneChapterPage.doEdit();
