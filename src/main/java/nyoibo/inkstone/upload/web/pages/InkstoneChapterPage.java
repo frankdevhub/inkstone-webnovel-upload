@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -239,6 +240,7 @@ public class InkstoneChapterPage {
 			end = System.currentTimeMillis();
 			System.out.println(String.format("Transfer Cost: %s Seconds", (end - start) / 1000));
             
+			Thread.sleep(4000);
 			
 			parent.doNextChaps();
 		}

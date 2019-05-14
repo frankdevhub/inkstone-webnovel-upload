@@ -59,15 +59,9 @@ public class InkstoneRawNovelService implements Runnable{
 	}
 
 	public void doNextChaps() throws Exception {
-		try {
-			driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
-		} catch (org.openqa.selenium.UnhandledAlertException e) {
-			Alert alertWindow = driver.switchTo().alert();
-			Thread.sleep(3000);
-			alertWindow.accept();
-			driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
-		}
-
+		
+		driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
+		
 		inkstoneChapterPage.editLatestRaw();
 		inkstoneChapterPage.doTranslate();
 		inkstoneChapterPage.doEdit();
@@ -77,8 +71,11 @@ public class InkstoneRawNovelService implements Runnable{
 	public void run() {
 		try {
 			inkstoneHomePage.login();
+			Thread.sleep(3000);
 			inkstoneChapterPage.editLatestRaw();
+			Thread.sleep(700);
 			inkstoneChapterPage.doTranslate();
+			Thread.sleep(700);
 			inkstoneChapterPage.doEdit();
 		} catch (Exception e) {
 			e.printStackTrace();
