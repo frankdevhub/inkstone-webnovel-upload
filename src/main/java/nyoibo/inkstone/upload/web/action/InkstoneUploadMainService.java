@@ -43,7 +43,7 @@ public class InkstoneUploadMainService {
 	private ExecutorService threadPool;
 
 	private String bookListPath = "C:/Users/Administrator/AppData/Local/Google/booklist.xls";
-	private String bookCompareListPath = "C:/Users/Administrator/AppData/Local/Google/comparelist.xls";
+	private String bookCompareListPath = "C:/Users/Administrator/AppData/Local/Google/compare.xls";
 	
 	private String transFilePath = "C:/Users/Administrator/AppData/Local/Google/Automation";
 	
@@ -109,7 +109,7 @@ public class InkstoneUploadMainService {
 				new LinkedBlockingQueue<Runnable>(300));
 		this.threadPool = service;
 		readBookList();
-		//readCompareList();
+		readCompareList();
 		
 		String url = bookListUrl.get(bookName);
 		if (StringUtils.isEmpty(url))

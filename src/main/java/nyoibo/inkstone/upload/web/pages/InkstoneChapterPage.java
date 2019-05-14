@@ -157,7 +157,7 @@ public class InkstoneChapterPage {
 
 		titleElement.clear();
 		contextElement.clear();
-
+		
 		File transFile = chapters.get(sourceChapName);
 		if (null == transFile)
 			throw new Exception("cannot find chapter file please check title and rollback in inprogress item");
