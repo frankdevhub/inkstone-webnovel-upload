@@ -79,7 +79,8 @@ public class InkstoneUploadMainService {
 		File[] chapters = folder.listFiles();
 		for (int i = 0; i < chapters.length; i++) {
 			File chap = chapters[i];
-			this.chapters.put(chap.getName(), chap);
+			String chapName = chap.getName().substring(0, chap.getName().lastIndexOf("."));
+			this.chapters.put(chapName, chap);
 		}
 
 		Integer count = new Integer(chapters.length);
