@@ -8,6 +8,8 @@ import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
@@ -56,6 +58,10 @@ public class InkstoneChapterPage {
 	private ConcurrentHashMap<String, Integer> process;
 
 	private final InkstoneRawNovelService parent;
+
+	private ExpectedCondition<Boolean> pageTitleStartsWith(final String searchString) {
+		return driver -> driver.getTitle().toLowerCase().startsWith(searchString.toLowerCase());
+	}
 	
 	public InkstoneChapterPage(WebDriver driver, String bookUrl, String bookName,
 			ConcurrentHashMap<String, Integer> process, Map<String, File> chapters, InkstoneRawNovelService parent)
@@ -68,7 +74,8 @@ public class InkstoneChapterPage {
 		this.conFirmTransBtn = new Query()
 				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_TRANSLATE_TAKE_CLASS + "']"));
 		this.bookUrl = bookUrl;
-		this.editBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_EDIT_BTN_ID));
+		this.editBtn = new Query()
+				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_EDIT_BTN_ID + "']"));
 
 		this.editTitle = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_EDIT_TITLE_ID));
 		this.editContext = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_EDIT_CONTENT_ID));
@@ -80,7 +87,7 @@ public class InkstoneChapterPage {
 		this.bookName = bookName;
 		wait = new WebDriverWait(driver, 10, 1000);
 
-		AssignDriver.initQueryObjects(this, DriverBase.getDriver(bookName));
+		AssignDriver.initQueryObjects(this, (RemoteWebDriver)driver);
 	}
 
 	private void switchTransDialog() {
@@ -95,15 +102,19 @@ public class InkstoneChapterPage {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("navigate to inkstone dashboard");
 		WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_DASHBOARD, wait);
 
+		Thread.sleep(1000);
+		
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("get to book chapters view");
 		driver.get(bookUrl);
-		WebDriverUtils.doWaitTitle(this.bookName, wait);
-
-		try {
-			WebDriverUtils.findWebElement(firstRawChapter).click();
-		} catch (Exception e) {
-			throw new Exception("time out or all chapters in raw have been uploaded");
-		}
+		
+		Thread.sleep(2000);
+		
+		wait.until(pageTitleStartsWith(this.bookName));
+		
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info(this.bookName);
+		//AssignDriver.initQueryObjects(firstRawChapter, (RemoteWebDriver)driver);
+		firstRawChapter.findWebElement().click();
+		
 		WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_TRANSLATION, wait);
 
 		Integer raw = process.get(SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW);
@@ -111,6 +122,7 @@ public class InkstoneChapterPage {
 
 		selectTranslate();
 		doTranslate();
+		doEdit();
 	}
 
 	private void selectTranslate() {
@@ -142,10 +154,11 @@ public class InkstoneChapterPage {
 		if (StringUtils.isEmpty(sourceChapName))
 			throw new Exception("chapter name is empty");
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("translating:[%s]", sourceChapName));
+
 		titleElement.clear();
 		contextElement.clear();
 
-		File transFile = chapters.get(bookName);
+		File transFile = chapters.get(sourceChapName);
 		if (null == transFile)
 			throw new Exception("cannot find chapter file please check title and rollback in inprogress item");
 		WordExtractorUtils wordUtils = new WordExtractorUtils();
@@ -159,7 +172,9 @@ public class InkstoneChapterPage {
 		switchTransDialog();
 
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("click yes to submit work");
-		WebDriverUtils.findWebElement(conFirmTransBtn).click();
+		WebElement confirmBtn = WebDriverUtils.findWebElement(conFirmTransBtn);
+		confirmBtn.click();
+
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("sumbit translate");
 
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("proceed to edit status");
@@ -168,22 +183,27 @@ public class InkstoneChapterPage {
 		process.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_EDITING, edit + 1);
 	}
 
-	private void doEdit() throws Exception {
+	public void doEdit() throws Exception {
 		WebDriverUtils.doWaitQuery(editBtn, wait);
 
+		Thread.sleep(1000);
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("doing edit");
 		WebDriverUtils.findWebElement(editBtn).click();
 
 		switchTransDialog();
+		Thread.sleep(2000);
 
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("click yes to start edit");
 		WebDriverUtils.findWebElement(conFirmTransBtn).click();
+		Thread.sleep(2000);
 		WebDriverUtils.doWaitQuery(doneBtn, wait);
 
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("sumbit edit");
 		WebDriverUtils.findWebElement(doneBtn).click();
 
 		switchTransDialog();
+		Thread.sleep(2000);
+
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("click to submit edit");
 		WebDriverUtils.findWebElement(conFirmTransBtn).click();
 

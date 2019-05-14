@@ -37,12 +37,15 @@ public class InkstoneUploadMainService {
 	private InkstoneProgressNovelService progressNovelService = null;
 
 	private List<Exception> execptions = new ArrayList();
-	
-	private Map<String,File> chapters = new HashMap<String,File>();
+
+	private Map<String, File> chapters = new HashMap<String, File>();
 	private Map<String, String> bookListUrl = new HashMap<String, String>();
+	private Map<String, String> bookCompareList = new HashMap<String, String>();
+
 	private ExecutorService threadPool;
 
 	private String bookListPath = "C:/Users/Administrator/AppData/Local/Google/booklist.xls";
+	private String bookCompareListPath = "C:/Users/Administrator/AppData/Local/Google/comparelist.xls";
 	
 	private String transFilePath = "C:/Users/Administrator/AppData/Local/Google/Automation";
 	
@@ -65,10 +68,15 @@ public class InkstoneUploadMainService {
 		}
 		return alive;
 	}
-	
+
 	private void readBookList() throws Exception {
 		File bookListFile = new File(bookListPath);
-		bookListUrl = ExcelReaderUtils.readExcel(bookListFile);
+		this.bookListUrl = ExcelReaderUtils.readExcel(bookListFile);
+	}
+
+	private void readCompareList() throws Exception {
+		File bookListFile = new File(bookCompareListPath);
+		this.bookCompareList = ExcelReaderUtils.readExcel(bookListFile);
 	}
 
 	private void init() throws Exception {
@@ -103,6 +111,8 @@ public class InkstoneUploadMainService {
 				new LinkedBlockingQueue<Runnable>(300));
 		this.threadPool = service;
 		readBookList();
+		//readCompareList();
+		
 		String url = bookListUrl.get(bookName);
 		if (StringUtils.isEmpty(url))
 			throw new Exception(String.format("cannot find book:[%s]", bookName));

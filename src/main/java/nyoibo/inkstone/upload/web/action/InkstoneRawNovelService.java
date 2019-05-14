@@ -58,6 +58,7 @@ public class InkstoneRawNovelService implements Runnable{
 	public void doNextChaps() throws Exception {
 		inkstoneChapterPage.editLatestRaw();
 		inkstoneChapterPage.doTranslate();
+		inkstoneChapterPage.doEdit();
 	}
 
 	@Override
@@ -66,6 +67,7 @@ public class InkstoneRawNovelService implements Runnable{
 			inkstoneHomePage.login();
 			inkstoneChapterPage.editLatestRaw();
 			inkstoneChapterPage.doTranslate();
+			inkstoneChapterPage.doEdit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			Thread.currentThread().interrupt();
