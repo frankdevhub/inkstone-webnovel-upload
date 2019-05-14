@@ -194,7 +194,7 @@ public class InkstoneChapterPage {
 			LOGGER.begin().headerAction(MessageMethod.EVENT).info("proceed to ready to publish");
 			Integer ready = process.get(SeleniumInkstone.INKSTONE_TRANS_STATUS_READY_PUBLISH);
 			process.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_READY_PUBLISH, ready + 1);
-			
+
 			parent.doNextChaps();
 		}
 	}
