@@ -2,9 +2,11 @@ package nyoibo.inkstone.upload.web.action;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
 
 import nyoibo.inkstone.upload.selenium.DriverBase;
@@ -31,9 +33,10 @@ public class InkstoneRawNovelService implements Runnable{
 	private final String bookName;
 	private final String thread;
 
+	private final Map<String, String> bookCompareList;
+	
 	private String path;
 	
-	private final Map<String,File> chapters;
 	private ConcurrentHashMap<String, Integer> process;
 
 	private String configChromeData() throws IOException {
@@ -43,21 +46,27 @@ public class InkstoneRawNovelService implements Runnable{
 	}
 
 	public InkstoneRawNovelService(boolean foreign, String bookUrl, String bookName,
-			ConcurrentHashMap<String, Integer> process, Map<String, File> chapters) throws Exception {
+			ConcurrentHashMap<String, Integer> process, Map<String, String> bookCompareList) throws Exception {
 		DriverBase.instantiateDriverObject();
-		this.chapters = chapters;
 		this.process = process;
 		this.thread = SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW;
 		String path = configChromeData();
 		this.driver = DriverBase.getDriver(path);
 		this.bookName = bookName;
 		this.inkstoneHomePage = new InkstoneHomePage(foreign, driver, bookName, process);
-		this.inkstoneChapterPage = new InkstoneChapterPage(driver, bookUrl, bookName, process, chapters, this);
+		this.inkstoneChapterPage = new InkstoneChapterPage(driver, bookUrl, bookName, process, this, bookCompareList);
+		this.bookCompareList = bookCompareList;
 	}
 
 	public void doNextChaps() throws Exception {
-
-		driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
+		try {
+			driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
+		} catch (org.openqa.selenium.UnhandledAlertException e) {
+			Alert alertWindow = driver.switchTo().alert();
+			Thread.sleep(3000);
+			alertWindow.accept();
+			driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
+		}
 
 		inkstoneChapterPage.editLatestRaw();
 		inkstoneChapterPage.doTranslate();

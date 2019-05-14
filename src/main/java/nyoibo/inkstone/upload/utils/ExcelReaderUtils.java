@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -61,6 +63,8 @@ public class ExcelReaderUtils {
 	}
 
 	private static String getValue(XSSFCell xssfRow) {
+		if (null == xssfRow)
+			return null;
 		if (xssfRow.getCellType() == xssfRow.CELL_TYPE_BOOLEAN) {
 			return String.valueOf(xssfRow.getBooleanCellValue());
 		} else if (xssfRow.getCellType() == xssfRow.CELL_TYPE_NUMERIC) {
@@ -71,6 +75,8 @@ public class ExcelReaderUtils {
 	}
 
 	private static String getValue(HSSFCell hssfCell) {
+		if(null==hssfCell)
+			return null;
 		if (hssfCell.getCellType() == hssfCell.CELL_TYPE_BOOLEAN) {
 			return String.valueOf(hssfCell.getBooleanCellValue());
 		} else if (hssfCell.getCellType() == hssfCell.CELL_TYPE_NUMERIC) {
@@ -107,17 +113,20 @@ public class ExcelReaderUtils {
 
 		InputStream is = new FileInputStream(file);
 		HSSFWorkbook hssfWorkbook = new HSSFWorkbook(is);
-
+		hssfWorkbook.getSheetAt(1);
 		for (int numSheet = 0; numSheet < hssfWorkbook.getNumberOfSheets(); numSheet++) {
 			HSSFSheet hssfSheet = hssfWorkbook.getSheetAt(numSheet);
 			if (hssfSheet == null) {
 				continue;
 			}
+
 			for (int rowNum = 1; rowNum <= hssfSheet.getLastRowNum(); rowNum++) {
 				HSSFRow hssfRow = hssfSheet.getRow(rowNum);
 				if (hssfRow != null) {
 					HSSFCell key = hssfRow.getCell(0);
 					HSSFCell value = hssfRow.getCell(1);
+					getValue(key);
+					getValue(value);
 					container.put(getValue(key), getValue(value));
 				}
 			}

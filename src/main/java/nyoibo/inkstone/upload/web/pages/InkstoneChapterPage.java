@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -16,7 +17,6 @@ import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.selenium.AssignDriver;
-import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.selenium.Query;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 import nyoibo.inkstone.upload.utils.WebDriverUtils;
@@ -35,39 +35,44 @@ import nyoibo.inkstone.upload.web.action.InkstoneRawNovelService;
 
 public class InkstoneChapterPage {
 
+	private long start;
+	private long end;
+
 	private final Query transBtn;
 	private final Query editBtn;
 	private final Query conFirmTransBtn;
-    private final Query firstRawChapter;
-	
+	private final Query firstRawChapter;
+
 	private WebDriver driver;
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneChapterPage.class);
 	private final String bookUrl;
-    private final String bookName;
-    
-    private final Query editTitle;
-    private final Query editContext;
-    
-    private final Query nextBtn;
-    private final Query doneBtn;
-    
-    private final Map<String,File> chapters;
-    
+	private final String bookName;
+
+	private final Query editTitle;
+	private final Query editContext;
+
+	private final Query nextBtn;
+	private final Query doneBtn;
+	
+	private final Map<String, String> bookCompareList;
+	
 	private WebDriverWait wait;
 
 	private ConcurrentHashMap<String, Integer> process;
 
+	private String tranUrl = "C:/Users/Administrator/AppData/Local/Google/data/";
+	
 	private final InkstoneRawNovelService parent;
 
 	private ExpectedCondition<Boolean> pageTitleStartsWith(final String searchString) {
-		return driver -> driver.getTitle().toLowerCase().startsWith(searchString.toLowerCase());
+		return driver -> driver.getTitle().toLowerCase().contains(searchString.toLowerCase());
 	}
-	
+
 	public InkstoneChapterPage(WebDriver driver, String bookUrl, String bookName,
-			ConcurrentHashMap<String, Integer> process, Map<String, File> chapters, InkstoneRawNovelService parent)
+			ConcurrentHashMap<String, Integer> process, InkstoneRawNovelService parent,Map<String, String> bookCompareList)
 			throws Exception {
 		this.driver = driver;
-		this.chapters = chapters;
+		this.bookCompareList = bookCompareList;
 		this.firstRawChapter = new Query().defaultLocator(By.xpath("//div[@class='"
 				+ SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS + "']/child::node()[1]/child::node()[1]"));
 		this.transBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_ID));
@@ -87,7 +92,7 @@ public class InkstoneChapterPage {
 		this.bookName = bookName;
 		wait = new WebDriverWait(driver, 10, 1000);
 
-		AssignDriver.initQueryObjects(this, (RemoteWebDriver)driver);
+		AssignDriver.initQueryObjects(this, (RemoteWebDriver) driver);
 	}
 
 	private void switchTransDialog() {
@@ -102,19 +107,21 @@ public class InkstoneChapterPage {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("navigate to inkstone dashboard");
 		WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_DASHBOARD, wait);
 
-		Thread.sleep(1000);
-		
+		Thread.sleep(3000);
+
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("get to book chapters view");
 		driver.get(bookUrl);
-		
+
 		Thread.sleep(2000);
-		
+
 		wait.until(pageTitleStartsWith(this.bookName));
-		
+
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info(this.bookName);
-		//AssignDriver.initQueryObjects(firstRawChapter, (RemoteWebDriver)driver);
-		firstRawChapter.findWebElement().click();
-		
+		// AssignDriver.initQueryObjects(firstRawChapter,
+		// (RemoteWebDriver)driver);
+		WebElement firstChapter = firstRawChapter.findWebElement();
+
+		firstChapter.click();
 		WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_TRANSLATION, wait);
 
 		Integer raw = process.get(SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW);
@@ -128,6 +135,8 @@ public class InkstoneChapterPage {
 	private void selectTranslate() {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("click translate button");
 		WebDriverUtils.findWebElement(transBtn).click();
+
+		start = System.currentTimeMillis();
 
 		Integer inprogress = process.get(SeleniumInkstone.INKSTONE_TRANS_STATUS_TRANSLATEING);
 		process.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_TRANSLATEING, inprogress + 1);
@@ -157,15 +166,27 @@ public class InkstoneChapterPage {
 
 		titleElement.clear();
 		contextElement.clear();
+        
+		System.out.println(tranUrl);
+		System.out.println(bookCompareList.get(sourceChapName));
 		
-		File transFile = chapters.get(sourceChapName);
-		if (null == transFile)
+		String dataFilePath = tranUrl + this.bookName + "/" + bookCompareList.get(sourceChapName)+".docx";
+		
+		System.out.println(dataFilePath);
+		
+		File transFile = new File(dataFilePath);
+		if (!transFile.exists())
 			throw new Exception("cannot find chapter file please check title and rollback in inprogress item");
 		WordExtractorUtils wordUtils = new WordExtractorUtils();
 		wordUtils.extractFile(transFile);
 
-		titleElement.sendKeys(wordUtils.getTitle());
-		contextElement.sendKeys(wordUtils.getContext());
+		JavascriptExecutor executor = (JavascriptExecutor) driver;
+		executor.executeScript("document.getElementById(\"editTitle\").value = \"" + wordUtils.getTitle() + "\"");
+		executor.executeScript(
+				"document.getElementById(\"editContent\").innerHTML = \"" + wordUtils.getContent() + "\"");
+
+		//titleElement.sendKeys(wordUtils.getTitle());
+		//contextElement.sendKeys(wordUtils.getContent());
 
 		WebDriverUtils.findWebElement(nextBtn).click();
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch translate dialog");
@@ -215,6 +236,10 @@ public class InkstoneChapterPage {
 			Integer ready = process.get(SeleniumInkstone.INKSTONE_TRANS_STATUS_READY_PUBLISH);
 			process.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_READY_PUBLISH, ready + 1);
 
+			end = System.currentTimeMillis();
+			System.out.println(String.format("Transfer Cost: %s Seconds", (end - start) / 1000));
+            
+			
 			parent.doNextChaps();
 		}
 	}

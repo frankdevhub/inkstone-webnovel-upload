@@ -36,7 +36,6 @@ public class InkstoneUploadMainService {
 
 	private List<Exception> execptions = new ArrayList();
 
-	private Map<String, File> chapters = new HashMap<String, File>();
 	private Map<String, String> bookListUrl = new HashMap<String, String>();
 	private Map<String, String> bookCompareList = new HashMap<String, String>();
 
@@ -67,29 +66,23 @@ public class InkstoneUploadMainService {
 		return alive;
 	}
 
+
 	private void readBookList() throws Exception {
 		File bookListFile = new File(bookListPath);
 		this.bookListUrl = ExcelReaderUtils.readExcel(bookListFile);
 	}
-
+	
 	private void readCompareList() throws Exception {
-		File bookListFile = new File(bookCompareListPath);
-		this.bookCompareList = ExcelReaderUtils.readExcel(bookListFile);
+		File compareFile = new File(bookCompareListPath);
+		this.bookCompareList = ExcelReaderUtils.readExcel(compareFile);
 	}
 
 	private void init() throws Exception {
-		File folder = new File(transFilePath).listFiles()[0];
-		
-		this.bookName = folder.getName();
-		
-		File[] chapters = folder.listFiles();
-		for (int i = 0; i < chapters.length; i++) {
-			File chap = chapters[i];
-			String chapName = chap.getName().substring(0, chap.getName().lastIndexOf("."));
-			this.chapters.put(chapName, chap);
-		}
+		File folder = new File("C:/Users/Administrator/AppData/Local/Google/data").listFiles()[0];
 
-		Integer count = new Integer(chapters.length);
+		this.bookName = folder.getName();
+
+		Integer count = new Integer(folder.listFiles().length);
 		total.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW, count);
 		total.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_INPROGRESS, count);
 		total.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_TRANSLATEING, count);
@@ -114,7 +107,7 @@ public class InkstoneUploadMainService {
 		String url = bookListUrl.get(bookName);
 		if (StringUtils.isEmpty(url))
 			throw new Exception(String.format("cannot find book:[%s]", bookName));
-		rawService = new InkstoneRawNovelService(false, url, this.bookName, process, this.chapters);
+		rawService = new InkstoneRawNovelService(false, url, this.bookName, process,bookCompareList);
 
 		Thread rawUpload = new Thread(rawService);
 		rawUpload.setName(bookName);

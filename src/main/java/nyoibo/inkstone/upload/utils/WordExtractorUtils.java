@@ -14,6 +14,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.converter.WordToHtmlConverter;
 import org.apache.poi.xwpf.converter.xhtml.XHTMLConverter;
@@ -39,10 +40,14 @@ import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 
 public class WordExtractorUtils {
 
+	private String charLCN ="“";
+	private String charRCN ="”";
+	
 	private final Logger LOGGER = LoggerFactory.getLogger(WordExtractorUtils.class);
 
 	private String title = null;
 	private StringBuilder context = new StringBuilder();
+	private String content = null;
 	private int titleHit = 0;
 	private static String getSuffix(File file) {
 		String fileName = file.getName();
@@ -116,27 +121,59 @@ public class WordExtractorUtils {
 
 			List<XWPFParagraph> paras = doc.getParagraphs();
 
+			int index = 0;
 			for (XWPFParagraph para : paras) {
+				String paraText = para.getText();
+				if (!StringUtils.isEmpty(paraText) && !paraText.equals("\n")) {
+					index++;
+					if (index == 1) {
+						title = paraText;
+						continue;
+					}
+				}
+				
 				String titleLevel = getTitleLvl(doc, para);
 				if ("a5".equals(titleLevel) || "HTML".equals(titleLevel) || "".equals(titleLevel)
 						|| null == titleLevel) {
 					titleLevel = "8";
-					System.out.println(para.getParagraphText());
-					context.append(para.getParagraphText()).append("\n");
+					// System.out.println(titleLevel + "==" +
+					// para.getParagraphText());
+					 paraText = para.getParagraphText();
+					if (paraText.isEmpty()) {
+						//paraText = "<br/>";
+					} else {
+						paraText = "<p>" + paraText + "<p>";
+					}
+					paraText = paraText.replaceAll(charLCN, "&quot;");
+					paraText = paraText.replaceAll(charRCN, "");
+					paraText = paraText.replaceAll("\"", "&quot;");
+					paraText = paraText.replaceAll("\n", "\\n");
+					context.append(paraText);
 				}
 				if (!"8".equals(titleLevel)) {
-					title = para.getParagraphText();
-					titleHit = titleHit + 1;
+					paraText = para.getParagraphText();
+					paraText = paraText.replaceAll("”", "&quot;");
+					paraText = paraText.replaceAll("”", "&quot;");
+					paraText = paraText.replaceAll("\"", "&quot;");
+					paraText = paraText.replaceAll("\n", "\\n");
+					context.append("<p>" + paraText + "</p>");
+					// System.out.println(titleLevel + "==" +
+					// para.getParagraphText());
+				/*	titleHit = titleHit + 1;
 					if (titleHit > 1)
-						break;
+						break;*/
 				}
 			}
 
-			if (null == title)
-				throw new Exception(SeleniumInkstone.INKSTONE_FILE_TITLE_NOT_FOUND);
-			if (titleHit > 1) {
-				throw new Exception(SeleniumInkstone.INKSTONE_FILE_UPLOAD_MULTI_TITLE);
+			if (null == title) {
+				title = paras.get(0).getParagraphText();
+			}else{
+				content = context.toString();
 			}
+			content = context.toString().replaceFirst("<p>"+title+"<p>", "");
+			/*if (titleHit > 1) {
+				throw new Exception(SeleniumInkstone.INKSTONE_FILE_UPLOAD_MULTI_TITLE);
+			}*/
 		} catch (Exception e) {
 			LOGGER.begin().headerAction(MessageMethod.ERROR).error(e.getMessage());
 		} finally {
@@ -158,6 +195,7 @@ public class WordExtractorUtils {
 		} catch (Exception e) {
 
 		}
+
 		return titleLevel;
 	}
 
@@ -171,6 +209,7 @@ public class WordExtractorUtils {
 		} catch (Exception e) {
 
 		}
+
 		return titleLevel;
 	}
 
@@ -198,8 +237,14 @@ public class WordExtractorUtils {
 		return title;
 	}
 
-	public StringBuilder getContext() {
-		return context;
+	public String getContent() {
+		return content;
 	}
 
+/*	public static void main(String[] args) {
+		WordExtractorUtils utils = new WordExtractorUtils();
+		utils.extractFile(new File("D:/a.docx"));
+		System.out.println(utils.getContent());
+		System.out.println(utils.getTitle());
+	}*/
 }
