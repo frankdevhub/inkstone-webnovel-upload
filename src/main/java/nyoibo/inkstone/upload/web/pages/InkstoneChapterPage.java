@@ -266,8 +266,7 @@ public class InkstoneChapterPage {
 					String.format("book [%s] publish failed , please check inprogress item", this.bookName));
 		}
 		//driver.quit();
-		
-		return;
+
 	}
 	
 /*	public static void main(String[] args) {
