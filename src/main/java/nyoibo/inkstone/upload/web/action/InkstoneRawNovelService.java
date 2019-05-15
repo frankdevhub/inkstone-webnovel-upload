@@ -68,7 +68,13 @@ public class InkstoneRawNovelService implements Runnable{
 
 	@Override
 	public void run() {
-		System.out.println(bookCompareList.size()+"''''''''");
+		System.out.println(bookCompareList.size()+"==============================");
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try {
 			for (int i = 0; i < bookCompareList.size(); i++) {
 				if (i == 0) {

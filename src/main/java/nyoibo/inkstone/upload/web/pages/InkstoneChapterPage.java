@@ -133,6 +133,8 @@ public class InkstoneChapterPage {
 		selectTranslate();
 		doTranslate();
 		doEdit();
+		
+		return;
 	}
 
 	private void selectTranslate() {
@@ -191,10 +193,19 @@ public class InkstoneChapterPage {
         
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("title source: %s", titleSource));
 		
-		String titleString = null;
+		String titleString = null;  
 		if (!foreign) {
 			// translate->english
-			titleString = titleSource.split("—")[1];
+			try {
+				titleString = titleSource.split("-")[1];
+			} catch (Exception e) {
+				try {
+					titleString = titleSource.split("—")[1];
+				} catch (Exception e1) {
+					titleString = titleSource.split("–")[1];
+				}
+			}
+			
 		} else {
 			titleString = titleSource.split(" ")[1];
 		}
@@ -249,11 +260,18 @@ public class InkstoneChapterPage {
 		Thread.sleep(3000);
 
 		try {
-			WebDriverUtils.findWebElement(doneBtn);
+			WebDriverUtils.findWebElement(publishBtn);
 		} catch (Exception e) {
 			throw new Exception(
 					String.format("book [%s] publish failed , please check inprogress item", this.bookName));
 		}
-		
+		return;
 	}
+	
+/*	public static void main(String[] args) {
+          String a = "Chapter 308 — She Had No Idea What Stunt Nian Junting Was Going to Pull";
+          //System.out.println(a.split("-")[1]);
+          System.out.println(a.split("—")[1]);
+	}*/
+	
 }
