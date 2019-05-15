@@ -51,7 +51,8 @@ public class InkstoneRawNovelService implements Runnable{
 		this.driver = DriverBase.getDriver(path);
 		this.bookName = bookName;
 		this.inkstoneHomePage = new InkstoneHomePage(foreign, driver, bookName, process);
-		this.inkstoneChapterPage = new InkstoneChapterPage(driver, bookUrl, bookName, process, bookCompareList);
+		this.inkstoneChapterPage = new InkstoneChapterPage(driver, bookUrl, bookName, process, bookCompareList,
+				foreign);
 		this.bookCompareList = bookCompareList;
 	}
 

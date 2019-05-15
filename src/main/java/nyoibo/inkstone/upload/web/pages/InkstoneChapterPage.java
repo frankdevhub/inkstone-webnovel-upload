@@ -53,6 +53,8 @@ public class InkstoneChapterPage {
 	private final Query nextBtn;
 	private final Query doneBtn;
 	
+	private final boolean foreign;
+	
 	private final Map<String, String> bookCompareList;
 	
 	private WebDriverWait wait;
@@ -66,9 +68,10 @@ public class InkstoneChapterPage {
 	}
 
 	public InkstoneChapterPage(WebDriver driver, String bookUrl, String bookName,
-			ConcurrentHashMap<String, Integer> process,Map<String, String> bookCompareList)
+			ConcurrentHashMap<String, Integer> process,Map<String, String> bookCompareList,boolean foreign)
 			throws Exception {
 		this.driver = driver;
+		this.foreign = foreign;
 		this.bookCompareList = bookCompareList;
 		this.firstRawChapter = new Query().defaultLocator(By.xpath("//div[@class='"
 				+ SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS + "']/child::node()[1]/child::node()[1]"));
@@ -78,12 +81,12 @@ public class InkstoneChapterPage {
 		this.bookUrl = bookUrl;
 		this.editBtn = new Query()
 				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_EDIT_BTN_ID + "']"));
-
+		//bug
 		this.editTitle = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_EDIT_TITLE_ID));
 		this.editContext = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_EDIT_CONTENT_ID));
 		this.nextBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_NEXT_BTN_ID));
 		this.doneBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_DONE_BTN_ID));
-
+		
 		this.process = process;
 		this.bookName = bookName;
 		wait = new WebDriverWait(driver, 10, 1000);
@@ -101,6 +104,8 @@ public class InkstoneChapterPage {
 
 	public void editLatestRaw() throws Exception {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("navigate to inkstone dashboard");
+		Thread.sleep(2000);
+		
 		WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_DASHBOARD, wait);
 
 		Thread.sleep(3000);
@@ -180,7 +185,17 @@ public class InkstoneChapterPage {
 		wordUtils.extractFile(transFile);
 
 		JavascriptExecutor executor = (JavascriptExecutor) driver;
-		executor.executeScript("document.getElementById(\"editTitle\").value = \"" + wordUtils.getTitle() + "\"");
+		String titleSource = wordUtils.getTitle();
+
+		String titleString = null;
+		if (!foreign) {
+			// translate->english
+			titleString = titleSource.split("—")[1];
+		} else {
+			titleString = titleSource.split(" ")[1];
+		}
+
+		executor.executeScript("document.getElementById(\"editTitle\").value = \"" + titleString + "\"");
 		executor.executeScript(
 				"document.getElementById(\"editContent\").innerHTML = \"" + wordUtils.getContent() + "\"");
 
