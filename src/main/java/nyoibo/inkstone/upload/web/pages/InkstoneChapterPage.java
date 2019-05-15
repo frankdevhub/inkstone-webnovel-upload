@@ -265,6 +265,8 @@ public class InkstoneChapterPage {
 			throw new Exception(
 					String.format("book [%s] publish failed , please check inprogress item", this.bookName));
 		}
+		//driver.quit();
+		
 		return;
 	}
 	

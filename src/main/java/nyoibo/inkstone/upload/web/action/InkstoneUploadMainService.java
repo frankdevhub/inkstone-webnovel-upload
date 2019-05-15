@@ -1,6 +1,7 @@
 package nyoibo.inkstone.upload.web.action;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +13,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.tomcat.util.threads.ThreadPoolExecutor;
+import org.openqa.selenium.WebDriver;
 
+import nyoibo.inkstone.upload.selenium.DriverBase;
+import nyoibo.inkstone.upload.selenium.config.ChromeDataConfig;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 import nyoibo.inkstone.upload.utils.ExcelReaderUtils;
 
@@ -31,7 +35,6 @@ public class InkstoneUploadMainService {
 	private ConcurrentHashMap<String, Integer> total = new ConcurrentHashMap<>();
 	private ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<>();
 
-	private InkstoneRawNovelService rawService = null;
 	private InkstoneProgressNovelService progressNovelService = null;
 
 	private List<Exception> execptions = new ArrayList();
@@ -40,13 +43,22 @@ public class InkstoneUploadMainService {
 	private Map<String, String> bookCompareList = new HashMap<String, String>();
 
 	private ExecutorService threadPool;
-
+	private String path;
+	
 	private String bookListPath = "C:/Users/Administrator/AppData/Local/Google/booklist.xls";
 	private String bookCompareListPath = "C:/Users/Administrator/AppData/Local/Google/compare.xls";
 	
 	private String transFilePath = "C:/Users/Administrator/AppData/Local/Google/Automation";
 	
 	private String bookName;
+	
+	private WebDriver driver;
+	
+	private String configChromeData() throws IOException {
+		String root = ChromeDataConfig.getLocal();
+		String dataName = ChromeDataConfig.createDataName(SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW);
+		return ChromeDataConfig.config(root, dataName);
+	}
 	
 	public synchronized static Thread check(String thread) {
 		Thread alive = null;
@@ -78,6 +90,10 @@ public class InkstoneUploadMainService {
 	}
 
 	private void init() throws Exception {
+		this.path = configChromeData();
+		DriverBase.instantiateDriverObject();
+		this.driver = DriverBase.getDriver(path);
+		
 		File folder = new File("C:/Users/Administrator/AppData/Local/Google/data").listFiles()[0];
 
 		this.bookName = folder.getName();
@@ -107,12 +123,20 @@ public class InkstoneUploadMainService {
 		String url = bookListUrl.get(bookName);
 		if (StringUtils.isEmpty(url))
 			throw new Exception(String.format("cannot find book:[%s]", bookName));
-		rawService = new InkstoneRawNovelService(false, url, this.bookName, process,bookCompareList);
 
-		Thread rawUpload = new Thread(rawService);
-		rawUpload.setName(bookName);
-		service.submit(rawUpload);
+		for (int i = 0; i < bookListUrl.size(); i++) {
+			InkstoneRawNovelService rawService = null;
+			if (i == 0) {
+				rawService = new InkstoneRawNovelService(false, url, this.bookName, process, bookCompareList, true,
+						driver);
+			} else {
+				rawService = new InkstoneRawNovelService(false, url, this.bookName, process, bookCompareList, false,
+						driver);
+			}
 
+			Thread uploadThread = new Thread(rawService);
+			service.execute(uploadThread);
+		}
 		service.shutdown();
 	}
 
