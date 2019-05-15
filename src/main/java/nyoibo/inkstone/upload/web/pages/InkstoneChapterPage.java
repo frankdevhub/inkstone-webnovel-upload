@@ -237,10 +237,10 @@ public class InkstoneChapterPage {
 
 			end = System.currentTimeMillis();
 			System.out.println(String.format("Transfer Cost: %s Seconds", (end - start) / 1000));
-            
+
 			Thread.sleep(3000);
-			
-			//parent.doNextChaps();
+
+			// parent.doNextChaps();
 		}
 	}
 }

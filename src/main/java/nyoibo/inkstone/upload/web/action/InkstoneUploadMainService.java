@@ -123,6 +123,5 @@ public class InkstoneUploadMainService {
 	public static void main(String[] args) throws Exception {
 		InkstoneUploadMainService service = new InkstoneUploadMainService();
 		service.start();
-	
 	}
 }

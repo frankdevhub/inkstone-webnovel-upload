@@ -75,7 +75,6 @@ public class InkstoneRawNovelService implements Runnable{
 					inkstoneChapterPage.doTranslate();
 					Thread.sleep(700);
 					inkstoneChapterPage.doEdit();
-					doNextChaps();
 				} else {
 					doNextChaps();
 				}
