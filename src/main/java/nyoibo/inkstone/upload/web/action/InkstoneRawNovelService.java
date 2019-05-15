@@ -5,10 +5,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.selenium.config.ChromeDataConfig;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
+import nyoibo.inkstone.upload.utils.WebDriverUtils;
 import nyoibo.inkstone.upload.web.pages.InkstoneChapterPage;
 import nyoibo.inkstone.upload.web.pages.InkstoneHomePage;
 
@@ -58,7 +60,7 @@ public class InkstoneRawNovelService implements Runnable{
 
 	public void doNextChaps() throws Exception {
 		driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
-		
+		WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_DASHBOARD, new WebDriverWait(driver, 10, 1000));
 		inkstoneChapterPage.editLatestRaw();
 		inkstoneChapterPage.doTranslate();
 		inkstoneChapterPage.doEdit();
@@ -66,6 +68,7 @@ public class InkstoneRawNovelService implements Runnable{
 
 	@Override
 	public void run() {
+		System.out.println(bookCompareList.size()+"''''''''");
 		try {
 			for (int i = 0; i < bookCompareList.size(); i++) {
 				if (i == 0) {
@@ -77,6 +80,7 @@ public class InkstoneRawNovelService implements Runnable{
 					Thread.sleep(700);
 					inkstoneChapterPage.doEdit();
 				} else {
+					System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaa");
 					doNextChaps();
 				}
 			}

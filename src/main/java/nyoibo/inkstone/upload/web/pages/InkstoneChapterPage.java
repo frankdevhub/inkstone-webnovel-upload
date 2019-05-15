@@ -52,6 +52,7 @@ public class InkstoneChapterPage {
 
 	private final Query nextBtn;
 	private final Query doneBtn;
+	private final Query publishBtn;
 	
 	private final boolean foreign;
 	
@@ -86,6 +87,7 @@ public class InkstoneChapterPage {
 		this.editContext = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_EDIT_CONTENT_ID));
 		this.nextBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_NEXT_BTN_ID));
 		this.doneBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_DONE_BTN_ID));
+		this.publishBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_PUBLISH_BTN_ID));
 		
 		this.process = process;
 		this.bookName = bookName;
@@ -186,7 +188,9 @@ public class InkstoneChapterPage {
 
 		JavascriptExecutor executor = (JavascriptExecutor) driver;
 		String titleSource = wordUtils.getTitle();
-
+        
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("title source: %s", titleSource));
+		
 		String titleString = null;
 		if (!foreign) {
 			// translate->english
@@ -242,20 +246,14 @@ public class InkstoneChapterPage {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("click to submit edit");
 		WebDriverUtils.findWebElement(conFirmTransBtn).click();
 
+		Thread.sleep(3000);
+
 		try {
-			WebDriverUtils.doWaitQuery(doneBtn, wait);
-			throw new Exception("current chapter cannot be published, please check in in progress item");
+			WebDriverUtils.findWebElement(doneBtn);
 		} catch (Exception e) {
-			LOGGER.begin().headerAction(MessageMethod.EVENT).info("proceed to ready to publish");
-			Integer ready = process.get(SeleniumInkstone.INKSTONE_TRANS_STATUS_READY_PUBLISH);
-			process.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_READY_PUBLISH, ready + 1);
-
-			end = System.currentTimeMillis();
-			System.out.println(String.format("Transfer Cost: %s Seconds", (end - start) / 1000));
-
-			Thread.sleep(3000);
-
-			// parent.doNextChaps();
+			throw new Exception(
+					String.format("book [%s] publish failed , please check inprogress item", this.bookName));
 		}
+		
 	}
 }

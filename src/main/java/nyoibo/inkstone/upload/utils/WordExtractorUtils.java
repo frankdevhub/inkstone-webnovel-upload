@@ -241,10 +241,11 @@ public class WordExtractorUtils {
 		return content;
 	}
 
-/*	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		WordExtractorUtils utils = new WordExtractorUtils();
 		utils.extractFile(new File("D:/a.docx"));
-		System.out.println(utils.getContent());
+		// System.out.println(utils.getContent());
 		System.out.println(utils.getTitle());
+		System.out.println(utils.getTitle().split("—")[1]);
 	}*/
 }
