@@ -8,11 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Executors;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.tomcat.util.threads.ThreadPoolExecutor;
 import org.openqa.selenium.WebDriver;
 
 import nyoibo.inkstone.upload.selenium.DriverBase;
@@ -114,8 +112,10 @@ public class InkstoneUploadMainService {
 		process.put("init", 1);
 
 		int nCPU = Runtime.getRuntime().availableProcessors();
-		ExecutorService service = new ThreadPoolExecutor(3, 2 * nCPU, 0L, TimeUnit.MICROSECONDS,
-				new LinkedBlockingQueue<Runnable>(300));
+		/*ExecutorService service = new ThreadPoolExecutor(3, 2 * nCPU, 0L, TimeUnit.MICROSECONDS,
+				new LinkedBlockingQueue<Runnable>(300));*/
+
+		ExecutorService service = Executors.newSingleThreadExecutor();
 		this.threadPool = service;
 		readBookList();
 		readCompareList();
