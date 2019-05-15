@@ -242,7 +242,7 @@ public class InkstoneChapterPage {
             
 			Thread.sleep(4000);
 			
-			parent.doNextChaps();
+			//parent.doNextChaps();
 		}
 	}
 }

@@ -70,13 +70,20 @@ public class InkstoneRawNovelService implements Runnable{
 	@Override
 	public void run() {
 		try {
-			inkstoneHomePage.login();
-			Thread.sleep(3000);
-			inkstoneChapterPage.editLatestRaw();
-			Thread.sleep(700);
-			inkstoneChapterPage.doTranslate();
-			Thread.sleep(700);
-			inkstoneChapterPage.doEdit();
+			for (int i = 0; i < bookCompareList.size(); i++) {
+				if (i == 0) {
+					inkstoneHomePage.login();
+					Thread.sleep(3000);
+					inkstoneChapterPage.editLatestRaw();
+					Thread.sleep(700);
+					inkstoneChapterPage.doTranslate();
+					Thread.sleep(700);
+					inkstoneChapterPage.doEdit();
+				} else {
+					doNextChaps();
+				}
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			Thread.currentThread().interrupt();
