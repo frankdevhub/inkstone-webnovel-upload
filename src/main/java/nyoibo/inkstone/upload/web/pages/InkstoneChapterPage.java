@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -22,7 +21,6 @@ import nyoibo.inkstone.upload.selenium.Query;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 import nyoibo.inkstone.upload.utils.WebDriverUtils;
 import nyoibo.inkstone.upload.utils.WordExtractorUtils;
-import nyoibo.inkstone.upload.web.action.InkstoneRawNovelService;
 
 /**
  * <p>Title:InkstoneProjectPage.java</p>  
@@ -62,15 +60,13 @@ public class InkstoneChapterPage {
 	private ConcurrentHashMap<String, Integer> process;
 
 	private String tranUrl = "C:/Users/Administrator/AppData/Local/Google/data/";
-	
-	private final InkstoneRawNovelService parent;
 
 	private ExpectedCondition<Boolean> pageTitleStartsWith(final String searchString) {
 		return driver -> driver.getTitle().toLowerCase().contains(searchString.toLowerCase());
 	}
 
 	public InkstoneChapterPage(WebDriver driver, String bookUrl, String bookName,
-			ConcurrentHashMap<String, Integer> process, InkstoneRawNovelService parent,Map<String, String> bookCompareList)
+			ConcurrentHashMap<String, Integer> process,Map<String, String> bookCompareList)
 			throws Exception {
 		this.driver = driver;
 		this.bookCompareList = bookCompareList;
@@ -88,7 +84,6 @@ public class InkstoneChapterPage {
 		this.nextBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_NEXT_BTN_ID));
 		this.doneBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_DONE_BTN_ID));
 
-		this.parent = parent;
 		this.process = process;
 		this.bookName = bookName;
 		wait = new WebDriverWait(driver, 10, 1000);
@@ -177,8 +172,11 @@ public class InkstoneChapterPage {
 		
 		File transFile = new File(dataFilePath);
 		if (!transFile.exists())
-			throw new Exception("cannot find chapter file please check title and rollback in inprogress item");
-		WordExtractorUtils wordUtils = new WordExtractorUtils();
+			// throw new Exception("cannot find chapter file please check title
+			// and rollback in inprogress item");
+			throw new java.io.FileNotFoundException(
+					"cannot find chapter file please check title and rollback in inprogress item");
+			WordExtractorUtils wordUtils = new WordExtractorUtils();
 		wordUtils.extractFile(transFile);
 
 		JavascriptExecutor executor = (JavascriptExecutor) driver;
@@ -240,7 +238,7 @@ public class InkstoneChapterPage {
 			end = System.currentTimeMillis();
 			System.out.println(String.format("Transfer Cost: %s Seconds", (end - start) / 1000));
             
-			Thread.sleep(4000);
+			Thread.sleep(3000);
 			
 			//parent.doNextChaps();
 		}

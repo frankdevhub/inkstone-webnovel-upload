@@ -1,12 +1,9 @@
 package nyoibo.inkstone.upload.web.action;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
 
 import nyoibo.inkstone.upload.selenium.DriverBase;
@@ -54,12 +51,11 @@ public class InkstoneRawNovelService implements Runnable{
 		this.driver = DriverBase.getDriver(path);
 		this.bookName = bookName;
 		this.inkstoneHomePage = new InkstoneHomePage(foreign, driver, bookName, process);
-		this.inkstoneChapterPage = new InkstoneChapterPage(driver, bookUrl, bookName, process, this, bookCompareList);
+		this.inkstoneChapterPage = new InkstoneChapterPage(driver, bookUrl, bookName, process, bookCompareList);
 		this.bookCompareList = bookCompareList;
 	}
 
 	public void doNextChaps() throws Exception {
-		
 		driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
 		
 		inkstoneChapterPage.editLatestRaw();
@@ -79,6 +75,7 @@ public class InkstoneRawNovelService implements Runnable{
 					inkstoneChapterPage.doTranslate();
 					Thread.sleep(700);
 					inkstoneChapterPage.doEdit();
+					doNextChaps();
 				} else {
 					doNextChaps();
 				}
