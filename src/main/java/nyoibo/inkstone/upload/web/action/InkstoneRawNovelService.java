@@ -3,7 +3,6 @@ package nyoibo.inkstone.upload.web.action;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 

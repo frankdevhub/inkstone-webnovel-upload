@@ -125,7 +125,7 @@ public class InkstoneChapterPage implements Runnable{
 		// AssignDriver.initQueryObjects(firstRawChapter,
 		// (RemoteWebDriver)driver);
 		WebElement firstChapter = firstRawChapter.findWebElement();
-
+		
 		firstChapter.click();
 		WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_TRANSLATION, wait);
 
@@ -165,7 +165,7 @@ public class InkstoneChapterPage implements Runnable{
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("proceed to translate status");
 	}
 
-	public void doTranslate() throws Exception {
+	private void doTranslate() throws Exception {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("doing translate");
 		//bug cannot find
 		
@@ -202,21 +202,22 @@ public class InkstoneChapterPage implements Runnable{
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("title source: %s", titleSource));
 		
 		String titleString = null;  
-		if (!foreign) {
-			// translate->english
+
+		try {
+			titleString = titleSource.split("-")[1];
+		} catch (Exception e) {
 			try {
-				titleString = titleSource.split("-")[1];
-			} catch (Exception e) {
+				titleString = titleSource.split("—")[1];
+			} catch (Exception e1) {
 				try {
-					titleString = titleSource.split("—")[1];
-				} catch (Exception e1) {
 					titleString = titleSource.split("–")[1];
+				} catch (Exception e2) {
+					titleString = titleSource.split(" ")[1];
 				}
 			}
-			
-		} else {
-			titleString = titleSource.split(" ")[1];
 		}
+
+		
 
 		executor.executeScript("document.getElementById(\"editTitle\").value = \"" + titleString + "\"");
 		executor.executeScript(
@@ -243,7 +244,7 @@ public class InkstoneChapterPage implements Runnable{
 		Thread.sleep(4000);
 	}
 
-	public void doEdit() throws Exception {
+	private void doEdit() throws Exception {
 		WebDriverUtils.doWaitQuery(editBtn, wait);
 
 		Thread.sleep(1000);
@@ -303,7 +304,7 @@ public class InkstoneChapterPage implements Runnable{
 	
 /*	public static void main(String[] args) {
           String a = "Chapter 308 — She Had No Idea What Stunt Nian Junting Was Going to Pull";
-          //System.out.println(a.split("-")[1]);
+          System.out.println(a.split("-")[1]);
           System.out.println(a.split("—")[1]);
 	}*/
 	

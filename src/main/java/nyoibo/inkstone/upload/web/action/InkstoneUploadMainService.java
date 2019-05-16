@@ -77,8 +77,8 @@ public class InkstoneUploadMainService {
 	}
 
 
-	private void readBookList() throws Exception {
-		File bookListFile = new File(bookListPath);
+	private void readBookList(String listPath) throws Exception {
+		File bookListFile = new File(listPath);
 		this.bookListUrl = ExcelReaderUtils.readExcel(bookListFile);
 	}
 	
@@ -117,9 +117,9 @@ public class InkstoneUploadMainService {
 
 		ExecutorService service = Executors.newSingleThreadExecutor();
 		this.threadPool = service;
-		readBookList();
+		readBookList(bookListPath);
 		readCompareList();
-		
+
 		String url = bookListUrl.get(bookName);
 		if (StringUtils.isEmpty(url))
 			throw new Exception(String.format("cannot find book:[%s]", bookName));

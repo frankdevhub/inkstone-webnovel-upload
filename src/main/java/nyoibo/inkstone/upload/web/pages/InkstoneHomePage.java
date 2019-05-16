@@ -63,7 +63,7 @@ public class InkstoneHomePage implements Runnable{
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver(bookName));
 	}
 
-	public void login() throws Exception {
+	private void login() throws Exception {
 		LOGGER.begin().headerMethod(MessageMethod.EVENT).info("navigate to homepage");
 		driver.get(SeleniumInkstone.INKSTONE);
 

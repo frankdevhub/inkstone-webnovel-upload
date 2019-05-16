@@ -241,11 +241,26 @@ public class WordExtractorUtils {
 		return content;
 	}
 
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		WordExtractorUtils utils = new WordExtractorUtils();
-		utils.extractFile(new File("D:/a.docx"));
+		utils.extractFile(new File("C:/Users/Administrator/AppData/Local/Google/data/Badge in Azure-Inkstone/Chapter 491 Hardness of Elementite (Part 1).docx"));
 		// System.out.println(utils.getContent());
 		System.out.println(utils.getTitle());
-		System.out.println(utils.getTitle().split("—")[1]);
-	}*/
+		String titleSource = utils.getTitle();
+		String titleString= "";
+		try {
+			titleString = titleSource.split("-")[1];
+		} catch (Exception e) {
+			try {
+				titleString = titleSource.split("—")[1];
+			} catch (Exception e1) {
+				try {
+					titleString = titleSource.split("–")[1];
+				} catch (Exception e2) {
+					titleString = titleSource.split(" ")[1];
+				}
+			}
+		}
+		System.out.println(titleString);
+	}
 }
