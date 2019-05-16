@@ -87,7 +87,7 @@ public class InkstoneUploadMainService {
 		this.bookCompareList = ExcelReaderUtils.readExcel(compareFile);
 	}
 
-	private void init() throws Exception {
+	private void initRawUpload() throws Exception {
 		this.path = configChromeData();
 		DriverBase.instantiateDriverObject();
 		this.driver = DriverBase.getDriver(path);
@@ -141,12 +141,12 @@ public class InkstoneUploadMainService {
 		service.shutdown();
 	}
 
-	public void start() throws Exception {
-		init();
+	public void rawUploadStart() throws Exception {
+		initRawUpload();
 	}
 	
 	public static void main(String[] args) throws Exception {
 		InkstoneUploadMainService service = new InkstoneUploadMainService();
-		service.start();
+		service.rawUploadStart();
 	}
 }
