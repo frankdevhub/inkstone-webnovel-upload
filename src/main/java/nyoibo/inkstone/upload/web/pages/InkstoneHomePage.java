@@ -25,7 +25,7 @@ import nyoibo.inkstone.upload.utils.WebDriverUtils;
  * @date:2019-05-08 11:00
  */
 
-public class InkstoneHomePage {
+public class InkstoneHomePage implements Runnable{
 	private String accountName;
 	private String accountPwd;
   
@@ -103,6 +103,16 @@ public class InkstoneHomePage {
 
 		}
           return;
+	}
+
+
+	@Override
+	public void run() {
+		try {
+			login();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

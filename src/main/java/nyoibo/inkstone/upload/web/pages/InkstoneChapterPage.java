@@ -32,7 +32,7 @@ import nyoibo.inkstone.upload.utils.WordExtractorUtils;
  * @date:2019-05-09 14:49
  */
 
-public class InkstoneChapterPage {
+public class InkstoneChapterPage implements Runnable{
 
 	private long start;
 	private long end;
@@ -76,13 +76,15 @@ public class InkstoneChapterPage {
 		this.bookCompareList = bookCompareList;
 		this.firstRawChapter = new Query().defaultLocator(By.xpath("//div[@class='"
 				+ SeleniumInkstone.INKSTONE_PROJECT_RAW_DIV_CLASS + "']/child::node()[1]/child::node()[1]"));
+		//bug cannot find in next run
+		
 		this.transBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_ID));
 		this.conFirmTransBtn = new Query()
 				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_TRANSLATE_TAKE_CLASS + "']"));
 		this.bookUrl = bookUrl;
 		this.editBtn = new Query()
 				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_EDIT_BTN_ID + "']"));
-		//bug
+		//bug cannot find in next run
 		this.editTitle = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_EDIT_TITLE_ID));
 		this.editContext = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_TRANSLATE_EDIT_CONTENT_ID));
 		this.nextBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_NEXT_BTN_ID));
@@ -137,8 +139,9 @@ public class InkstoneChapterPage {
 		return;
 	}
 
-	private void selectTranslate() {
+	private void selectTranslate() throws InterruptedException {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("click translate button");
+		//bug cannot find in next run
 		WebDriverUtils.findWebElement(transBtn).click();
 
 		start = System.currentTimeMillis();
@@ -151,6 +154,9 @@ public class InkstoneChapterPage {
 
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("click yes to take this chapter");
 		WebDriverUtils.findWebElement(conFirmTransBtn).click();
+		
+		Thread.sleep(3000);
+		
 		waitForSaveBtn();
 
 		Integer translate = process.get(SeleniumInkstone.INKSTONE_TRANS_STATUS_TRANSLATEING);
@@ -161,6 +167,8 @@ public class InkstoneChapterPage {
 
 	public void doTranslate() throws Exception {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("doing translate");
+		//bug cannot find
+		
 		WebElement titleElement = WebDriverUtils.findWebElement(editTitle);
 		WebElement contextElement = WebDriverUtils.findWebElement(editContext);
 
@@ -231,6 +239,8 @@ public class InkstoneChapterPage {
 
 		Integer edit = process.get(SeleniumInkstone.INKSTONE_TRANS_STATUS_EDITING);
 		process.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_EDITING, edit + 1);
+		
+		Thread.sleep(4000);
 	}
 
 	public void doEdit() throws Exception {
@@ -257,16 +267,38 @@ public class InkstoneChapterPage {
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("click to submit edit");
 		WebDriverUtils.findWebElement(conFirmTransBtn).click();
 
-		Thread.sleep(3000);
+		Thread.sleep(4000);
 
 		try {
 			WebDriverUtils.findWebElement(publishBtn);
+			Thread.sleep(2000);
+			
+			Thread.currentThread().interrupt();
+			
 		} catch (Exception e) {
+			e.printStackTrace();
+			Thread.currentThread().interrupt();
 			throw new Exception(
 					String.format("book [%s] publish failed , please check inprogress item", this.bookName));
 		}
 		//driver.quit();
+	}
 
+
+	@Override
+	public void run() {
+		try {
+			editLatestRaw();
+			/*selectTranslate();
+			doTranslate();
+			doEdit();*/
+		} catch (Exception e) {
+			Thread.currentThread().interrupt();
+			e.printStackTrace();
+
+			LOGGER.begin().headerAction(MessageMethod.ERROR)
+					.error(String.format("Error at page:[%s]", driver.getTitle()));
+		}
 	}
 	
 /*	public static void main(String[] args) {

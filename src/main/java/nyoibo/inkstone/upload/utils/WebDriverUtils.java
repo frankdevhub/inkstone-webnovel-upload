@@ -1,6 +1,7 @@
 package nyoibo.inkstone.upload.utils;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -25,6 +26,11 @@ public class WebDriverUtils {
 	}
 
 	
+	public static ExpectedCondition<Boolean> waitPageLoadComplete(WebDriverWait webDriverWait) {
+		String function = "return document.readyState";
+		return driver -> ((String) ((JavascriptExecutor) driver).executeScript(function)).equals("complete");
+	}
+
 	public static synchronized WebElement findWebElement(Query query) {
 		WebElement element = query.findWebElement();
 		return element;

@@ -111,7 +111,7 @@ public class InkstoneUploadMainService {
 
 		process.put("init", 1);
 
-		int nCPU = Runtime.getRuntime().availableProcessors();
+		//int nCPU = Runtime.getRuntime().availableProcessors();
 		/*ExecutorService service = new ThreadPoolExecutor(3, 2 * nCPU, 0L, TimeUnit.MICROSECONDS,
 				new LinkedBlockingQueue<Runnable>(300));*/
 
@@ -135,6 +135,7 @@ public class InkstoneUploadMainService {
 			}
 
 			Thread uploadThread = new Thread(rawService);
+			
 			service.execute(uploadThread);
 		}
 		service.shutdown();

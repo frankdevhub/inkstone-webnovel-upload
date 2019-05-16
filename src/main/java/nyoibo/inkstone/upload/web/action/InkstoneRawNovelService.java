@@ -3,6 +3,7 @@ package nyoibo.inkstone.upload.web.action;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -38,6 +39,10 @@ public class InkstoneRawNovelService implements Runnable{
 
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneRawNovelService.class);
 
+	private Thread homePageThread;
+	private Thread chapterThread;
+	
+	
 	public InkstoneRawNovelService(boolean foreign, String bookUrl, String bookName,
 			ConcurrentHashMap<String, Integer> process, Map<String, String> bookCompareList, boolean needLogin,WebDriver driver)
 			throws Exception {
@@ -45,47 +50,77 @@ public class InkstoneRawNovelService implements Runnable{
 		this.needLogin = needLogin;
 		this.process = process;
 		this.bookName = bookName;
+
 		this.inkstoneHomePage = new InkstoneHomePage(foreign, driver, bookName, process);
 		this.inkstoneChapterPage = new InkstoneChapterPage(driver, bookUrl, bookName, process, bookCompareList,
 				foreign);
+		
+		
 		this.bookCompareList = bookCompareList;
 	}
 
-	private void doNextChaps() throws Exception {
+/*	private void doNextChaps() throws Exception {
 		driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
 		Thread.sleep(2000);
-		
+
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("start to do next chapter, loop to dashboard");
-		
+
 		WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_DASHBOARD, new WebDriverWait(driver, 10, 1000));
+
+		Thread.sleep(2000);
+
 		inkstoneChapterPage.editLatestRaw();
 		inkstoneChapterPage.doTranslate();
 		inkstoneChapterPage.doEdit();
-	}
+	}*/
 
 	@Override
 	public void run() {
+		homePageThread = new Thread(inkstoneHomePage);
+		homePageThread.setDaemon(true);
+		chapterThread = new Thread(inkstoneChapterPage);
+		chapterThread.setDaemon(true);
 		
 		if (needLogin) {
 			try {
-				inkstoneHomePage.login();
+				homePageThread.start();
+				homePageThread.join();
+				Thread.sleep(3000);
+				chapterThread.start();
+				chapterThread.join();
+				
+	/*			inkstoneHomePage.login();
 				Thread.sleep(3000);
 				inkstoneChapterPage.editLatestRaw();
 				Thread.sleep(700);
 				inkstoneChapterPage.doTranslate();
 				Thread.sleep(700);
-				inkstoneChapterPage.doEdit();
+				inkstoneChapterPage.doEdit();*/
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
 		} else {
 			try {
-				doNextChaps();
+				Thread.sleep(2000);
+				driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
+				
+                WebDriverUtils.waitPageLoadComplete(new WebDriverWait(driver,10));
+				Thread.sleep(2000);
+				LOGGER.begin().headerAction(MessageMethod.EVENT).info("start to do next chapter, loop to dashboard");
+
+				WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_DASHBOARD, new WebDriverWait(driver, 10, 1000));
+				chapterThread.start();
+				chapterThread.join();
+				Thread.sleep(2000);
+				
+			
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+		Thread.currentThread().interrupt();
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info(" raw main thread kill complete");
 		
 	}
 }
