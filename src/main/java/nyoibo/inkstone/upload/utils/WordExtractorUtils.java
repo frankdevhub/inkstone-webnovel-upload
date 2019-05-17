@@ -25,7 +25,6 @@ import org.w3c.dom.Document;
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.message.MessageMethod;
-import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 
 
 /**
@@ -55,7 +54,7 @@ public class WordExtractorUtils {
 		return suffix;
 	}
 	
-	public static String Word2003ToHtml(File file) throws Exception {
+	public static String Word2003ToString(File file) throws Exception {
 
 		if (null == file) {
 			return null;
@@ -91,7 +90,7 @@ public class WordExtractorUtils {
 
 	}
 
-	public static String Word2007ToHtml(File file) throws Exception {
+	public static String Word2007ToString(File file) throws Exception {
 
 		if (null == file) {
 			return null;
@@ -122,8 +121,10 @@ public class WordExtractorUtils {
 			List<XWPFParagraph> paras = doc.getParagraphs();
 
 			int index = 0;
+			//System.out.println(paras.size());
 			for (XWPFParagraph para : paras) {
-				String paraText = para.getText();
+				String paraText = para.getParagraphText();
+				//System.out.println(paraText);
 				if (!StringUtils.isEmpty(paraText) && !paraText.equals("\n")) {
 					index++;
 					if (index == 1) {
@@ -136,8 +137,8 @@ public class WordExtractorUtils {
 				if ("a5".equals(titleLevel) || "HTML".equals(titleLevel) || "".equals(titleLevel)
 						|| null == titleLevel) {
 					titleLevel = "8";
-					// System.out.println(titleLevel + "==" +
-					// para.getParagraphText());
+					 //System.out.println(titleLevel + "==" +
+					 //para.getParagraphText());
 					 paraText = para.getParagraphText();
 					if (paraText.isEmpty()) {
 						//paraText = "<br/>";
@@ -157,8 +158,8 @@ public class WordExtractorUtils {
 					paraText = paraText.replaceAll("\"", "&quot;");
 					paraText = paraText.replaceAll("\n", "\\n");
 					context.append("<p>" + paraText + "</p>");
-					// System.out.println(titleLevel + "==" +
-					// para.getParagraphText());
+					 //System.out.println(titleLevel + "==" +
+					 //para.getParagraphText());
 				/*	titleHit = titleHit + 1;
 					if (titleHit > 1)
 						break;*/
@@ -175,6 +176,7 @@ public class WordExtractorUtils {
 				throw new Exception(SeleniumInkstone.INKSTONE_FILE_UPLOAD_MULTI_TITLE);
 			}*/
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOGGER.begin().headerAction(MessageMethod.ERROR).error(e.getMessage());
 		} finally {
 			try {
@@ -241,31 +243,37 @@ public class WordExtractorUtils {
 		return content;
 	}
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		WordExtractorUtils utils = new WordExtractorUtils();
-		utils.extractFile(new File("C:/Users/Administrator/AppData/Local/Google/data/The Empress' Livestream-Inkstone/Chapter 334 – Red Dowries (7).docx"));
+		utils.extractFile(new File("C:/Users/Administrator/AppData/Local/Google/data/The Empress' Livestream-Inkstone/Chapter 340 – Red Dowries (13).docx"));
 		// System.out.println(utils.getContent());
 		String titleSource = utils.getTitle();
+		//System.out.println(titleSource);
 		String titleString= "";
 	
 		try {
 			titleString = titleSource.split("––")[1];
 		} catch (Exception e0) {
 			try {
-				titleString = titleSource.split("-")[1];
+				titleString = titleSource.split("––")[1];
 			} catch (Exception e1) {
 				try {
-					titleString = titleSource.split("—")[1];
+					titleString = titleSource.split("-")[1];
 				} catch (Exception e2) {
 					try {
-						titleString = titleSource.split("–")[1];
+						titleString = titleSource.split("—")[1];
 					} catch (Exception e3) {
-						titleString = titleSource.split(" ")[1];
+						try {
+							titleString = titleSource.split("–")[1];
+						} catch (Exception e4) {
+							titleString = titleSource.split(" ")[1];
+						}
 					}
 				}
 			}
 		}
+
 		
 		System.out.println(titleString);
-	}
+	}*/
 }

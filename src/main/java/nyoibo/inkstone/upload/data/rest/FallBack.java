@@ -25,7 +25,7 @@ public class FallBack<T> {
 	  
 	  public PageResult<T> getPageResult()
 	  {
-	    PageResult<T> result = new PageResult();
+	    PageResult result = new PageResult();
 	    result.setMessage("远程服务调用失败。");
 	    result.setStatus("406");
 	    return result;
@@ -33,7 +33,7 @@ public class FallBack<T> {
 	  
 	  public SingleResult<T> getSingleResult()
 	  {
-	    SingleResult<T> result = new SingleResult();
+	    SingleResult result = new SingleResult();
 	    result.setMessage("远程服务调用失败。");
 	    result.setStatus("406");
 	    return result;
