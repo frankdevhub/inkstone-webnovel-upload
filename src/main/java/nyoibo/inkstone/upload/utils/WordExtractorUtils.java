@@ -243,24 +243,29 @@ public class WordExtractorUtils {
 
 	public static void main(String[] args) {
 		WordExtractorUtils utils = new WordExtractorUtils();
-		utils.extractFile(new File("C:/Users/Administrator/AppData/Local/Google/data/Badge in Azure-Inkstone/Chapter 491 Hardness of Elementite (Part 1).docx"));
+		utils.extractFile(new File("C:/Users/Administrator/AppData/Local/Google/data/The Empress' Livestream-Inkstone/Chapter 334 – Red Dowries (7).docx"));
 		// System.out.println(utils.getContent());
-		System.out.println(utils.getTitle());
 		String titleSource = utils.getTitle();
 		String titleString= "";
+	
 		try {
-			titleString = titleSource.split("-")[1];
-		} catch (Exception e) {
+			titleString = titleSource.split("––")[1];
+		} catch (Exception e0) {
 			try {
-				titleString = titleSource.split("—")[1];
+				titleString = titleSource.split("-")[1];
 			} catch (Exception e1) {
 				try {
-					titleString = titleSource.split("–")[1];
+					titleString = titleSource.split("—")[1];
 				} catch (Exception e2) {
-					titleString = titleSource.split(" ")[1];
+					try {
+						titleString = titleSource.split("–")[1];
+					} catch (Exception e3) {
+						titleString = titleSource.split(" ")[1];
+					}
 				}
 			}
 		}
+		
 		System.out.println(titleString);
 	}
 }

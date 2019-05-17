@@ -86,6 +86,8 @@ public class InkstoneHomePage implements Runnable{
 			WebDriverUtils.findWebElement(submitBtn).click();
 			
 		} catch (Exception e) {
+			//another login page
+			
 			JavascriptExecutor jsExec = (JavascriptExecutor) driver;
 			String function = "return document.readyState";
 			String code = (String) jsExec.executeScript(function);

@@ -53,6 +53,7 @@ public class InkstoneChapterPage implements Runnable{
 	private final Query nextBtn;
 	private final Query doneBtn;
 	private final Query publishBtn;
+	private final Query reditBtn;
 	
 	private final boolean foreign;
 	
@@ -90,6 +91,7 @@ public class InkstoneChapterPage implements Runnable{
 		this.nextBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_NEXT_BTN_ID));
 		this.doneBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_DONE_BTN_ID));
 		this.publishBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_PUBLISH_BTN_ID));
+		this.reditBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_REDIT_BTN_ID));
 		
 		this.process = process;
 		this.bookName = bookName;
@@ -277,11 +279,21 @@ public class InkstoneChapterPage implements Runnable{
 			Thread.currentThread().interrupt();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-			Thread.currentThread().interrupt();
-			throw new Exception(
-					String.format("book [%s] publish failed , please check inprogress item", this.bookName));
+
+			try {
+				WebDriverUtils.findWebElement(reditBtn);
+				Thread.sleep(2000);
+
+				Thread.currentThread().interrupt();
+			} catch (Exception e1) {
+				e.printStackTrace();
+				Thread.currentThread().interrupt();
+				throw new Exception(
+						String.format("book [%s] publish failed , please check inprogress item", this.bookName));
+			}
 		}
+			
+		
 		//driver.quit();
 	}
 

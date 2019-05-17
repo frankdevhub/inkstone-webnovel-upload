@@ -59,6 +59,7 @@ public class SeleniumInkstone {
 	// edit page
 	public static final String INKSTONE_NEXT_BTN_ID = "tonextnode";
 	public static final String INKSTONE_EDIT_BTN_ID = "bt bt_ghost";
+	public static final String INKSTONE_REDIT_BTN_ID = "bt bt_ghost";
 	public static final String INKSTONE_DONE_BTN_ID = "todone";
 	public static final String INKSTONE_PUBLISH_BTN_ID = "topublish";
 }
