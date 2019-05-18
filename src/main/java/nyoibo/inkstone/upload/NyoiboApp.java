@@ -26,10 +26,10 @@ import nyoibo.inkstone.upload.message.MessageMethod;
 @ComponentScan(basePackages = { "nyoibo.inkstone.upload" })
 public class NyoiboApp {
 	public static void main(String[] args) throws Exception {
-		SpringApplication.run(NyoiboApp.class, args);
+		/*SpringApplication.run(NyoiboApp.class, args);
 		GoogleDriveFtpAdapterFactory.getInstance();
 		LoggerFactory.getLogger(NyoiboApp.class).begin().headerAction(MessageMethod.EVENT).info("application start!");
 		LoggerFactory.getLogger(NyoiboApp.class).begin().headerAction(MessageMethod.EVENT).info(
-				String.format("google drive redirect uri:/n%s", GoogleDriveFtpAdapterFactory.getAuthorizationUrl()));
+				String.format("google drive redirect uri:/n%s", GoogleDriveFtpAdapterFactory.getAuthorizationUrl()));*/
 	}
 }

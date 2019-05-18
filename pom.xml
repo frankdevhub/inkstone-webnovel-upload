@@ -84,7 +84,6 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.freemarker/freemarker -->
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
@@ -94,8 +93,6 @@
 			<artifactId>pagehelper</artifactId>
 			<version>${pagehelper.version}</version>
 		</dependency>
-		<!-- apache common -->
-		<!-- https://mvnrepository.com/artifact/commons-lang/commons-lang -->
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
@@ -107,28 +104,23 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<!-- Selenium Web Test -->
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-remote-driver</artifactId>
 			<version>3.141.59</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
 			<version>3.141.59</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.openqa.selenium/selenium -->
 		<dependency>
 			<groupId>org.openqa.selenium</groupId>
 			<artifactId>selenium</artifactId>
 			<version>0.9.1</version>
 			<type>pom</type>
 		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/io.appium/java-client -->
 		<dependency>
 			<groupId>io.appium</groupId>
 			<artifactId>java-client</artifactId>
@@ -150,20 +142,17 @@
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
 		</dependency>
-
 		<!-- google drive api -->
 		<dependency>
 			<groupId>com.google.apis</groupId>
 			<artifactId>google-api-services-drive</artifactId>
 			<version>v3-rev124-1.23.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.google.oauth-client</groupId>
 			<artifactId>google-oauth-client-java6</artifactId>
 			<version>1.23.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.google.oauth-client</groupId>
 			<artifactId>google-oauth-client-jetty</artifactId>
@@ -223,6 +212,8 @@
 			<artifactId>assertj-core</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!--swt jface-->
+		
 	</dependencies>
 
 	<build>
