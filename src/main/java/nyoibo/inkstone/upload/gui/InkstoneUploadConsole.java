@@ -6,6 +6,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -143,5 +144,19 @@ public class InkstoneUploadConsole extends Dialog{
 	@Override
 	protected Point getInitialSize() {
 		return new Point(450, 546);
+	}
+	
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText("Select your novel");
+		newShell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
+	}
+	
+	
+	public static void main(String[] args) {
+		Shell shell = Display.getDefault().getActiveShell();
+		InkstoneUploadConsole console = new InkstoneUploadConsole(shell);
+		console.open();
 	}
 }
