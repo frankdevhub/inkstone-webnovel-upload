@@ -6,14 +6,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -42,6 +43,10 @@ public class InkstoneUploadConsole extends Dialog{
 	private Button chromeCacheButton;
 	private Text chromeCacheText;
 
+	private String chromeCachePath;
+	private String bookListPath;
+	private String chapterListPath;
+	
 	public InkstoneUploadConsole(Shell parentShell) {
 		super(parentShell);
 	}
@@ -59,7 +64,24 @@ public class InkstoneUploadConsole extends Dialog{
 		chromeCacheButton.setLayoutData(gdChromeCacheButton);
 		formToolkit.adapt(chromeCacheButton, true, true);
 		chromeCacheButton.setText("Config Chrome Cache");
+		chromeCacheButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				DirectoryDialog folderdlg = new DirectoryDialog(new Shell());
+				folderdlg.setText("Config Chrome Broswer");
+				folderdlg.setFilterPath("SystemDrive");
+				folderdlg.setMessage("Please select your chrome cache folder");
+				String selecteddir = folderdlg.open();
+				if (selecteddir == null) {
+					return;
+				} else {
+					chromeCachePath = selecteddir;
+					chromeCacheText.setText(selecteddir);
+				}
 
+			}
+		});
+		
 		chromeCacheText = new Text(container, SWT.BORDER);
 		chromeCacheText.setEditable(false);
 		chromeCacheText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
@@ -72,6 +94,26 @@ public class InkstoneUploadConsole extends Dialog{
 		bookListButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				Display display = Display.getDefault();
+				Shell shell = Display.getCurrent().getActiveShell();
+				FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+				dialog.setFilterPath(System.getProperty("user.dir"));
+
+				dialog.setText("Please select bookList excel");
+				dialog.setFilterExtensions(new String[] { "*.xls", "*.xlsx" });
+				bookListPath = dialog.open();
+				if (bookListPath == null) {
+					return;
+				} else {
+					bookListText.setText(bookListPath);
+				}
+				shell.layout();
+				shell.dispose();
+				while (!shell.isDisposed()) {
+					if (!display.readAndDispatch())
+						display.sleep();
+				}
+				display.dispose();
 			}
 		});
 
@@ -89,6 +131,17 @@ public class InkstoneUploadConsole extends Dialog{
 		chapterListButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				DirectoryDialog folderdlg = new DirectoryDialog(new Shell());
+				folderdlg.setText("Select Novel Chapters");
+				folderdlg.setFilterPath("SystemDrive");
+				folderdlg.setMessage("Please select novel chapter folder");
+				String selecteddir = folderdlg.open();
+				if (selecteddir == null) {
+					return;
+				} else {
+					chapterListPath = selecteddir;
+					chapterListText.setText(selecteddir);
+				}
 			}
 		});
 
@@ -158,6 +211,18 @@ public class InkstoneUploadConsole extends Dialog{
 	@Override
 	protected Point getInitialSize() {
 		return new Point(450, 632);
+	}
+
+	public String getChromeCachePath() {
+		return chromeCachePath;
+	}
+
+	public String getBookListPath() {
+		return bookListPath;
+	}
+
+	public String getChapterListPath() {
+		return chapterListPath;
 	}
 
 }
