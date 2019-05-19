@@ -30,7 +30,6 @@
 		<query.version>2.0.0-BETA3</query.version>
 		<!--Plugin Versions -->
 		<driver-binary-downloader-maven-plugin.version>1.0.17</driver-binary-downloader-maven-plugin.version>
-		<!-- <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version> -->
 		<maven-failsafe-plugin.version>2.22.1</maven-failsafe-plugin.version>
 		<!--Configuration Properties -->
 		<overwrite.binaries>false</overwrite.binaries>
@@ -201,7 +200,6 @@
 			<artifactId>ftpserver-core</artifactId>
 			<version>1.1.1</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-maven-plugin -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-maven-plugin</artifactId>
@@ -212,8 +210,17 @@
 			<artifactId>assertj-core</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!--swt jface-->
-		
+		<!--swt jface -->
+		<dependency>
+			<groupId>org.eclipse</groupId>
+			<artifactId>jface</artifactId>
+			<version>3.3.0-I20070606-0010</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jface</groupId>
+			<artifactId>text</artifactId>
+			<version>3.3.0-v20070606-0010</version>
+		</dependency>
 	</dependencies>
 
 	<build>
