@@ -35,6 +35,12 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 	private static final String HELP_DIALOG_TITLE = "Help";
 	private static final String HELP_INFORMATION = "If you need help, please contact support at frank.fang@jianlaiglobal.com";
 
+	private InkstoneUploadConsole uplaodConsole;
+		
+	public InkstoneUploadConsole getUplaodConsole() {
+		return uplaodConsole;
+	}
+
 	private class CustomComposite extends Composite {
 		public CustomComposite(Composite parent, int style, String imagePath) {
 			super(parent, style);
@@ -88,7 +94,9 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 		startButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
+				Shell shell = Display.getCurrent().getActiveShell();
+				uplaodConsole = new InkstoneUploadConsole(shell);
+			    shell.open();
 			}
 		});
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);

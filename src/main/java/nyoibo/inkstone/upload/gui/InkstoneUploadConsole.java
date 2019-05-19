@@ -39,6 +39,8 @@ public class InkstoneUploadConsole extends Dialog{
 	private Text webLinkText;
 	private Text progressText;
 	private Text weblinkUrl;
+	private Button chromeCacheButton;
+	private Text chromeCacheText;
 
 	public InkstoneUploadConsole(Shell parentShell) {
 		super(parentShell);
@@ -51,10 +53,22 @@ public class InkstoneUploadConsole extends Dialog{
 		GridLayout gridLayout = (GridLayout) container.getLayout();
 		gridLayout.numColumns = 4;
 
+		chromeCacheButton = new Button(container, SWT.NONE);
+		GridData gdChromeCacheButton = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
+		gdChromeCacheButton.widthHint = 423;
+		chromeCacheButton.setLayoutData(gdChromeCacheButton);
+		formToolkit.adapt(chromeCacheButton, true, true);
+		chromeCacheButton.setText("Config Chrome Cache");
+
+		chromeCacheText = new Text(container, SWT.BORDER);
+		chromeCacheText.setEditable(false);
+		chromeCacheText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
+		formToolkit.adapt(chromeCacheText, true, true);
+
 		Button bookListButton = formToolkit.createButton(container, "Config Book List", SWT.NONE);
-		GridData gd_bookListButton = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
-		gd_bookListButton.widthHint = 425;
-		bookListButton.setLayoutData(gd_bookListButton);
+		GridData gdBookListButton = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
+		gdBookListButton.widthHint = 425;
+		bookListButton.setLayoutData(gdBookListButton);
 		bookListButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -64,14 +78,14 @@ public class InkstoneUploadConsole extends Dialog{
 		bookListText = formToolkit.createText(container, "bookListText", SWT.NONE);
 		bookListText.setEditable(false);
 		bookListText.setText("");
-		GridData gd_bookListText = new GridData(SWT.LEFT, SWT.CENTER, true, false, 4, 1);
-		gd_bookListText.widthHint = 422;
-		bookListText.setLayoutData(gd_bookListText);
+		GridData gdBookListText = new GridData(SWT.LEFT, SWT.CENTER, true, false, 4, 1);
+		gdBookListText.widthHint = 422;
+		bookListText.setLayoutData(gdBookListText);
 
 		Button chapterListButton = formToolkit.createButton(container, "Config Chapters ", SWT.NONE);
-		GridData gd_chapterListButton = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
-		gd_chapterListButton.widthHint = 423;
-		chapterListButton.setLayoutData(gd_chapterListButton);
+		GridData gdChapterListButton = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
+		gdChapterListButton.widthHint = 423;
+		chapterListButton.setLayoutData(gdChapterListButton);
 		chapterListButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -94,9 +108,9 @@ public class InkstoneUploadConsole extends Dialog{
 		weblinkUrl = new Text(container, SWT.BORDER);
 		weblinkUrl.setText("https://inkstone.webnovel.com/book");
 		weblinkUrl.setEditable(false);
-		GridData gd_weblinkUrl = new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1);
-		gd_weblinkUrl.widthHint = 186;
-		weblinkUrl.setLayoutData(gd_weblinkUrl);
+		GridData gdWeblinkUrl = new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1);
+		gdWeblinkUrl.widthHint = 186;
+		weblinkUrl.setLayoutData(gdWeblinkUrl);
 		formToolkit.adapt(weblinkUrl, true, true);
 
 		progressText = formToolkit.createText(container, "progressText", SWT.NONE);
@@ -143,20 +157,7 @@ public class InkstoneUploadConsole extends Dialog{
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 546);
+		return new Point(450, 632);
 	}
-	
-	@Override
-	protected void configureShell(Shell newShell) {
-		super.configureShell(newShell);
-		newShell.setText("Select your novel");
-		newShell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
-	}
-	
-	
-	public static void main(String[] args) {
-		Shell shell = Display.getDefault().getActiveShell();
-		InkstoneUploadConsole console = new InkstoneUploadConsole(shell);
-		console.open();
-	}
+
 }
