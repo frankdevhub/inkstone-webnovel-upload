@@ -4,6 +4,8 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -11,12 +13,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
 
 
 /**
@@ -29,11 +30,14 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  * @date:2019-05-19 18:06
  */
 
-public class InkstoneUploadConsole extends Dialog {
+public class InkstoneUploadConsole extends Dialog{
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
-	private Text txtNewText;
-	private Text txtNewText_1;
-	private Text txtNewText_2;
+	private Text bookListText;
+	private Text chapterListText;
+	private Text consoleTextArea;
+	private Text webLinkText;
+	private Text progressText;
+	private Text weblinkUrl;
 
 	public InkstoneUploadConsole(Shell parentShell) {
 		super(parentShell);
@@ -44,52 +48,88 @@ public class InkstoneUploadConsole extends Dialog {
 		Composite container = (Composite) super.createDialogArea(parent);
 
 		GridLayout gridLayout = (GridLayout) container.getLayout();
-		gridLayout.numColumns = 2;
+		gridLayout.numColumns = 4;
 
-		Button btnNewButton = formToolkit.createButton(container, "New Button", SWT.NONE);
+		Button bookListButton = formToolkit.createButton(container, "Config Book List", SWT.NONE);
+		GridData gd_bookListButton = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
+		gd_bookListButton.widthHint = 425;
+		bookListButton.setLayoutData(gd_bookListButton);
+		bookListButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+			}
+		});
 
-		txtNewText = formToolkit.createText(container, "New Text", SWT.NONE);
-		txtNewText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		bookListText = formToolkit.createText(container, "bookListText", SWT.NONE);
+		bookListText.setEditable(false);
+		bookListText.setText("");
+		GridData gd_bookListText = new GridData(SWT.LEFT, SWT.CENTER, true, false, 4, 1);
+		gd_bookListText.widthHint = 422;
+		bookListText.setLayoutData(gd_bookListText);
 
-		Button btnNewButton_1 = formToolkit.createButton(container, "New Button", SWT.NONE);
+		Button chapterListButton = formToolkit.createButton(container, "Config Chapters ", SWT.NONE);
+		GridData gd_chapterListButton = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
+		gd_chapterListButton.widthHint = 423;
+		chapterListButton.setLayoutData(gd_chapterListButton);
+		chapterListButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+			}
+		});
 
-		txtNewText_1 = formToolkit.createText(container, "New Text", SWT.NONE);
-		txtNewText_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		chapterListText = formToolkit.createText(container, "chapterListText", SWT.NONE);
+		chapterListText.setEditable(false);
+		chapterListText.setText("");
+		chapterListText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 
-		Label lblNewLabel = new Label(container, SWT.NONE);
-		formToolkit.adapt(lblNewLabel, true, true);
-		lblNewLabel.setText("New Label");
+		webLinkText = formToolkit.createText(container, "webLinkText", SWT.NONE);
+		webLinkText.setEnabled(false);
+		webLinkText.setToolTipText("");
+		webLinkText.setEditable(false);
+		webLinkText.setText("Web Link ");
+		webLinkText.setBackground(container.getBackground());
+		webLinkText.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1));
 
-		Link link = new Link(container, SWT.NONE);
-		formToolkit.adapt(link, true, true);
-		link.setText("<a>New Link</a>");
+		weblinkUrl = new Text(container, SWT.BORDER);
+		weblinkUrl.setText("https://inkstone.webnovel.com/book");
+		weblinkUrl.setEditable(false);
+		GridData gd_weblinkUrl = new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1);
+		gd_weblinkUrl.widthHint = 186;
+		weblinkUrl.setLayoutData(gd_weblinkUrl);
+		formToolkit.adapt(weblinkUrl, true, true);
 
-		Label lblNewLabel_1 = new Label(container, SWT.NONE);
-		formToolkit.adapt(lblNewLabel_1, true, true);
-		lblNewLabel_1.setText("New Label");
+		progressText = formToolkit.createText(container, "progressText", SWT.NONE);
+		progressText.setEnabled(false);
+		progressText.setEditable(false);
+		progressText.setText("Progress ");
+		progressText.setBackground(container.getBackground());
+		progressText.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1));
 
 		ProgressBar progressBar = new ProgressBar(container, SWT.NONE);
-		GridData gd_progressBar = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_progressBar.widthHint = 344;
-		progressBar.setLayoutData(gd_progressBar);
+		progressBar.setBackground(SWTResourceManager.getColor(SWT.COLOR_CYAN));
+		GridData gdProgressBar = new GridData(SWT.LEFT, SWT.CENTER, true, false, 4, 1);
+		gdProgressBar.widthHint = 425;
+		progressBar.setLayoutData(gdProgressBar);
 		formToolkit.adapt(progressBar, true, true);
 
 		ScrolledComposite scrolledComposite = new ScrolledComposite(container,
 				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		GridData gridData = new GridData(SWT.FILL, SWT.FILL, false, false, 2, 1);
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, false, false, 4, 1);
 		gridData.widthHint = 367;
-		gridData.heightHint = 205;
+		gridData.heightHint = 218;
 		scrolledComposite.setLayoutData(gridData);
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 		scrolledComposite.setAlwaysShowScrollBars(true);
 
-		txtNewText_2 = formToolkit.createText(scrolledComposite, "New Text", SWT.NONE);
-		txtNewText_2.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
-		txtNewText_2.setForeground(SWTResourceManager.getColor(SWT.COLOR_YELLOW));
-		txtNewText_2.append("ssss");
-		scrolledComposite.setContent(txtNewText_2);
-		scrolledComposite.setMinSize(txtNewText_2.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		consoleTextArea = formToolkit.createText(scrolledComposite, "InkstoneConsoleTextArea", SWT.NONE);
+		consoleTextArea.setEditable(false);
+		consoleTextArea.setText("Waiting ......");
+		consoleTextArea.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+		consoleTextArea.setForeground(SWTResourceManager.getColor(SWT.COLOR_YELLOW));
+
+		scrolledComposite.setContent(consoleTextArea);
+		scrolledComposite.setMinSize(consoleTextArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
 		return container;
 	}
@@ -102,6 +142,6 @@ public class InkstoneUploadConsole extends Dialog {
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 456);
+		return new Point(450, 546);
 	}
 }
