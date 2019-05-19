@@ -20,11 +20,12 @@ import nyoibo.inkstone.upload.message.MessageMethod;
 public class InkstoneRawHeaderUtils {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(InkstoneRawHeaderUtils.class);
+	private static final String numRegx = "\\d+(\\.\\d+){0,1}";
+	private static final String chapCNRegx = "第([\\s\\S]*?)章";
+	
 	public static String getRawCNHeaderToEN(String header) throws Exception {
 		String convert = null;
-		String regexCN = "第([\\s\\S]*?)章";
-		String regexNum = "\\d+(\\.\\d+){0,1}";
-		Matcher matcher = Pattern.compile(regexCN).matcher(header);
+		Matcher matcher = Pattern.compile(chapCNRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group(1).trim();
 			LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
@@ -33,7 +34,7 @@ public class InkstoneRawHeaderUtils {
 			convert = Integer.toString(number);
 
 		} else {
-			matcher = Pattern.compile(regexNum).matcher(header);
+			matcher = Pattern.compile(numRegx).matcher(header);
 			if (matcher.find()) {
 				convert = matcher.group();
 				LOGGER.begin().headerAction(MessageMethod.EVENT)
@@ -49,17 +50,20 @@ public class InkstoneRawHeaderUtils {
 		return convert;
 	}
 
-	public static String getRawExelChap(String header) {
+	public static String getRawExelChap(String header) throws Exception {
 		String convert = null;
 		convert = header.toLowerCase();
-		
-		
-		return convert;
-	}
+		Matcher matcher = Pattern.compile(numRegx).matcher(header);
+		if (matcher.find()) {
+			convert = matcher.group();
+			LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
+		}
 
-	public static void main(String[] args) throws Exception {
-         String s = "a123";
-         System.out.println(s.toLowerCase());
+		if (StringUtils.isEmpty(convert)) {
+			throw new Exception(String.format("Cannot recognize the raw header in format：[%s] if need help, "
+					+ "please contact support for this bug.", header));
+		}
+		return convert;
 	}
 
 }
