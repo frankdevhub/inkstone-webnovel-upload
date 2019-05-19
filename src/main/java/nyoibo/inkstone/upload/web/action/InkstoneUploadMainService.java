@@ -2,9 +2,7 @@ package nyoibo.inkstone.upload.web.action;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -33,20 +31,16 @@ public class InkstoneUploadMainService {
 	private ConcurrentHashMap<String, Integer> total = new ConcurrentHashMap<>();
 	private ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<>();
 
-	private InkstoneProgressNovelService progressNovelService = null;
-
-	private List<Exception> execptions = new ArrayList();
-
 	private Map<String, String> bookListUrl = new HashMap<String, String>();
 	private Map<String, String> bookCompareList = new HashMap<String, String>();
 
 	private ExecutorService threadPool;
 	private String path;
 	
-	private String bookListPath = "C:/Users/Administrator/AppData/Local/Google/booklist.xls";
-	private String bookCompareListPath = "C:/Users/Administrator/AppData/Local/Google/compare.xls";
+	private String bookListPath;
+	private String bookCompareListPath;
 	
-	private String transFilePath = "C:/Users/Administrator/AppData/Local/Google/Automation";
+	private String transFilePath;
 	
 	private String bookName;
 	

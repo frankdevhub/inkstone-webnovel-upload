@@ -58,21 +58,6 @@ public class InkstoneRawNovelService implements Runnable{
 		this.bookCompareList = bookCompareList;
 	}
 
-/*	private void doNextChaps() throws Exception {
-		driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
-		Thread.sleep(2000);
-
-		LOGGER.begin().headerAction(MessageMethod.EVENT).info("start to do next chapter, loop to dashboard");
-
-		WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_DASHBOARD, new WebDriverWait(driver, 10, 1000));
-
-		Thread.sleep(2000);
-
-		inkstoneChapterPage.editLatestRaw();
-		inkstoneChapterPage.doTranslate();
-		inkstoneChapterPage.doEdit();
-	}*/
-
 	@Override
 	public void run() {
 		homePageThread = new Thread(inkstoneHomePage);
@@ -87,14 +72,6 @@ public class InkstoneRawNovelService implements Runnable{
 				Thread.sleep(3000);
 				chapterThread.start();
 				chapterThread.join();
-				
-	/*			inkstoneHomePage.login();
-				Thread.sleep(3000);
-				inkstoneChapterPage.editLatestRaw();
-				Thread.sleep(700);
-				inkstoneChapterPage.doTranslate();
-				Thread.sleep(700);
-				inkstoneChapterPage.doEdit();*/
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
