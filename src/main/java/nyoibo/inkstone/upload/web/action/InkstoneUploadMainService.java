@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,10 +40,10 @@ public class InkstoneUploadMainService {
     private Map<String, String> chapterFileList = new HashMap<String,String>();
 	
 	private ExecutorService threadPool;
-	private String path;
+	private String path; //chrome cache path
 
-	private String bookListPath = "C:/Users/Administrator/AppData/Local/Google/booklist.xls";
-	private String bookCompareListPath ="C:/Users/Administrator/AppData/Local/Google/compare.xls";
+	private String bookListPath;
+	private String bookCompareListPath;
 
 	private String bookName;
 	
@@ -134,7 +136,6 @@ public class InkstoneUploadMainService {
 			}
 
 			Thread uploadThread = new Thread(rawService);
-			
 			this.threadPool.execute(uploadThread);
 		}
 		this.threadPool.shutdown();
@@ -145,7 +146,32 @@ public class InkstoneUploadMainService {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		InkstoneUploadMainService service = new InkstoneUploadMainService();
-		service.rawUploadStart();
+		//InkstoneUploadMainService service = new InkstoneUploadMainService();
+		//service.rawUploadStart();
+
+		/*File folder = new File("C:/Users/Administrator/AppData/Local/Google/data").listFiles()[0];
+		Map<String, String> map = new HashMap<String, String>();
+		for (File f : folder.listFiles()) {
+			map.put(InkstoneRawHeaderUtils.convertRawENeader(f.getName()), f.getAbsolutePath());
+		}
+
+		Set<Entry<String, String>> bookSet = map.entrySet();
+		for (Entry<String, String> entry : bookSet) {
+			System.out.println(entry.getKey() + "========" + entry.getValue());
+		}
+		
+		System.out.println("ssssssssssssssssss");
+		//
+		File bookListFile = new File("C:/Users/Administrator/AppData/Local/Google/compare.xls");
+		Map<String, String> compareMap = CompareExcelReaderUtils.readExcel(bookListFile);
+		Set<Entry<String, String>> compareSet = compareMap.entrySet();
+		for (Entry<String, String> entry : compareSet) {
+			System.out.println(entry.getKey() + "========" + entry.getValue());
+		}
+		
+		String res = map.get("1496");
+		System.out.println(res);
+		
+		*/
 	}
 }

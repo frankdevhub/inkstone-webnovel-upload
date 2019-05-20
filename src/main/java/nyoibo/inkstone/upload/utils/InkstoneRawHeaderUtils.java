@@ -34,14 +34,14 @@ public class InkstoneRawHeaderUtils {
 		header = header.replaceAll("（", "(");
 		header = header.replaceAll("）", ")");
 		
-		String convert = null;
+		String convert = header;
 		Matcher matcher = Pattern.compile(chapCNRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group(1).trim();
 			LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
-
+	
 			int number = StringNumberUtils.numberCN2Arab(convert);
-			convert = Integer.toString(number);
+			convert = Integer.toString(number).replace(".0", "");
 
 		} else {
 			matcher = Pattern.compile(numRegx).matcher(header);
@@ -56,7 +56,9 @@ public class InkstoneRawHeaderUtils {
 			throw new Exception(String.format("Cannot recognize the raw header in format：[%s] if need help, "
 					+ "please contact support for this bug.", header));
 		}
-		
+
+		convert = convert.replaceAll(".0", "");
+
 		String tail = getInnerPart(header);
 		if (tail == null) {
 			return convert;
@@ -86,8 +88,8 @@ public class InkstoneRawHeaderUtils {
 					+ "please contact support for this bug.", header));
 		}
 		
-		System.out.println(header);
 		String tail = getInnerPart(header);
+		convert = convert.replaceAll(".0", "");
 		if (tail == null) {
 			return convert;
 		} else {
