@@ -14,6 +14,7 @@ import org.openqa.selenium.WebDriver;
 import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.selenium.config.ChromeDataConfig;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
+import nyoibo.inkstone.upload.utils.CompareExcelReaderUtils;
 import nyoibo.inkstone.upload.utils.ExcelReaderUtils;
 import nyoibo.inkstone.upload.utils.InkstoneRawHeaderUtils;
 
@@ -40,10 +41,8 @@ public class InkstoneUploadMainService {
 	private String path;
 
 	private String bookListPath = "C:/Users/Administrator/AppData/Local/Google/booklist.xls";
-	private String bookCompareListPath ="C:/Users/Administrator/AppData/Local/Google";
-	
-	private String transFilePath;
-	
+	private String bookCompareListPath ="C:/Users/Administrator/AppData/Local/Google/compare.xls";
+
 	private String bookName;
 	
 	private WebDriver driver;
@@ -80,7 +79,7 @@ public class InkstoneUploadMainService {
 	
 	private void readCompareList() throws Exception {
 		File compareFile = new File(bookCompareListPath);
-		this.bookCompareList = ExcelReaderUtils.readExcel(compareFile);
+		this.bookCompareList = CompareExcelReaderUtils.readExcel(compareFile);
 	}
 
 	private void initRawUpload() throws Exception {
@@ -90,10 +89,10 @@ public class InkstoneUploadMainService {
 		
 		File folder = new File("C:/Users/Administrator/AppData/Local/Google/data").listFiles()[0];
 
-	    for(File f:folder.listFiles()){
-	    	chapterFileList.put(InkstoneRawHeaderUtils.getRawExelChap(header), folder.getAbsolutePath());
-	    }
-		
+		for (File f : folder.listFiles()) {
+			chapterFileList.put(InkstoneRawHeaderUtils.convertRawENeader(f.getName()), f.getAbsolutePath());
+		}
+
 		this.bookName = folder.getName();
 
 		Integer count = new Integer(folder.listFiles().length);
@@ -119,7 +118,8 @@ public class InkstoneUploadMainService {
 		readBookList(bookListPath);
 		readCompareList();
 
-		String url = bookListUrl.get(bookName);
+		//String url = bookListUrl.get(bookName);
+		String url = "https://inkstone.webnovel.com/book/detail/cbid/8094160805005105";
 		if (StringUtils.isEmpty(url))
 			throw new Exception(String.format("cannot find book:[%s]", bookName));
 
@@ -127,10 +127,10 @@ public class InkstoneUploadMainService {
 			InkstoneRawNovelService rawService = null;
 			if (i == 0) {
 				rawService = new InkstoneRawNovelService(false, url, this.bookName, process, bookCompareList, true,
-						driver);
+						driver ,chapterFileList);
 			} else {
 				rawService = new InkstoneRawNovelService(false, url, this.bookName, process, bookCompareList, false,
-						driver);
+						driver ,chapterFileList);
 			}
 
 			Thread uploadThread = new Thread(rawService);

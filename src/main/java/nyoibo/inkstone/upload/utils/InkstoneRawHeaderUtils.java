@@ -28,6 +28,9 @@ public class InkstoneRawHeaderUtils {
 	
 	
 	public static String convertRawCNHeader(String header) throws Exception {
+		if(header == null)
+			return null;
+		
 		header = header.replaceAll("（", "(");
 		header = header.replaceAll("）", ")");
 		
@@ -63,7 +66,10 @@ public class InkstoneRawHeaderUtils {
 
 	}
 
-	public static String getRawExelChap(String header) throws Exception {
+	public static String convertRawENeader(String header) throws Exception {
+		if(header == null)
+			return null;
+		
 		header = header.replaceAll("（", "(");
 		header = header.replaceAll("）", ")");
 		

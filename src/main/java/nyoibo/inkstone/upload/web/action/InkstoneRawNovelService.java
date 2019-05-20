@@ -33,7 +33,8 @@ public class InkstoneRawNovelService implements Runnable{
 	private final boolean needLogin;
 
 	private final Map<String, String> bookCompareList;
-
+    private final Map<String,String> chapterFileList;
+	
 	private ConcurrentHashMap<String, Integer> process;
 
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneRawNovelService.class);
@@ -43,7 +44,8 @@ public class InkstoneRawNovelService implements Runnable{
 	
 	
 	public InkstoneRawNovelService(boolean foreign, String bookUrl, String bookName,
-			ConcurrentHashMap<String, Integer> process, Map<String, String> bookCompareList, boolean needLogin,WebDriver driver)
+			ConcurrentHashMap<String, Integer> process, Map<String, String> bookCompareList, boolean needLogin,WebDriver driver,
+			Map<String,String> chapterFileList)
 			throws Exception {
 		this.driver = driver;
 		this.needLogin = needLogin;
@@ -51,9 +53,10 @@ public class InkstoneRawNovelService implements Runnable{
 		this.bookName = bookName;
 
 		this.inkstoneHomePage = new InkstoneHomePage(foreign, driver, bookName, process);
-		this.inkstoneChapterPage = new InkstoneChapterPage(driver, bookUrl, bookName, process, bookCompareList,
-				foreign);
-		
+		this.inkstoneChapterPage = new InkstoneChapterPage(driver, bookUrl, bookName, process, bookCompareList, foreign,
+				chapterFileList);
+
+		this.chapterFileList = chapterFileList;
 		
 		this.bookCompareList = bookCompareList;
 	}

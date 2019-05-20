@@ -19,6 +19,7 @@ import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.selenium.AssignDriver;
 import nyoibo.inkstone.upload.selenium.Query;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
+import nyoibo.inkstone.upload.utils.InkstoneRawHeaderUtils;
 import nyoibo.inkstone.upload.utils.WebDriverUtils;
 import nyoibo.inkstone.upload.utils.WordExtractorUtils;
 
@@ -58,20 +59,21 @@ public class InkstoneChapterPage implements Runnable{
 	private final boolean foreign;
 	
 	private final Map<String, String> bookCompareList;
+	private final Map<String, String> chapterFileList;
+	
+	private String filePath;
 	
 	private WebDriverWait wait;
 
 	private ConcurrentHashMap<String, Integer> process;
-
-	private String tranUrl = "C:/Users/Administrator/AppData/Local/Google/data/";
 
 	private ExpectedCondition<Boolean> pageTitleStartsWith(final String searchString) {
 		return driver -> driver.getTitle().toLowerCase().contains(searchString.toLowerCase());
 	}
 
 	public InkstoneChapterPage(WebDriver driver, String bookUrl, String bookName,
-			ConcurrentHashMap<String, Integer> process,Map<String, String> bookCompareList,boolean foreign)
-			throws Exception {
+			ConcurrentHashMap<String, Integer> process, Map<String, String> bookCompareList, boolean foreign,
+			Map<String, String> chapterFileList) throws Exception {
 		this.driver = driver;
 		this.foreign = foreign;
 		this.bookCompareList = bookCompareList;
@@ -92,9 +94,12 @@ public class InkstoneChapterPage implements Runnable{
 		this.doneBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_DONE_BTN_ID));
 		this.publishBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_PUBLISH_BTN_ID));
 		this.reditBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_REDIT_BTN_ID));
-		
+
 		this.process = process;
 		this.bookName = bookName;
+
+		this.chapterFileList = chapterFileList;
+
 		wait = new WebDriverWait(driver, 10, 1000);
 
 		AssignDriver.initQueryObjects(this, (RemoteWebDriver) driver);
@@ -127,6 +132,19 @@ public class InkstoneChapterPage implements Runnable{
 		// AssignDriver.initQueryObjects(firstRawChapter,
 		// (RemoteWebDriver)driver);
 		WebElement firstChapter = firstRawChapter.findWebElement();
+		// check chapterName
+		String chapName = firstChapter.getText();
+		System.out.println(chapName + "==============================================");
+		String enChapName = bookCompareList.get(InkstoneRawHeaderUtils.convertRawCNHeader(chapName));
+		/*if (enChapName == null)
+			throw new Exception("Cannot find related translated file please check mannually");
+*/
+		
+		
+		this.filePath = chapterFileList.get(enChapName);
+		/*if (filePath == null)
+			throw new Exception("Cannot find related translated file please check mannually");*/
+		this.filePath=  "C:/Users/Administrator/AppData/Local/Google/data/The Great Ruler/Chapter 1446.docx";
 		
 		firstChapter.click();
 		WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_TRANSLATION, wait);
@@ -181,15 +199,11 @@ public class InkstoneChapterPage implements Runnable{
 
 		titleElement.clear();
 		contextElement.clear();
-        
-		System.out.println(tranUrl);
-		System.out.println(bookCompareList.get(sourceChapName));
+     
 		
-		String dataFilePath = tranUrl + this.bookName + "/" + bookCompareList.get(sourceChapName)+".docx";
+		System.out.println(filePath);
 		
-		System.out.println(dataFilePath);
-		
-		File transFile = new File(dataFilePath);
+		File transFile = new File(filePath);
 		if (!transFile.exists())
 			// throw new Exception("cannot find chapter file please check title
 			// and rollback in inprogress item");
@@ -314,6 +328,7 @@ public class InkstoneChapterPage implements Runnable{
 		}
 	}
 	
+
 /*	public static void main(String[] args) {
           String a = "Chapter 308 — She Had No Idea What Stunt Nian Junting Was Going to Pull";
           System.out.println(a.split("-")[1]);
