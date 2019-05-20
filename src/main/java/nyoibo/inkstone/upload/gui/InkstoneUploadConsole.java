@@ -6,6 +6,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -19,6 +20,10 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
+import nyoibo.inkstone.upload.data.logging.Logger;
+import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.message.MessageMethod;
 
 
 
@@ -46,6 +51,10 @@ public class InkstoneUploadConsole extends Dialog{
 	private String chromeCachePath;
 	private String bookListPath;
 	private String chapterListPath;
+	private ProgressBar progressBar;
+	private Composite composite;
+	
+	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
 	
 	public InkstoneUploadConsole(Shell parentShell) {
 		super(parentShell);
@@ -54,7 +63,8 @@ public class InkstoneUploadConsole extends Dialog{
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
-
+		composite = container;
+		
 		GridLayout gridLayout = (GridLayout) container.getLayout();
 		gridLayout.numColumns = 4;
 
@@ -173,8 +183,11 @@ public class InkstoneUploadConsole extends Dialog{
 		progressText.setBackground(container.getBackground());
 		progressText.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1));
 
-		ProgressBar progressBar = new ProgressBar(container, SWT.NONE);
+		progressBar = new ProgressBar(container, SWT.HORIZONTAL | SWT.SMOOTH);
+		progressBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		progressBar.setBackground(SWTResourceManager.getColor(SWT.COLOR_CYAN));
+		progressBar.setMinimum(0);
+		progressBar.setMaximum(100);
 		GridData gdProgressBar = new GridData(SWT.LEFT, SWT.CENTER, true, false, 4, 1);
 		gdProgressBar.widthHint = 425;
 		progressBar.setLayoutData(gdProgressBar);
@@ -213,6 +226,13 @@ public class InkstoneUploadConsole extends Dialog{
 		return new Point(450, 632);
 	}
 
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText("WebNovel Upload Console");
+		newShell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
+	}
+	
 	public String getChromeCachePath() {
 		return chromeCachePath;
 	}
@@ -225,4 +245,81 @@ public class InkstoneUploadConsole extends Dialog{
 		return chapterListPath;
 	}
 
+	public Text getProgressText() {
+		return progressText;
+	}
+
+	public void setProgressText(Text progressText) {
+		this.progressText = progressText;
+	}
+
+	public Button getChromeCacheButton() {
+		return chromeCacheButton;
+	}
+
+	public void setChromeCacheButton(Button chromeCacheButton) {
+		this.chromeCacheButton = chromeCacheButton;
+	}
+
+	public Text getChromeCacheText() {
+		return chromeCacheText;
+	}
+
+	public void setChromeCacheText(Text chromeCacheText) {
+		this.chromeCacheText = chromeCacheText;
+	}
+
+	public Text getBookListText() {
+		return bookListText;
+	}
+
+	public Text getChapterListText() {
+		return chapterListText;
+	}
+
+	public Text getConsoleTextArea() {
+		return consoleTextArea;
+	}
+
+	public Text getWebLinkText() {
+		return webLinkText;
+	}
+
+	public Text getWeblinkUrl() {
+		return weblinkUrl;
+	}
+
+	public ProgressBar getProgressBar() {
+		return progressBar;
+	}
+
+	public Composite getComposite() {
+		return composite;
+	}
+
+	public static void main(String[] args) throws InterruptedException {
+		Display display = new Display(); 
+		System.out.println(display==null);
+	      Shell shell = new Shell(display); 
+		//Shell shell = Display.getDefault().getActiveShell();
+		InkstoneUploadConsole console = new InkstoneUploadConsole(Display.getCurrent().getActiveShell());
+		ConsoleStream stream = new ConsoleStream(System.out, console.getConsoleTextArea());
+		System.setOut(stream);
+		System.setErr(stream);
+
+		
+		
+		ProgressThread thread = new ProgressThread(display, console.getProgressBar());
+		thread.start();
+		console.open();
+		/*for (int i = 0; i <= 100; i++) {
+			console.getProgressBar().setSelection(console.getProgressBar().getSelection()+1);
+			Thread.sleep(200);
+			System.out.println("infoo");
+    	  LOGGER.begin().headerMethod(MessageMethod.EVENT).info("test info");
+    	 
+      }*/
+		
+
+	}
 }
