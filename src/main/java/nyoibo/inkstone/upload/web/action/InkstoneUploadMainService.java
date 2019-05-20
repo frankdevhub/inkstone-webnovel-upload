@@ -15,6 +15,7 @@ import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.selenium.config.ChromeDataConfig;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 import nyoibo.inkstone.upload.utils.ExcelReaderUtils;
+import nyoibo.inkstone.upload.utils.InkstoneRawHeaderUtils;
 
 /**
  * <p>Title:InkstoneNovelUploadThread.java</p>  
@@ -33,12 +34,13 @@ public class InkstoneUploadMainService {
 
 	private Map<String, String> bookListUrl = new HashMap<String, String>();
 	private Map<String, String> bookCompareList = new HashMap<String, String>();
-
+    private Map<String, String> chapterFileList = new HashMap<String,String>();
+	
 	private ExecutorService threadPool;
 	private String path;
-	
-	private String bookListPath;
-	private String bookCompareListPath;
+
+	private String bookListPath = "C:/Users/Administrator/AppData/Local/Google/booklist.xls";
+	private String bookCompareListPath ="C:/Users/Administrator/AppData/Local/Google";
 	
 	private String transFilePath;
 	
@@ -88,6 +90,10 @@ public class InkstoneUploadMainService {
 		
 		File folder = new File("C:/Users/Administrator/AppData/Local/Google/data").listFiles()[0];
 
+	    for(File f:folder.listFiles()){
+	    	chapterFileList.put(InkstoneRawHeaderUtils.getRawExelChap(header), folder.getAbsolutePath());
+	    }
+		
 		this.bookName = folder.getName();
 
 		Integer count = new Integer(folder.listFiles().length);
@@ -109,8 +115,7 @@ public class InkstoneUploadMainService {
 		/*ExecutorService service = new ThreadPoolExecutor(3, 2 * nCPU, 0L, TimeUnit.MICROSECONDS,
 				new LinkedBlockingQueue<Runnable>(300));*/
 
-		ExecutorService service = Executors.newSingleThreadExecutor();
-		this.threadPool = service;
+		this.threadPool = Executors.newSingleThreadExecutor();
 		readBookList(bookListPath);
 		readCompareList();
 
@@ -130,9 +135,9 @@ public class InkstoneUploadMainService {
 
 			Thread uploadThread = new Thread(rawService);
 			
-			service.execute(uploadThread);
+			this.threadPool.execute(uploadThread);
 		}
-		service.shutdown();
+		this.threadPool.shutdown();
 	}
 
 	public void rawUploadStart() throws Exception {

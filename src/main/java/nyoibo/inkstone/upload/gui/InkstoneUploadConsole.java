@@ -23,7 +23,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
-import nyoibo.inkstone.upload.message.MessageMethod;
 
 
 
