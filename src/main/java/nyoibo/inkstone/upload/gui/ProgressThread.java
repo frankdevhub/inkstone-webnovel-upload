@@ -22,9 +22,10 @@ public class ProgressThread extends Thread {
 		this.progressBar = progressBar;
 	}
 
+	@Override
 	public void run() {
 
-		for (int i = 0; i < 30; i++) {
+		while (true) {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -34,7 +35,9 @@ public class ProgressThread extends Thread {
 				public void run() {
 					if (progressBar.isDisposed())
 						return;
-
+					if (progressBar.getSelection() > 5) {
+						progressBar.setSelection(0);
+					}
 					progressBar.setSelection(progressBar.getSelection() + 1);
 				}
 			});

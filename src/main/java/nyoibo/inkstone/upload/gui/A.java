@@ -1,28 +1,10 @@
 package nyoibo.inkstone.upload.gui;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-
-import nyoibo.inkstone.upload.data.logging.Logger;
-import nyoibo.inkstone.upload.data.logging.LoggerFactory;
-import nyoibo.inkstone.upload.message.MessageMethod;
 
 
 /**
@@ -64,7 +46,7 @@ class LongRunningOperation extends Thread{
   private ProgressBar progressBar; 
   
   public LongRunningOperation(Display display,ProgressBar progressBar){ 
-      this.display = display; 
+      this.display = Display.getDefault(); 
       this.progressBar = progressBar; 
   } 
   
@@ -80,7 +62,7 @@ class LongRunningOperation extends Thread{
               public void run(){ 
                   if(progressBar.isDisposed()) return; 
                   //进度条递增 
-                  progressBar.setSelection(progressBar.getSelection()+1); 
+                  progressBar.setSelection(progressBar.getSelection()+10); 
               } 
           }); 
       } 

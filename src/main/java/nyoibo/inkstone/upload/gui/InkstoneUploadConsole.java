@@ -24,8 +24,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 
-
-
 /**
  * <p>Title:InkstoneUploadConsole.java</p>  
  * <p>Description: </p>  
@@ -36,8 +34,9 @@ import nyoibo.inkstone.upload.data.logging.LoggerFactory;
  * @date:2019-05-19 18:06
  */
 
-public class InkstoneUploadConsole extends Dialog{
+public class InkstoneUploadConsole extends Dialog {
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
+	private Display display;
 	private Text bookListText;
 	private Text chapterListText;
 	private Text consoleTextArea;
@@ -53,6 +52,8 @@ public class InkstoneUploadConsole extends Dialog{
 	private ProgressBar progressBar;
 	private Composite composite;
 	
+	private ProgressThread progressThread;
+	
 	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
 	
 	public InkstoneUploadConsole(Shell parentShell) {
@@ -63,6 +64,7 @@ public class InkstoneUploadConsole extends Dialog{
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
 		composite = container;
+		display = composite.getDisplay();
 		
 		GridLayout gridLayout = (GridLayout) container.getLayout();
 		gridLayout.numColumns = 4;
@@ -192,6 +194,8 @@ public class InkstoneUploadConsole extends Dialog{
 		progressBar.setLayoutData(gdProgressBar);
 		formToolkit.adapt(progressBar, true, true);
 
+		progressThread = new ProgressThread(display, progressBar);
+		
 		ScrolledComposite scrolledComposite = new ScrolledComposite(container,
 				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, false, false, 4, 1);
@@ -211,6 +215,8 @@ public class InkstoneUploadConsole extends Dialog{
 		scrolledComposite.setContent(consoleTextArea);
 		scrolledComposite.setMinSize(consoleTextArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
+		
+	
 		return container;
 	}
 
@@ -232,6 +238,10 @@ public class InkstoneUploadConsole extends Dialog{
 		newShell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
 	}
 	
+	public ProgressThread getProgressThread() {
+		return progressThread;
+	}
+
 	public String getChromeCachePath() {
 		return chromeCachePath;
 	}
@@ -297,28 +307,25 @@ public class InkstoneUploadConsole extends Dialog{
 	}
 
 	public static void main(String[] args) throws InterruptedException {
-		Display display = new Display(); 
+		Display display = Display.getDefault(); 
 		System.out.println(display==null);
 	      Shell shell = new Shell(display); 
 		//Shell shell = Display.getDefault().getActiveShell();
-		InkstoneUploadConsole console = new InkstoneUploadConsole(Display.getCurrent().getActiveShell());
-		ConsoleStream stream = new ConsoleStream(System.out, console.getConsoleTextArea());
+		InkstoneUploadConsole console = new InkstoneUploadConsole(shell);
+		/*ConsoleStream stream = new ConsoleStream(System.out, console.getConsoleTextArea());
 		System.setOut(stream);
 		System.setErr(stream);
+*/
+		
+		
+		 console.open();
+	
+	      while(!shell.isDisposed()){ 
+	          if(!display.readAndDispatch()){ 
+	              display.sleep(); 
+	          } 
+	      } 
 
-		
-		
-		ProgressThread thread = new ProgressThread(display, console.getProgressBar());
-		thread.start();
-		console.open();
-		/*for (int i = 0; i <= 100; i++) {
-			console.getProgressBar().setSelection(console.getProgressBar().getSelection()+1);
-			Thread.sleep(200);
-			System.out.println("infoo");
-    	  LOGGER.begin().headerMethod(MessageMethod.EVENT).info("test info");
-    	 
-      }*/
-		
 
 	}
 }
