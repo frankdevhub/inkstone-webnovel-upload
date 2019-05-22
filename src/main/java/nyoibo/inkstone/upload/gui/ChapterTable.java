@@ -6,7 +6,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -18,7 +17,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 
-public class ChapterTable {
+public class ChapterTable{
 	private ViewForm viewForm = null;
 	private ToolBar toolBar = null;
 	private Composite composite = null;
@@ -26,14 +25,10 @@ public class ChapterTable {
 	private Menu menu = null;
 
 	public ChapterTable(Composite parent) {
-		Display display = Display.getDefault();
-		createSShell(parent);
-		while (!parent.isDisposed()) {
-			if (!display.readAndDispatch())
-				display.sleep();
-		}
-		ImageFactory.dispose();
-		display.dispose();
+		this.composite = parent;
+		createViewForm(parent);
+		createToolBar();
+		createMenu(parent);
 	}
 
 	private void createViewForm(Composite parent) {

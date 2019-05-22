@@ -1,12 +1,15 @@
 package nyoibo.inkstone.upload.gui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 
 /**
  * <p>Title:CompareChapterWindow.java</p>  
@@ -19,28 +22,40 @@ import org.eclipse.swt.widgets.Text;
  */
 
 public class CompareChapterWindow {
-	public static void main(String[] args) {
-		final Display display = new Display();
-		Shell shell = new Shell(display);
+	
+	private Shell shell;
+	private Display display;
+	private SashForm form;
+	
+	private Composite fileComposite;
+	private Composite chapterComposite;
+
+	public Map<String, String> chapterList = new HashMap<String, String>();
+
+	public CompareChapterWindow() {
+		this.display = new Display();
+		this.shell = new Shell(display);
 		shell.setLayout(new FillLayout());
-		shell.setText("SashForm");
-
-		// 创建窗框对象，设置样式为水平排列
-		SashForm form = new SashForm(shell, SWT.HORIZONTAL | SWT.BORDER);
+		shell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
+		shell.setText("ConfigChapterList");
+		
+		this.form = new SashForm(shell, SWT.HORIZONTAL | SWT.BORDER);
 		form.setLayout(new FillLayout());
-		// 创建窗口1的面板
-		Composite child1 = new Composite(form, SWT.NONE);
-		child1.setLayout(new FillLayout());
-		new Text(child1, SWT.MULTI).setText("窗口1");
-		// 创建窗口2的面板
-		Composite child2 = new Composite(form, SWT.NONE);
-		child2.setLayout(new FillLayout());
-		new Text(child2, SWT.MULTI).setText("窗口2");
 
-		form.setWeights(new int[] { 30, 70 });
-		// form.setMaximizedControl( child1 );
-		// form.setMaximizedControl( null );
-		shell.setSize(200, 150);
+		fileComposite =new Composite(form, SWT.BEGINNING);
+		fileComposite.setLayout(new FillLayout());
+		new FileExplorer(fileComposite);
+
+		this.chapterComposite = new Composite(form, SWT.BEGINNING);
+		chapterComposite.setLayout(new FillLayout());
+		new ChapterTable(chapterComposite);
+
+		form.setWeights(new int[] { 200, 150 });
+
+		shell.setSize(800, 450);
+	}
+
+	public void open() {
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
@@ -48,5 +63,10 @@ public class CompareChapterWindow {
 		}
 		display.dispose();
 
+	}
+
+	public static void main(String[] args) {
+		CompareChapterWindow window = new CompareChapterWindow();
+		window.open();
 	}
 }

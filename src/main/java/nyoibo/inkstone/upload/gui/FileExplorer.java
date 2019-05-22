@@ -40,23 +40,22 @@ import org.eclipse.swt.widgets.TableColumn;
  * @date:2019-05-13 12:17
  */
 
-public class FileExplorer extends ApplicationWindow {
+public class FileExplorer{
 
 	private SashForm sash;
 	private TreeViewer tree;
 	private TableViewer table;
 	private SelectAction selectAction;
     private ChapterTable chapterTable;
-	
-	public FileExplorer() {
-		super(null);
+	private Composite parent;
+    
+	public FileExplorer(Composite parent) {
+		this.parent = parent;
 		selectAction = new SelectAction();
+		createContents(parent);
 	}
 
-	@Override
 	protected Control createContents(Composite parent) {
-
-		this.getShell().setMaximized(true);
 		sash = new SashForm(parent, SWT.SMOOTH);
 		sash.setLayoutData(new GridData(GridData.FILL_BOTH));
 		initTree();
@@ -97,12 +96,12 @@ public class FileExplorer extends ApplicationWindow {
 		tree.addSelectionChangedListener(selectAction);
 	};
 
-	public static void main(String[] args) {
-		FileExplorer test = new FileExplorer();
+/*	public static void main(String[] args) {
+		FileExplorer test = new FileExplorer(Display.getDefault().getActiveShell());
 		test.setBlockOnOpen(true);
 		test.open();
 		Display.getCurrent().dispose();
-	}
+	}*/
 
 	public class FileTreeContentProvider implements ITreeContentProvider {
 
