@@ -1,5 +1,7 @@
 package nyoibo.inkstone.upload.gui;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ProgressBar;
 
@@ -16,11 +18,22 @@ import org.eclipse.swt.widgets.ProgressBar;
 public class ProgressThread extends Thread {
 	private Display display;
 	private ProgressBar progressBar;
+	private ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<>();
 
-	public ProgressThread(Display display, ProgressBar progressBar) {
+	public ProgressThread(Display display, ProgressBar progressBar, ConcurrentHashMap<String, Integer> process) {
 		this.display = display;
 		this.progressBar = progressBar;
+		this.process = process;
 	}
+
+	public ConcurrentHashMap<String, Integer> getProcess() {
+		return process;
+	}
+
+	public void setProcess(ConcurrentHashMap<String, Integer> process) {
+		this.process = process;
+	}
+
 
 	@Override
 	public void run() {

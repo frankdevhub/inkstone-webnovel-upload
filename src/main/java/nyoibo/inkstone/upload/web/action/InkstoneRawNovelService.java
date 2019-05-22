@@ -57,7 +57,6 @@ public class InkstoneRawNovelService implements Runnable{
 				chapterFileList);
 
 		this.chapterFileList = chapterFileList;
-		
 		this.bookCompareList = bookCompareList;
 	}
 

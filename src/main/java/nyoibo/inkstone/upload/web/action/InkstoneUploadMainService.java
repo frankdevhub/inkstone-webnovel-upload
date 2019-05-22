@@ -2,6 +2,7 @@ package nyoibo.inkstone.upload.web.action;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,8 +31,9 @@ import nyoibo.inkstone.upload.utils.InkstoneRawHeaderUtils;
 
 public class InkstoneUploadMainService {
 	
-	private ConcurrentHashMap<String, Integer> total = new ConcurrentHashMap<>();
 	private ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<>();
+	public static ArrayList<String> finishedChapters = new ArrayList<String>();
+	public static String currentChapterName = null;
 
 	private Map<String, String> bookListUrl = new HashMap<String, String>();
 	private Map<String, String> bookCompareList = new HashMap<String, String>();
@@ -52,25 +54,6 @@ public class InkstoneUploadMainService {
 		String dataName = ChromeDataConfig.createDataName(SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW);
 		return ChromeDataConfig.config(root, dataName);
 	}
-	
-	public synchronized static Thread check(String thread) {
-		Thread alive = null;
-		ThreadGroup currentGroup = Thread.currentThread().getThreadGroup();
-		int noThread = currentGroup.activeCount();
-
-		Thread[] lstThreads = new Thread[noThread];
-		currentGroup.enumerate(lstThreads);
-
-		for (int i = 0; i < noThread; i++) {
-			String currentThreadName = lstThreads[i].getName();
-			if (currentThreadName.equals(thread)) {
-				alive = lstThreads[i];
-				break;
-			}
-		}
-		return alive;
-	}
-
 
 	private void readBookList(String listPath) throws Exception {
 		File bookListFile = new File(listPath);
@@ -94,13 +77,6 @@ public class InkstoneUploadMainService {
 		}
 
 		this.bookName = folder.getName();
-
-		Integer count = new Integer(folder.listFiles().length);
-		total.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW, count);
-		total.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_INPROGRESS, count);
-		total.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_TRANSLATEING, count);
-		total.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_EDITING, count);
-		total.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_READY_PUBLISH, count);
 
 		process.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW, 0);
 		process.put(SeleniumInkstone.INKSTONE_TRANS_STATUS_INPROGRESS, 0);
@@ -143,6 +119,14 @@ public class InkstoneUploadMainService {
 		initRawUpload();
 	}
 	
+	public ConcurrentHashMap<String, Integer> getProcess() {
+		return process;
+	}
+
+	public void setProcess(ConcurrentHashMap<String, Integer> process) {
+		this.process = process;
+	}
+
 	public static void main(String[] args) throws Exception {
 		//InkstoneUploadMainService service = new InkstoneUploadMainService();
 		//service.rawUploadStart();

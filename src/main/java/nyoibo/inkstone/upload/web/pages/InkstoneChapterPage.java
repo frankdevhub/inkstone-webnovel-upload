@@ -22,6 +22,7 @@ import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 import nyoibo.inkstone.upload.utils.InkstoneRawHeaderUtils;
 import nyoibo.inkstone.upload.utils.WebDriverUtils;
 import nyoibo.inkstone.upload.utils.WordExtractorUtils;
+import nyoibo.inkstone.upload.web.action.InkstoneUploadMainService;
 
 /**
  * <p>Title:InkstoneProjectPage.java</p>  
@@ -66,7 +67,8 @@ public class InkstoneChapterPage implements Runnable{
 	private WebDriverWait wait;
 
 	private ConcurrentHashMap<String, Integer> process;
-
+    private String currentChapterName;
+	
 	private ExpectedCondition<Boolean> pageTitleStartsWith(final String searchString) {
 		return driver -> driver.getTitle().toLowerCase().contains(searchString.toLowerCase());
 	}
@@ -133,9 +135,11 @@ public class InkstoneChapterPage implements Runnable{
 		// (RemoteWebDriver)driver);
 		WebElement firstChapter = firstRawChapter.findWebElement();
 		// check chapterName
-		String chapName = firstChapter.getText();
-		System.out.println(chapName + "==============================================");
-		String enChapName = bookCompareList.get(InkstoneRawHeaderUtils.convertRawCNHeader(chapName));
+		currentChapterName = firstChapter.getText();
+		InkstoneUploadMainService.currentChapterName = currentChapterName;
+		
+		
+		String enChapName = bookCompareList.get(InkstoneRawHeaderUtils.convertRawCNHeader(currentChapterName));
 		/*if (enChapName == null)
 			throw new Exception("Cannot find related translated file please check mannually");
 */
@@ -289,6 +293,7 @@ public class InkstoneChapterPage implements Runnable{
 		try {
 			WebDriverUtils.findWebElement(publishBtn);
 			Thread.sleep(2000);
+			InkstoneUploadMainService.finishedChapters.add(currentChapterName);
 			
 			Thread.currentThread().interrupt();
 			
@@ -306,9 +311,7 @@ public class InkstoneChapterPage implements Runnable{
 						String.format("book [%s] publish failed , please check inprogress item", this.bookName));
 			}
 		}
-			
 		
-		//driver.quit();
 	}
 
 
@@ -316,9 +319,6 @@ public class InkstoneChapterPage implements Runnable{
 	public void run() {
 		try {
 			editLatestRaw();
-			/*selectTranslate();
-			doTranslate();
-			doEdit();*/
 		} catch (Exception e) {
 			Thread.currentThread().interrupt();
 			e.printStackTrace();
@@ -327,7 +327,6 @@ public class InkstoneChapterPage implements Runnable{
 					.error(String.format("Error at page:[%s]", driver.getTitle()));
 		}
 	}
-	
 
 /*	public static void main(String[] args) {
           String a = "Chapter 308 — She Had No Idea What Stunt Nian Junting Was Going to Pull";

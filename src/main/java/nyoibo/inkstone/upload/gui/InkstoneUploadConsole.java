@@ -1,5 +1,7 @@
 package nyoibo.inkstone.upload.gui;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -53,6 +55,7 @@ public class InkstoneUploadConsole extends Dialog {
 	private Composite composite;
 	
 	private ProgressThread progressThread;
+	private ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<>();
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
 	
@@ -194,7 +197,7 @@ public class InkstoneUploadConsole extends Dialog {
 		progressBar.setLayoutData(gdProgressBar);
 		formToolkit.adapt(progressBar, true, true);
 
-		progressThread = new ProgressThread(display, progressBar);
+		progressThread = new ProgressThread(display, progressBar, process);
 		
 		ScrolledComposite scrolledComposite = new ScrolledComposite(container,
 				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
