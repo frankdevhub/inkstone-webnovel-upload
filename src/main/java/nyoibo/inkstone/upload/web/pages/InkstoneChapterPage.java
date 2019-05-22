@@ -149,7 +149,9 @@ public class InkstoneChapterPage implements Runnable{
 		/*if (filePath == null)
 			throw new Exception("Cannot find related translated file please check mannually");*/
 		this.filePath=  "C:/Users/Administrator/AppData/Local/Google/data/The Great Ruler/Chapter 1446.docx";
-		
+
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Using file path: %s", filePath));
+
 		firstChapter.click();
 		WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_TRANSLATION, wait);
 
@@ -203,9 +205,7 @@ public class InkstoneChapterPage implements Runnable{
 
 		titleElement.clear();
 		contextElement.clear();
-     
-		
-		System.out.println(filePath);
+    
 		
 		File transFile = new File(filePath);
 		if (!transFile.exists())
