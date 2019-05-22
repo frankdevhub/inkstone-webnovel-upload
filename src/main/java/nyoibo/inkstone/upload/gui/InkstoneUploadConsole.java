@@ -25,7 +25,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
-import nyoibo.inkstone.upload.message.MessageMethod;
 
 /**
  * <p>Title:InkstoneUploadConsole.java</p>  
@@ -54,12 +53,15 @@ public class InkstoneUploadConsole extends Dialog {
 	private String chapterListPath;
 	private ProgressBar progressBar;
 	private Composite composite;
+	private final int CONSOLE_OK_ID = 10;
 	
 	private ProgressThread progressThread;
 
 	private ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<>();
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
+
+	
 	
 	public InkstoneUploadConsole(Shell parentShell) {
 		super(parentShell);
@@ -219,14 +221,32 @@ public class InkstoneUploadConsole extends Dialog {
 
 		scrolledComposite.setContent(consoleTextArea);
 		scrolledComposite.setMinSize(consoleTextArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
+
+		new ConsoleUtils(display, consoleTextArea);
 		
 		return container;
 	}
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+		Button okButton = createButton(parent, CONSOLE_OK_ID, IDialogConstants.OK_LABEL, false);
+		okButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+
+	
+
+			}
+		});
+		Button cancelButton = createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+
+		cancelButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+
+			}
+		});
 	}
 
 	@Override
@@ -315,7 +335,6 @@ public class InkstoneUploadConsole extends Dialog {
 
 	public static void main(String[] args) throws InterruptedException {
 		Display display = Display.getDefault(); 
-		System.out.println(display==null);
 	      Shell shell = new Shell(display); 
 		//Shell shell = Display.getDefault().getActiveShell();
 		InkstoneUploadConsole console = new InkstoneUploadConsole(shell);
@@ -324,15 +343,10 @@ public class InkstoneUploadConsole extends Dialog {
 		System.setErr(stream);
 */
 		
-		
-
-		 
-		TextAreaThread 	textAreaThread = new TextAreaThread(display,console.getConsoleTextArea(), "test");
-			textAreaThread.start();
-			
-		 String test = LOGGER.begin().headerAction(MessageMethod.EVENT).info("test info");
-		
 		 console.open();
+		 
+		
+		 
 	      while(!shell.isDisposed()){ 
 	          if(!display.readAndDispatch()){ 
 	              display.sleep(); 

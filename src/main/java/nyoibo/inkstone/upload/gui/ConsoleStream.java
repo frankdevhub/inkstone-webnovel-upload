@@ -27,6 +27,7 @@ public class ConsoleStream extends PrintStream {
 
 	@Override
 	public void write(byte[] buf, int off, int len) {
+		buf = new byte[5000];
 		final String log = new String(buf, off, len);
 		Display.getDefault().syncExec(new Thread() {
 			public void run() {

@@ -13,30 +13,24 @@ import org.eclipse.swt.widgets.Text;
  * @date:2019-05-22 20:36
  */
 
-public class TextAreaThread extends Thread {
+public class ConsoleUtils {
 
-	private Display display;
-	private Text textarea;
-	private String text;
+	private static Display display;
+	private static Text textarea;
 
-	public TextAreaThread(Display display, Text textarea, String text) {
-		super();
+	public ConsoleUtils(Display display, Text textarea) {
 		this.display = display;
 		this.textarea = textarea;
-		this.text = text;
 	}
 
-	@Override
-	public void run() {
+	public synchronized static void pushToConsole(String message) {
 		display.asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				System.out.println("=====");
 				textarea.append("\n");
-				textarea.append(text);
+				textarea.append(message);
 			}
 		});
-
 	}
 
 }

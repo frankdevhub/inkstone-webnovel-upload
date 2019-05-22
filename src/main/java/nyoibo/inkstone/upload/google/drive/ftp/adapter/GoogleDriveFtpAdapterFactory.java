@@ -15,6 +15,7 @@ import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import nyoibo.inkstone.upload.NyoiboApp;
 import nyoibo.inkstone.upload.google.drive.ftp.adapter.model.GoogleDriveFactory;
 import nyoibo.inkstone.upload.google.drive.ftp.adapter.utils.JarUtils;
+import nyoibo.inkstone.upload.gui.ConsoleUtils;
 
 /**
  * <p>Title:GoogleDriveFtpAdapterFactory.java</p>  
@@ -69,6 +70,7 @@ public class GoogleDriveFtpAdapterFactory {
 	
 	private static void init() {
 		try {
+			ConsoleUtils.pushToConsole("init google drive ftp adapter");
 			cleanDataFolders();
 			JarUtils.printManifestAttributesToString();
 			LOGGER.info("Program info: " + JarUtils.getManifestAttributesAsMap());
