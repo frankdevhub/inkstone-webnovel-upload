@@ -46,12 +46,14 @@ public class FileExplorer extends ApplicationWindow {
 	private TreeViewer tree;
 	private TableViewer table;
 	private SelectAction selectAction;
-
+    private ChapterTable chapterTable;
+	
 	public FileExplorer() {
 		super(null);
 		selectAction = new SelectAction();
 	}
 
+	@Override
 	protected Control createContents(Composite parent) {
 
 		this.getShell().setMaximized(true);
@@ -65,7 +67,8 @@ public class FileExplorer extends ApplicationWindow {
 
 	private void initTable() {
 		table = new TableViewer(sash);
-
+		chapterTable = new ChapterTable(sash);
+		
 		new TableColumn(table.getTable(), SWT.LEFT).setText("Name");
 		new TableColumn(table.getTable(), SWT.LEFT).setText("Type");
 		new TableColumn(table.getTable(), SWT.LEFT).setText("Size");
