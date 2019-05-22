@@ -45,13 +45,13 @@ public class FileExplorer extends ApplicationWindow {
 	private SashForm sash;
 	private TreeViewer tree;
 	private TableViewer table;
-	private OpenAction openAction;
+	private SelectAction selectAction;
 
 	public FileExplorer() {
 		super(null);
-		openAction = new OpenAction();
+		selectAction = new SelectAction();
 	}
-	
+
 	protected Control createContents(Composite parent) {
 
 		this.getShell().setMaximized(true);
@@ -62,10 +62,10 @@ public class FileExplorer extends ApplicationWindow {
 		sash.setWeights(new int[] { 40, 60 });
 		return parent;
 	}
-	
+
 	private void initTable() {
 		table = new TableViewer(sash);
-		
+
 		new TableColumn(table.getTable(), SWT.LEFT).setText("Name");
 		new TableColumn(table.getTable(), SWT.LEFT).setText("Type");
 		new TableColumn(table.getTable(), SWT.LEFT).setText("Size");
@@ -73,17 +73,17 @@ public class FileExplorer extends ApplicationWindow {
 		for (int i = 0; i < table.getTable().getColumnCount(); i++) {
 			table.getTable().getColumn(i).pack();
 		}
-		
+
 		table.getTable().setHeaderVisible(true);
 		table.getTable().setLinesVisible(true);
-	
+
 		table.setContentProvider(new FileTableContentProvider());
-		
+
 		table.setLabelProvider(new FileTableLabelProvider());
-		
+
 		table.setSorter(new FileSorter());
-		
-		table.addDoubleClickListener(openAction);
+
+		table.addDoubleClickListener(selectAction);
 
 	}
 
@@ -92,7 +92,7 @@ public class FileExplorer extends ApplicationWindow {
 		tree.setContentProvider(new FileTreeContentProvider());
 		tree.setLabelProvider(new FileTreeLabelProvider());
 		tree.setInput("root");
-		tree.addSelectionChangedListener(openAction);
+		tree.addSelectionChangedListener(selectAction);
 	};
 
 	public static void main(String[] args) {
@@ -130,7 +130,8 @@ public class FileExplorer extends ApplicationWindow {
 		public void dispose() {
 		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		}
 
 	}
 
@@ -139,8 +140,8 @@ public class FileExplorer extends ApplicationWindow {
 		public Image getImage(Object element) {
 			File file = (File) element;
 			if (file.isDirectory())
-				return ImageFactory.loadImage(Display.getCurrent(),ImageFactory.FOLDER);
-			return ImageFactory.loadImage(Display.getCurrent(),ImageFactory.FILE);
+				return ImageFactory.loadImage(Display.getCurrent(), ImageFactory.FOLDER);
+			return ImageFactory.loadImage(Display.getCurrent(), ImageFactory.FILE);
 		}
 
 		public String getText(Object element) {
@@ -151,7 +152,8 @@ public class FileExplorer extends ApplicationWindow {
 			return text;
 		}
 
-		public void addListener(ILabelProviderListener listener) {	}
+		public void addListener(ILabelProviderListener listener) {
+		}
 
 		public void dispose() {
 			ImageFactory.dispose();
@@ -161,15 +163,18 @@ public class FileExplorer extends ApplicationWindow {
 			return false;
 		}
 
-		public void removeListener(ILabelProviderListener listener) {}
+		public void removeListener(ILabelProviderListener listener) {
+		}
 
 	}
 
 	class FileTableContentProvider implements IStructuredContentProvider {
 
-		public void dispose() {}
+		public void dispose() {
+		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		}
 
 		public Object[] getElements(Object inputElement) {
 			File file = (File) inputElement;
@@ -184,16 +189,16 @@ public class FileExplorer extends ApplicationWindow {
 			File file = (File) element;
 			if (columnIndex == 0) {
 				if (file.isDirectory())
-					return ImageFactory.loadImage(Display.getCurrent(),ImageFactory.FOLDER);
+					return ImageFactory.loadImage(Display.getCurrent(), ImageFactory.FOLDER);
 				else
-					return ImageFactory.loadImage(Display.getCurrent(),ImageFactory.FILE);
+					return ImageFactory.loadImage(Display.getCurrent(), ImageFactory.FILE);
 			}
 			return null;
 		}
 
 		public String getColumnText(Object element, int columnIndex) {
 			File file = (File) element;
-			if (columnIndex == 0 )
+			if (columnIndex == 0)
 				return file.getName();
 			else if (columnIndex == 1) {
 				if (file.isDirectory())
@@ -212,7 +217,8 @@ public class FileExplorer extends ApplicationWindow {
 			return null;
 		}
 
-		public void addListener(ILabelProviderListener listener) {}
+		public void addListener(ILabelProviderListener listener) {
+		}
 
 		public void dispose() {
 			ImageFactory.dispose();
@@ -222,7 +228,8 @@ public class FileExplorer extends ApplicationWindow {
 			return false;
 		}
 
-		public void removeListener(ILabelProviderListener listener) {}
+		public void removeListener(ILabelProviderListener listener) {
+		}
 
 	}
 
@@ -239,37 +246,34 @@ public class FileExplorer extends ApplicationWindow {
 		}
 	}
 
-	public class OpenAction implements ISelectionChangedListener, IDoubleClickListener {
-		
-		
+	public class SelectAction implements ISelectionChangedListener, IDoubleClickListener {
+
 		public void selectionChanged(SelectionChangedEvent event) {
 			table.setInput(getTreeSelection());
 		}
-		
+
 		public void doubleClick(DoubleClickEvent event) {
-			Object selection =  getTableSelection();
-			if  (selection==null)
+			Object selection = getTableSelection();
+			if (selection == null)
 				return;
 			File file = (File) selection;
 			if (file.isFile()) {
-				//Program.launch(file.getAbsolutePath());
-				System.out.println(file.getName());
+				String selectFileName = file.getName();
 			} else if (file.isDirectory()) {
-				table.setInput( selection );
-				System.out.println("===");
+				table.setInput(selection);
 			}
-			
+
 		}
 	}
 
-	public Object getTreeSelection(){
+	public Object getTreeSelection() {
 		IStructuredSelection selection = (IStructuredSelection) tree.getSelection();
 		if (selection.size() != 1)
 			return null;
 		return selection.getFirstElement();
 	}
 
-	public Object getTableSelection(){
+	public Object getTableSelection() {
 		IStructuredSelection selection = (IStructuredSelection) table.getSelection();
 		if (selection.size() != 1)
 			return null;
