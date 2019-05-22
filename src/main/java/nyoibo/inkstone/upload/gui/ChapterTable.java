@@ -1,11 +1,16 @@
 package nyoibo.inkstone.upload.gui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.custom.ViewForm;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -13,8 +18,10 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 
 public class ChapterTable{
@@ -57,12 +64,14 @@ public class ChapterTable{
 		final ToolItem save = new ToolItem(toolBar, SWT.PUSH);
 		save.setText("save");
 		save.setImage(ImageFactory.loadImage(toolBar.getDisplay(), ImageFactory.SAVE_EDIT));
-
+		
+		
 		Listener listener = new Listener() {
 			public void handleEvent(Event event) {
 				if (event.widget == add) {
 					TableItem item = new TableItem(table, SWT.NONE);
 					item.setText(new String[] { "aa", "aa" });
+					bindEditors();
 				}
 
 				else if (event.widget == del) {
@@ -107,6 +116,26 @@ public class ChapterTable{
 		createTable();
 	}
 
+	private void bindEditors() {
+		TableItem[] items = table.getItems();
+		for (int i = 0; i < items.length; i++) {
+			for (int j = 0; j < 2; j++) {
+				final TableEditor editor1 = new TableEditor(table);
+				final Text text = new Text(table, SWT.NONE);
+				final int index = j;
+				text.setText(items[i].getText(index));
+				editor1.grabHorizontal = true;
+				editor1.setEditor(text, items[i], index);
+				text.addModifyListener(new ModifyListener() {
+					public void modifyText(ModifyEvent e) {
+						editor1.getItem().setText(index, text.getText());
+					}
+
+				});
+			}
+		}
+	}
+
 	private void createTable() {
 
 		GridData gridData = new org.eclipse.swt.layout.GridData();
@@ -128,14 +157,12 @@ public class ChapterTable{
 		}
 		TableItem item = new TableItem(table, SWT.NONE);
 		item.setText(new String[] { "A1", "A1" });
+		for (int i = 0; i < tableHeader.length; i++) {
+			table.getColumn(i).pack();
+		}
 
-	}
 
-	private void createSShell(Composite parent) {
-		parent.setLayout(new FillLayout());
-		createViewForm(parent);
-		createMenu(parent);
-		parent.setSize(new org.eclipse.swt.graphics.Point(307, 218));
+
 	}
 
 	private void createMenu(Composite parent) {
@@ -154,17 +181,6 @@ public class ChapterTable{
 			}
 		});
 
-		MenuItem view = new MenuItem(menu, SWT.PUSH);
-		view.setText("Open");
-		view.setImage(ImageFactory.loadImage(parent.getShell().getDisplay(), ImageFactory.SCOPY_EDIT));
-
-		view.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event event) {
-				TableItem[] items = table.getSelection();
-				for (int i = 0; i < items.length; i++)
-					System.out.print(items[i].getText());
-			}
-		});
 
 	}
 

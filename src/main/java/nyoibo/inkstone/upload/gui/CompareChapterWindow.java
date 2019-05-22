@@ -29,7 +29,7 @@ public class CompareChapterWindow {
 	
 	private Composite fileComposite;
 	private Composite chapterComposite;
-
+	
 	public Map<String, String> chapterList = new HashMap<String, String>();
 
 	public CompareChapterWindow() {
@@ -37,7 +37,7 @@ public class CompareChapterWindow {
 		this.shell = new Shell(display);
 		shell.setLayout(new FillLayout());
 		shell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
-		shell.setText("ConfigChapterList");
+		shell.setText("Config Chapter List");
 		
 		this.form = new SashForm(shell, SWT.HORIZONTAL | SWT.BORDER);
 		form.setLayout(new FillLayout());
@@ -49,10 +49,10 @@ public class CompareChapterWindow {
 		this.chapterComposite = new Composite(form, SWT.BEGINNING);
 		chapterComposite.setLayout(new FillLayout());
 		new ChapterTable(chapterComposite);
-
+		
 		form.setWeights(new int[] { 200, 150 });
-
 		shell.setSize(800, 450);
+
 	}
 
 	public void open() {
