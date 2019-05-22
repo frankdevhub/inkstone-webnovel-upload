@@ -25,6 +25,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.message.MessageMethod;
 
 /**
  * <p>Title:InkstoneUploadConsole.java</p>  
@@ -55,6 +56,7 @@ public class InkstoneUploadConsole extends Dialog {
 	private Composite composite;
 	
 	private ProgressThread progressThread;
+
 	private ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<>();
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
@@ -209,7 +211,7 @@ public class InkstoneUploadConsole extends Dialog {
 		scrolledComposite.setExpandVertical(true);
 		scrolledComposite.setAlwaysShowScrollBars(true);
 
-		consoleTextArea = formToolkit.createText(scrolledComposite, "InkstoneConsoleTextArea", SWT.NONE);
+		consoleTextArea = formToolkit.createText(scrolledComposite, "InkstoneConsoleTextArea", SWT.BORDER | SWT.MULTI);
 		consoleTextArea.setEditable(false);
 		consoleTextArea.setText("Waiting ......");
 		consoleTextArea.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
@@ -217,9 +219,7 @@ public class InkstoneUploadConsole extends Dialog {
 
 		scrolledComposite.setContent(consoleTextArea);
 		scrolledComposite.setMinSize(consoleTextArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-
 		
-	
 		return container;
 	}
 
@@ -309,6 +309,10 @@ public class InkstoneUploadConsole extends Dialog {
 		return composite;
 	}
 
+	public Display getDisplay() {
+		return display;
+	}
+
 	public static void main(String[] args) throws InterruptedException {
 		Display display = Display.getDefault(); 
 		System.out.println(display==null);
@@ -321,8 +325,14 @@ public class InkstoneUploadConsole extends Dialog {
 */
 		
 		
+
+		 
+		TextAreaThread 	textAreaThread = new TextAreaThread(display,console.getConsoleTextArea(), "test");
+			textAreaThread.start();
+			
+		 String test = LOGGER.begin().headerAction(MessageMethod.EVENT).info("test info");
+		
 		 console.open();
-	
 	      while(!shell.isDisposed()){ 
 	          if(!display.readAndDispatch()){ 
 	              display.sleep(); 

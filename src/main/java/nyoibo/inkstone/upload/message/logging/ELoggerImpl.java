@@ -36,11 +36,13 @@ public class ELoggerImpl extends MessageBuilder{
 	}
 
 
-	public void error(String text) {
+	public String error(String text) {
 		try {
 			System.out.println(headerLevel("error").headerText(text).getSource().toJson());
+			return headerLevel("error").headerText(text).getSource().toJson();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			return e.getMessage();
 		}
 	}
 
@@ -137,19 +139,23 @@ public class ELoggerImpl extends MessageBuilder{
 		return this;
 	}
 
-	public void info(String text) {
+	public String info(String text) {
 		try {
 			System.out.println(headerLevel("info").headerText(text).getSource().toJson());
+			return headerLevel("info").headerText(text).getSource().toJson();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			return e.getMessage();
 		}
 	}
 
-	public void warn(String text) {
+	public String warn(String text) {
 		try {
 			System.out.println(headerLevel("warn").headerText(text).getSource().toJson());
+			return headerLevel("warn").headerText(text).getSource().toJson();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			return e.getMessage();
 		}
 	}
 }

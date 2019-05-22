@@ -1,7 +1,6 @@
 package nyoibo.inkstone.upload.gui;
 
 import java.util.concurrent.ConcurrentHashMap;
-
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ProgressBar;
 
@@ -48,9 +47,6 @@ public class ProgressThread extends Thread {
 				public void run() {
 					if (progressBar.isDisposed())
 						return;
-					if (progressBar.getSelection() > 5) {
-						progressBar.setSelection(0);
-					}
 					progressBar.setSelection(progressBar.getSelection() + 1);
 				}
 			});
