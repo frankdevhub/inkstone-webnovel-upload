@@ -67,7 +67,6 @@ public class FileExplorer extends ApplicationWindow {
 
 	private void initTable() {
 		table = new TableViewer(sash);
-		chapterTable = new ChapterTable(sash);
 		
 		new TableColumn(table.getTable(), SWT.LEFT).setText("Name");
 		new TableColumn(table.getTable(), SWT.LEFT).setText("Type");

@@ -1,7 +1,6 @@
 package nyoibo.inkstone.upload.gui;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -18,20 +17,18 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-public class ChapterTable {
 
-	private SashForm sash = null;
+public class ChapterTable {
 	private ViewForm viewForm = null;
 	private ToolBar toolBar = null;
 	private Composite composite = null;
 	private Table table = null;
 	private Menu menu = null;
 
-	public ChapterTable(SashForm sash) {
-		this.sash = sash;
+	public ChapterTable(Composite parent) {
 		Display display = Display.getDefault();
-		createSShell();
-		while (!sash.isDisposed()) {
+		createSShell(parent);
+		while (!parent.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
@@ -39,8 +36,8 @@ public class ChapterTable {
 		display.dispose();
 	}
 
-	private void createViewForm() {
-		viewForm = new ViewForm(sash, SWT.NONE);
+	private void createViewForm(Composite parent) {
+		viewForm = new ViewForm(parent, SWT.NONE);
 		viewForm.setTopCenterSeparate(true);
 		createToolBar();
 		viewForm.setTopLeft(toolBar);
@@ -139,25 +136,22 @@ public class ChapterTable {
 
 	}
 
-	private void createSShell() {
-/*		sShell = new Shell();
-		sShell.setText("Excel");
-		sShell.setLayout(new FillLayout());*/
-		sash.setLayout(new FillLayout());
-		createViewForm();
-		createMenu();
-		sash.setSize(new org.eclipse.swt.graphics.Point(307, 218));
+	private void createSShell(Composite parent) {
+		parent.setLayout(new FillLayout());
+		createViewForm(parent);
+		createMenu(parent);
+		parent.setSize(new org.eclipse.swt.graphics.Point(307, 218));
 	}
 
-	private void createMenu() {
+	private void createMenu(Composite parent) {
 
-		menu = new Menu(this.sash.getShell(), SWT.POP_UP);
+		menu = new Menu(parent.getShell(), SWT.POP_UP);
 
 		table.setMenu(menu);
 
 		MenuItem del = new MenuItem(menu, SWT.PUSH);
 		del.setText("delete");
-		del.setImage(ImageFactory.loadImage(this.sash.getShell().getDisplay(), ImageFactory.DELETE_EDIT));
+		del.setImage(ImageFactory.loadImage(parent.getShell().getDisplay(), ImageFactory.DELETE_EDIT));
 
 		del.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
@@ -167,7 +161,7 @@ public class ChapterTable {
 
 		MenuItem view = new MenuItem(menu, SWT.PUSH);
 		view.setText("Open");
-		view.setImage(ImageFactory.loadImage(this.sash.getShell().getDisplay(), ImageFactory.SCOPY_EDIT));
+		view.setImage(ImageFactory.loadImage(parent.getShell().getDisplay(), ImageFactory.SCOPY_EDIT));
 
 		view.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
