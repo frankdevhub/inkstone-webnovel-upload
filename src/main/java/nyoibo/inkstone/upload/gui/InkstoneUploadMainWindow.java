@@ -114,6 +114,9 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 		newShell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
 	}
 	
-	
+	public static void main(String[] args) {
+		InkstoneUploadMainWindow main = new InkstoneUploadMainWindow(Display.getDefault().getActiveShell());
+		main.open();
+	}
 }
 
