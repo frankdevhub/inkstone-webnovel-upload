@@ -6,6 +6,8 @@ import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -66,7 +68,7 @@ public class ChapterTable{
 			public void handleEvent(Event event) {
 				if (event.widget == add) {
 					TableItem item = new TableItem(table, SWT.NONE);
-					item.setText(new String[] { "aa", "aa" });
+					item.setText(new String[] { "第几章", "Chapter" });
 					bindEditors();
 				}
 
@@ -125,6 +127,21 @@ public class ChapterTable{
 						editor.getItem().setText(index, text.getText());
 					}
 
+				});
+
+				text.addMouseListener(new MouseListener() {
+					@Override
+					public void mouseUp(MouseEvent e) {
+					}
+
+					@Override
+					public void mouseDown(MouseEvent e) {
+					}
+
+					@Override
+					public void mouseDoubleClick(MouseEvent e) {
+						text.setText(CompareChapterWindow.chapCacheName);
+					}
 				});
 			}
 		}

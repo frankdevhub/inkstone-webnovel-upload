@@ -31,27 +31,28 @@ public class CompareChapterWindow {
 	private Composite chapterComposite;
 	
 	public static Map<String, String> chapterList = new HashMap<String, String>();
-
 	public static String chapCacheName;
 	
+	
 	public CompareChapterWindow() {
+		
 		this.display = new Display();
 		this.shell = new Shell(display);
 		shell.setLayout(new FillLayout());
 		shell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
 		shell.setText("Config Chapter List");
-		
+
 		this.form = new SashForm(shell, SWT.HORIZONTAL | SWT.BORDER);
 		form.setLayout(new FillLayout());
 
-		fileComposite =new Composite(form, SWT.BEGINNING);
+		fileComposite = new Composite(form, SWT.BEGINNING);
 		fileComposite.setLayout(new FillLayout());
 		new FileExplorer(fileComposite);
 
 		this.chapterComposite = new Composite(form, SWT.BEGINNING);
 		chapterComposite.setLayout(new FillLayout());
 		new ChapterTable(chapterComposite);
-		
+
 		form.setWeights(new int[] { 200, 150 });
 		shell.setSize(800, 450);
 
