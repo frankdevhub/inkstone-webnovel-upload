@@ -74,7 +74,7 @@ public class InkstoneRawHeaderUtils {
 		
 		header = header.replaceAll("（", "(");
 		header = header.replaceAll("）", ")");
-		
+
 		String convert = null;
 		convert = header.toLowerCase();
 		Matcher matcher = Pattern.compile(numRegx).matcher(header);
@@ -87,7 +87,7 @@ public class InkstoneRawHeaderUtils {
 			throw new Exception(String.format("Cannot recognize the raw header in format：[%s] if need help, "
 					+ "please contact support for this bug.", header));
 		}
-		
+
 		String tail = getInnerPart(header);
 		convert = convert.replaceAll(".0", "");
 		if (tail == null) {
@@ -135,9 +135,13 @@ public class InkstoneRawHeaderUtils {
 			}
 		}
 	}
-/*
+
 	public static void main(String[] args) throws Exception {
-		String test = " 325(Part 9) – There were Misunderstandings.docx";
+		String test = " Copy of Chapter 302 — Greatest Weakness.docx";
 		System.out.println(InkstoneRawHeaderUtils.convertRawENeader(test));
-	}*/
+/*
+		WordExtractorUtils utils = new WordExtractorUtils();
+		utils.extractFile(new File("D:/蜜爱1V1-首席宠上天/Copy of Chapter 344 - Her Hope.docx"));
+        System.out.println(utils.getTitle());*/
+	}
 }

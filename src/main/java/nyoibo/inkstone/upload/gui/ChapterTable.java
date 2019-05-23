@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.io.FileUtils;
@@ -47,6 +49,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.springframework.util.StringUtils;
 
 import nyoibo.inkstone.upload.utils.FileZipUtils;
+import nyoibo.inkstone.upload.utils.InkstoneRawHeaderUtils;
 
 
 public class ChapterTable{
@@ -92,7 +95,7 @@ public class ChapterTable{
 		cleanExclusiveZip(filePath);
 		new FileZipUtils().unZipDriveZip(filePath);
 		regroupFolder(filePath);
-		
+
 		File[] fileList = new File(filePath).listFiles(new FilenameFilter() {
 
 			@Override
@@ -109,6 +112,31 @@ public class ChapterTable{
 		for (File f : fileList) {
 			FileUtils.forceDelete(f);
 		}
+		wrapDataMap(filePath);
+	}
+	
+	private void wrapDataMap(String filePath) throws Exception {
+		File dataFile = new File(filePath);
+		File[] dataFileList = dataFile.listFiles();
+
+		Map<String, String> compareList = new HashMap<String, String>();
+		Map<String, String> chapterList = new HashMap<String, String>();
+
+		for (File f : dataFileList) {
+			String fileName = f.getName();
+			String guessCHName = InkstoneRawHeaderUtils.convertRawENeader(fileName);
+			compareList.put(guessCHName, fileName);
+			chapterList.put(fileName, f.getAbsolutePath());
+		}
+
+		Set<Entry<String, String>> entrySet = compareList.entrySet();
+		for (Entry<String, String> entry : entrySet) {
+			TableItem item = new TableItem(table, SWT.NONE);
+			item.setText(new String[] { entry.getKey(), entry.getValue() });
+		}
+		
+		CompareChapterWindow.chapterList = chapterList;
+		CompareChapterWindow.compareList = compareList;
 	}
 
 	private void createViewForm(Composite parent) {
@@ -320,8 +348,6 @@ public class ChapterTable{
 			}
 
 		});
-		
-		
 	
 		
 	}
@@ -390,8 +416,6 @@ public class ChapterTable{
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
-		// regroupFolder("D:\\蜜爱1V1-首席宠上天");
-	}
+
 
 }

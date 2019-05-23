@@ -47,7 +47,6 @@ public class WordExtractorUtils {
 	private String title = null;
 	private StringBuilder context = new StringBuilder();
 	private String content = null;
-	private int titleHit = 0;
 	private static String getSuffix(File file) {
 		String fileName = file.getName();
 		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
@@ -168,13 +167,36 @@ public class WordExtractorUtils {
 
 			if (null == title) {
 				title = paras.get(0).getParagraphText();
-			}else{
+			} else {
 				content = context.toString();
 			}
 			content = context.toString().replaceFirst("<p>"+title+"<p>", "");
 			/*if (titleHit > 1) {
 				throw new Exception(SeleniumInkstone.INKSTONE_FILE_UPLOAD_MULTI_TITLE);
 			}*/
+
+			try {
+				title = title.split("––")[1];
+			} catch (Exception e0) {
+				try {
+					title = title.split("––")[1];
+				} catch (Exception e1) {
+					try {
+						title = title.split("-")[1];
+					} catch (Exception e2) {
+						try {
+							title = title.split("—")[1];
+						} catch (Exception e3) {
+							try {
+								title = title.split("–")[1];
+							} catch (Exception e4) {
+								title = title.split(" ")[1];
+							}
+						}
+					}
+				}
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.begin().headerAction(MessageMethod.ERROR).error(e.getMessage());
