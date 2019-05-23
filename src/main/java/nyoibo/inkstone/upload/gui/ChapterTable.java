@@ -1,7 +1,9 @@
 package nyoibo.inkstone.upload.gui;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,12 +16,20 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ControlEditor;
+import org.eclipse.swt.custom.TableCursor;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.custom.ViewForm;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -37,6 +47,8 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.springframework.util.StringUtils;
 
+import nyoibo.inkstone.upload.utils.FileZipUtils;
+
 
 public class ChapterTable{
 	private ViewForm viewForm = null;
@@ -44,12 +56,42 @@ public class ChapterTable{
 	private Composite composite = null;
 	private Table table = null;
 	private Menu menu = null;
-
-	public ChapterTable(Composite parent) {
+	
+	public ChapterTable(Composite parent, String filePath) throws Exception {
 		this.composite = parent;
 		createViewForm(parent);
 		createToolBar();
 		createMenu(parent);
+		createData(filePath);
+	}
+
+	private void cleanExclusiveZip(String filePath) throws IOException {
+		File file = new File(filePath);
+		File[] fileList = file.listFiles(new FilenameFilter() {
+
+			@Override
+			public boolean accept(File dir, String name) {
+				if (name.lastIndexOf('.') > 0) {
+					int lastIndex = name.lastIndexOf('.');
+					String str = name.substring(lastIndex);
+					if (!str.equals(".zip")) {
+						return true;
+					}
+				}
+				return false;
+			}
+
+		});
+
+		for (File f : fileList) {
+			FileUtils.forceDelete(f);
+		}
+	}
+
+	private void createData(String filePath) throws Exception {
+		cleanExclusiveZip(filePath);
+		new FileZipUtils().unZipDriveZip(filePath);
+		regroupFolder(filePath);
 	}
 
 	private void createViewForm(Composite parent) {
@@ -223,6 +265,48 @@ public class ChapterTable{
 			table.getColumn(i).pack();
 		}
 
+		final TableCursor cursor = new TableCursor(table, SWT.NONE);
+		final ControlEditor editor = new ControlEditor(cursor);
+		editor.grabHorizontal = true;
+		editor.grabVertical = true;
+		cursor.addSelectionListener(new SelectionAdapter() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+				final Text text = new Text(cursor, SWT.NONE);
+				TableItem row = cursor.getRow();
+				int column = cursor.getColumn();
+				text.setText(row.getText(column));
+				text.addKeyListener(new KeyAdapter() {
+					public void keyPressed(KeyEvent e) {
+						if (e.character == SWT.CR) {
+							TableItem row = cursor.getRow();
+							int column = cursor.getColumn();
+							row.setText(column, text.getText());
+							text.dispose();
+						}
+						if (e.character == SWT.ESC) {
+							text.dispose();
+						}
+					}
+				});
+
+				text.addFocusListener(new FocusAdapter() {
+					public void focusLost(FocusEvent e) {
+						text.dispose();
+					}
+				});
+				editor.setEditor(text);
+				text.setFocus();
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				table.setSelection(new TableItem[] { cursor.getRow() });
+			}
+
+		});
+		
+		
+	
+		
 	}
 
 	private void createMenu(Composite parent) {
@@ -284,6 +368,7 @@ public class ChapterTable{
 				regroupFolder(current, destPath);
 			} else {
 				FileUtils.copyFileToDirectory(current, new File(destPath));
+				FileUtils.forceDelete(current);
 			}
 		}
 	}

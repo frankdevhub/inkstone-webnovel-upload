@@ -32,10 +32,12 @@ public class CompareChapterWindow {
 	
 	public static Map<String, String> chapterList = new HashMap<String, String>();
 	public static String chapCacheName;
+	public static String dataPath;
 	
 	
-	public CompareChapterWindow() {
-		
+	public CompareChapterWindow(String filePath) throws Exception {
+		dataPath = filePath;
+
 		this.display = new Display();
 		this.shell = new Shell(display);
 		shell.setLayout(new FillLayout());
@@ -51,7 +53,7 @@ public class CompareChapterWindow {
 
 		this.chapterComposite = new Composite(form, SWT.BEGINNING);
 		chapterComposite.setLayout(new FillLayout());
-		new ChapterTable(chapterComposite);
+		new ChapterTable(chapterComposite, filePath);
 
 		form.setWeights(new int[] { 200, 150 });
 		shell.setSize(800, 450);
@@ -68,8 +70,8 @@ public class CompareChapterWindow {
 
 	}
 
-	public static void main(String[] args) {
-		CompareChapterWindow window = new CompareChapterWindow();
+	public static void main(String[] args) throws Exception {
+		CompareChapterWindow window = new CompareChapterWindow("D:\\蜜爱1V1-首席宠上天");
 		window.open();
 	}
 }

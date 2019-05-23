@@ -135,9 +135,9 @@ public class InkstoneRawHeaderUtils {
 			}
 		}
 	}
-
-/*	public static void main(String[] args) throws Exception {
-		String test = "Chapter2212 (一百二十一)";
-		System.out.println(InkstoneRawHeaderUtils.convertRawCNHeader(test));
+/*
+	public static void main(String[] args) throws Exception {
+		String test = " 325(Part 9) – There were Misunderstandings.docx";
+		System.out.println(InkstoneRawHeaderUtils.convertRawENeader(test));
 	}*/
 }

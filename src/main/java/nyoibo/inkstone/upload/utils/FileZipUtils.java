@@ -10,6 +10,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import org.codehaus.plexus.util.FileUtils;
+
 /**
  * <p>Title:DriveZipUtils.java</p>  
  * <p>Description: </p>  
@@ -20,7 +22,7 @@ import java.util.zip.ZipFile;
  * @date:2019-05-23 17:17
  */
 
-public class DriveZipUtils {
+public class FileZipUtils {
 	private static final String ZIP_SUFFIX = "zip";
 	private ArrayList<File> unZipFiles = new ArrayList<File>();
 	private ArrayList<String> unZipFolderNames = new ArrayList<String>();
@@ -49,12 +51,10 @@ public class DriveZipUtils {
 		if (!hasZip)
 			throw new Exception(String.format("Cannot find zip file in path [%s]", filePath));
 
-		for (File zip : unZipFiles)
+		for (File zip : unZipFiles) {
 			unZipFile(zip, filePath);
-
-	}
-
-	private void combineFiles(String filePath) {
+			FileUtils.forceDelete(zip);
+		}
 
 	}
 
@@ -94,8 +94,5 @@ public class DriveZipUtils {
 		}
 
 	}
-	
-	public static void main(String[] args) throws Exception {
-		new DriveZipUtils().unZipDriveZip("D:\\蜜爱1V1-首席宠上天");
-	}
+
 }
