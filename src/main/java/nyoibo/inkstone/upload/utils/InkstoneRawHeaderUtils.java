@@ -28,18 +28,18 @@ public class InkstoneRawHeaderUtils {
 	
 	
 	public static String convertRawCNHeader(String header) throws Exception {
-		if(header == null)
+		if (header == null)
 			return null;
-		
+
 		header = header.replaceAll("（", "(");
 		header = header.replaceAll("）", ")");
-		
+
 		String convert = header;
 		Matcher matcher = Pattern.compile(chapCNRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group(1).trim();
 			LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
-	
+
 			int number = StringNumberUtils.numberCN2Arab(convert);
 			convert = Integer.toString(number).replace(".0", "");
 
