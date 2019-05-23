@@ -133,8 +133,8 @@ public class CompareExcelReaderUtils {
 		return container;
 	}
 
-	public static void main(String[] args) throws Exception {
+/*	public static void main(String[] args) throws Exception {
 		System.out.println(InkstoneRawHeaderUtils.convertRawCNHeader("1497(1)"));
-	}
+	}*/
 
 }

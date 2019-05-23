@@ -1,6 +1,17 @@
 package nyoibo.inkstone.upload.gui;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.apache.commons.collections4.map.HashedMap;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.custom.ViewForm;
@@ -11,16 +22,19 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.springframework.util.StringUtils;
 
 
 public class ChapterTable{
@@ -68,7 +82,7 @@ public class ChapterTable{
 			public void handleEvent(Event event) {
 				if (event.widget == add) {
 					TableItem item = new TableItem(table, SWT.NONE);
-					item.setText(new String[] { "第几章", "Chapter" });
+					item.setText(new String[] { "第几章", "ChapterNumber" });
 					bindEditors();
 				}
 
@@ -92,6 +106,11 @@ public class ChapterTable{
 						table.setSelection(selectedRow + 1);
 				} else if (event.widget == save) {
 					getTableValues();
+					try {
+						saveExcelFile();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 
@@ -140,10 +159,34 @@ public class ChapterTable{
 
 					@Override
 					public void mouseDoubleClick(MouseEvent e) {
-						text.setText(CompareChapterWindow.chapCacheName);
+						String tempChapter = CompareChapterWindow.chapCacheName;
+						if (tempChapter != null) {
+							text.setText(CompareChapterWindow.chapCacheName);
+						}
 					}
 				});
 			}
+		}
+	}
+
+	private void saveExcelFile() throws IOException {
+		String saveFileName = null;
+		String savePath = null;
+		DirectoryDialog folderdlg = new DirectoryDialog(new Shell());
+		folderdlg.setText("Select Save Path");
+		folderdlg.setFilterPath("SystemDrive");
+		folderdlg.setMessage("Please select your save excel path");
+		String selecteddir = folderdlg.open();
+		if (selecteddir == null) {
+			return;
+		} else {
+			savePath = selecteddir;
+			saveFileName = Long.toString(System.currentTimeMillis()) + "ChapAutoList.xls";
+			savePath = savePath + saveFileName;
+		}
+		if (savePath != null) {
+			getTableValues();
+			getHSSFWorkbook(savePath, CompareChapterWindow.chapterList);
 		}
 	}
 
@@ -176,8 +219,7 @@ public class ChapterTable{
 			tableColumn.setText(tableHeader[i]);
 			tableColumn.setMoveable(true);
 		}
-		TableItem item = new TableItem(table, SWT.NONE);
-		item.setText(new String[] { "A1", "A1" });
+		
 		for (int i = 0; i < tableHeader.length; i++) {
 			table.getColumn(i).pack();
 		}
@@ -199,4 +241,36 @@ public class ChapterTable{
 		});
 	}
 
+	
+	private HSSFWorkbook getHSSFWorkbook(String path, Map<String, String> values) throws IOException {
+		String[] title = new String[] { "CN_chapterName", "EN_chapterName" };
+		HSSFWorkbook wb = new HSSFWorkbook();
+
+		HSSFSheet sheet = wb.createSheet("compareSheet");
+
+		HSSFRow row = sheet.createRow(0);
+		HSSFCellStyle style = wb.createCellStyle();
+		HSSFCell cell = null;
+
+		for (int i = 0; i < title.length; i++) {
+			cell = row.createCell(i);
+			cell.setCellValue(title[i]);
+			cell.setCellStyle(style);
+		}
+
+		for (Entry<String, String> entry : values.entrySet()) {
+			String cnName = entry.getKey();
+			String enName = entry.getValue();
+
+			if (!StringUtils.isEmpty(cnName) && !StringUtils.isEmpty(enName)) {
+				row.createCell(0).setCellValue(cnName);
+				row.createCell(1).setCellValue(enName);
+			}
+		}
+
+		FileOutputStream fos = new FileOutputStream(new File(path));
+		wb.write(fos);
+		return wb;
+	}
+	
 }
