@@ -5,12 +5,9 @@ import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -21,7 +18,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 
 
 public class ChapterTable{
@@ -64,8 +60,7 @@ public class ChapterTable{
 		final ToolItem save = new ToolItem(toolBar, SWT.PUSH);
 		save.setText("save");
 		save.setImage(ImageFactory.loadImage(toolBar.getDisplay(), ImageFactory.SAVE_EDIT));
-		
-		
+
 		Listener listener = new Listener() {
 			public void handleEvent(Event event) {
 				if (event.widget == add) {
@@ -93,10 +88,7 @@ public class ChapterTable{
 					if (selectedRow > -1 && selectedRow < table.getItemCount() - 1)
 						table.setSelection(selectedRow + 1);
 				} else if (event.widget == save) {
-					TableItem[] items = table.getItems();
-					for (int i = 0; i < items.length; i++)
-						for (int j = 0; j < table.getColumnCount(); j++)
-							System.out.println(items[i].getText(j));
+					getTableValues();
 				}
 			}
 
@@ -114,21 +106,22 @@ public class ChapterTable{
 		composite = new Composite(viewForm, SWT.NONE);
 		composite.setLayout(gridLayout);
 		createTable();
+		bindEditors();
 	}
 
 	private void bindEditors() {
 		TableItem[] items = table.getItems();
 		for (int i = 0; i < items.length; i++) {
 			for (int j = 0; j < 2; j++) {
-				final TableEditor editor1 = new TableEditor(table);
+				final TableEditor editor = new TableEditor(table);
 				final Text text = new Text(table, SWT.NONE);
 				final int index = j;
 				text.setText(items[i].getText(index));
-				editor1.grabHorizontal = true;
-				editor1.setEditor(text, items[i], index);
+				editor.grabHorizontal = true;
+				editor.setEditor(text, items[i], index);
 				text.addModifyListener(new ModifyListener() {
 					public void modifyText(ModifyEvent e) {
-						editor1.getItem().setText(index, text.getText());
+						editor.getItem().setText(index, text.getText());
 					}
 
 				});
@@ -136,9 +129,15 @@ public class ChapterTable{
 		}
 	}
 
-	private void createTable() {
+	private void getTableValues() {
+		TableItem[] items = table.getItems();
+		for (TableItem item : items) {
+			System.out.println(item.getText(0) + "======" + item.getText(1));
+		}
+	}
 
-		GridData gridData = new org.eclipse.swt.layout.GridData();
+	private void createTable() {
+		GridData gridData = new GridData();
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
@@ -161,14 +160,10 @@ public class ChapterTable{
 			table.getColumn(i).pack();
 		}
 
-
-
 	}
 
 	private void createMenu(Composite parent) {
-
 		menu = new Menu(parent.getShell(), SWT.POP_UP);
-
 		table.setMenu(menu);
 
 		MenuItem del = new MenuItem(menu, SWT.PUSH);
@@ -180,8 +175,6 @@ public class ChapterTable{
 				table.remove(table.getSelectionIndices());
 			}
 		});
-
-
 	}
 
 }

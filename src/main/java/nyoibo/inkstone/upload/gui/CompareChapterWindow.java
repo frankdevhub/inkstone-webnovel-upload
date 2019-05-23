@@ -32,6 +32,8 @@ public class CompareChapterWindow {
 	
 	public Map<String, String> chapterList = new HashMap<String, String>();
 
+	public static String chapCacheName;
+	
 	public CompareChapterWindow() {
 		this.display = new Display();
 		this.shell = new Shell(display);

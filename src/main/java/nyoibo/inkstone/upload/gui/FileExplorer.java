@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Image;
@@ -260,6 +259,7 @@ public class FileExplorer{
 			File file = (File) selection;
 			if (file.isFile()) {
 				String selectFileName = file.getName();
+				CompareChapterWindow.chapCacheName = selectFileName;
 			} else if (file.isDirectory()) {
 				table.setInput(selection);
 			}
