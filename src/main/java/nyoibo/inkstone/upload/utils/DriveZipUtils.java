@@ -68,7 +68,7 @@ public class DriveZipUtils {
 
 			if (entry.isDirectory()) {
 				unZipFolderNames.add(entry.getName());
-				
+
 				String dirPath = filePath + "/" + entry.getName();
 				File dir = new File(dirPath);
 
@@ -92,9 +92,8 @@ public class DriveZipUtils {
 				fos.flush();
 			}
 		}
-		 
+
 	}
-	
 	
 	public static void main(String[] args) throws Exception {
 		new DriveZipUtils().unZipDriveZip("D:\\蜜爱1V1-首席宠上天");

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.collections4.map.HashedMap;
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -271,6 +272,27 @@ public class ChapterTable{
 		FileOutputStream fos = new FileOutputStream(new File(path));
 		wb.write(fos);
 		return wb;
+	}
+	
+	public static void regroupFolder(String path) throws IOException {
+		regroupFolder(new File(path), path);
+	}
+
+	private static void regroupFolder(File root, String destPath) throws IOException {
+		File file = root;
+		File[] listFiles = file.listFiles();
+		for (int i = 0; i < listFiles.length; i++) {
+			File current = listFiles[i];
+			if (current.isDirectory()) {
+				regroupFolder(current, destPath);
+			} else {
+				FileUtils.copyFileToDirectory(current, new File(destPath));
+			}
+		}
+	}
+
+	public static void main(String[] args) throws IOException {
+		regroupFolder("D:\\蜜爱1V1-首席宠上天");
 	}
 	
 }

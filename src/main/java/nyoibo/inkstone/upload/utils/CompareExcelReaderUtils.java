@@ -72,7 +72,7 @@ public class CompareExcelReaderUtils {
 	}
 
 	private static String getValue(HSSFCell hssfCell) {
-		if(null==hssfCell)
+		if (null == hssfCell)
 			return null;
 		if (hssfCell.getCellType() == hssfCell.CELL_TYPE_BOOLEAN) {
 			return String.valueOf(hssfCell.getBooleanCellValue());
