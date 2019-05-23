@@ -38,7 +38,7 @@ public class InkstoneRawHeaderUtils {
 		Matcher matcher = Pattern.compile(chapCNRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group(1).trim();
-			LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
+			//LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
 
 			int number = StringNumberUtils.numberCN2Arab(convert);
 			convert = Integer.toString(number).replace(".0", "");
@@ -47,8 +47,8 @@ public class InkstoneRawHeaderUtils {
 			matcher = Pattern.compile(numRegx).matcher(header);
 			if (matcher.find()) {
 				convert = matcher.group();
-				LOGGER.begin().headerAction(MessageMethod.EVENT)
-						.info(String.format("Catch raw header key:[%s]", convert));
+			/*	LOGGER.begin().headerAction(MessageMethod.EVENT)
+						.info(String.format("Catch raw header key:[%s]", convert));*/
 			}
 		}
 
@@ -80,7 +80,7 @@ public class InkstoneRawHeaderUtils {
 		Matcher matcher = Pattern.compile(numRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group();
-			LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
+			//LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
 		}
 
 		if (StringUtils.isEmpty(convert)) {
@@ -105,7 +105,7 @@ public class InkstoneRawHeaderUtils {
 		Matcher matcher = Pattern.compile(selectENRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group();
-			LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
+			//LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
 		} else {
 			matcher = Pattern.compile(selectENRegx).matcher(header);
 			if (matcher.find()) {
@@ -136,12 +136,12 @@ public class InkstoneRawHeaderUtils {
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
+	/*public static void main(String[] args) throws Exception {
 		String test = " Copy of Chapter 302 — Greatest Weakness.docx";
 		System.out.println(InkstoneRawHeaderUtils.convertRawENeader(test));
-/*
+
 		WordExtractorUtils utils = new WordExtractorUtils();
 		utils.extractFile(new File("D:/蜜爱1V1-首席宠上天/Copy of Chapter 344 - Her Hope.docx"));
-        System.out.println(utils.getTitle());*/
-	}
+        System.out.println(utils.getTitle());
+	}*/
 }

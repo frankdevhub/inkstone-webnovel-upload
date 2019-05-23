@@ -16,6 +16,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -36,7 +37,9 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 	private static final String HELP_INFORMATION = "If you need help, please contact support at frank.fang@jianlaiglobal.com";
 
 	private InkstoneUploadConsole uplaodConsole;
-		
+	private CompareChapterWindow compareChapterWindow;
+	private Display display;
+	
 	public InkstoneUploadConsole getUplaodConsole() {
 		return uplaodConsole;
 	}
@@ -65,6 +68,8 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
+		this.display = parent.getDisplay();
+	
 		parent.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.NORMAL));
 		parent.setToolTipText("");
 
@@ -94,12 +99,37 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 		startButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Shell shell = Display.getCurrent().getActiveShell();
-				uplaodConsole = new InkstoneUploadConsole(shell);
-			    shell.open();
+				uplaodConsole = new InkstoneUploadConsole(Display.getCurrent().getActiveShell());
+				uplaodConsole.open();
 			}
 		});
-		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+		Button setExcelButton = createButton(parent, 1001, "Set Upload Chapters", true);
+		setExcelButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setExcelButton.setEnabled(false);
+				DirectoryDialog folderdlg = new DirectoryDialog(new Shell());
+				folderdlg.setText("Select Chapter Path");
+				folderdlg.setFilterPath("SystemDrive");
+				folderdlg.setMessage("Please select your chapter stored path");
+				String selecteddir = folderdlg.open();
+
+				if (selecteddir != null) {
+					try {
+						compareChapterWindow = new CompareChapterWindow(Display.getCurrent().getActiveShell(),
+								selecteddir);
+						compareChapterWindow.open();
+						
+						setExcelButton.setEnabled(true);
+					} catch (Exception e1) {
+						new ErrorDialogUtils(Display.getDefault()).openErrorDialog("Failed to package chapter files",
+								e1);
+						setExcelButton.setEnabled(true);
+					}
+				}
+
+			}
+		});
 	}
 
 	@Override
