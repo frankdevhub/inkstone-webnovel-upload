@@ -85,9 +85,7 @@ public class ChapterTable{
 					TableItem item = new TableItem(table, SWT.NONE);
 					item.setText(new String[] { "第几章", "ChapterNumber" });
 					bindEditors();
-				}
-
-				else if (event.widget == del) {
+				} else if (event.widget == del) {
 					TableItem[] items = table.getItems();
 					for (int i = 0; i < items.length; i++) {
 						if (!items[i].getChecked())
@@ -220,7 +218,7 @@ public class ChapterTable{
 			tableColumn.setText(tableHeader[i]);
 			tableColumn.setMoveable(true);
 		}
-		
+
 		for (int i = 0; i < tableHeader.length; i++) {
 			table.getColumn(i).pack();
 		}
@@ -242,7 +240,6 @@ public class ChapterTable{
 		});
 	}
 
-	
 	private HSSFWorkbook getHSSFWorkbook(String path, Map<String, String> values) throws IOException {
 		String[] title = new String[] { "CN_chapterName", "EN_chapterName" };
 		HSSFWorkbook wb = new HSSFWorkbook();
@@ -273,7 +270,7 @@ public class ChapterTable{
 		wb.write(fos);
 		return wb;
 	}
-	
+
 	public static void regroupFolder(String path) throws IOException {
 		regroupFolder(new File(path), path);
 	}
