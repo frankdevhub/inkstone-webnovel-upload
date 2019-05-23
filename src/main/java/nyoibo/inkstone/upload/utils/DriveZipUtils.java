@@ -22,8 +22,9 @@ import java.util.zip.ZipFile;
 
 public class DriveZipUtils {
 	private static final String ZIP_SUFFIX = "zip";
-    private ArrayList<File> unZipFiles = new ArrayList<File>();
-	
+	private ArrayList<File> unZipFiles = new ArrayList<File>();
+	private ArrayList<String> unZipFolderNames = new ArrayList<String>();
+
 	public void unZipDriveZip(String filePath) throws Exception {
 		boolean hasZip = false;
 
@@ -53,7 +54,10 @@ public class DriveZipUtils {
 
 	}
 
-	
+	private void combineFiles(String filePath) {
+
+	}
+
 	private void unZipFile(File file, String filePath) throws ZipException, IOException {
 		ZipFile zipFile = null;
 		zipFile = new ZipFile(file);
@@ -63,6 +67,8 @@ public class DriveZipUtils {
 			ZipEntry entry = (ZipEntry) entries.nextElement();
 
 			if (entry.isDirectory()) {
+				unZipFolderNames.add(entry.getName());
+				
 				String dirPath = filePath + "/" + entry.getName();
 				File dir = new File(dirPath);
 
