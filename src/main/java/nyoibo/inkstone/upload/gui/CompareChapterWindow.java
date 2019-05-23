@@ -30,7 +30,7 @@ public class CompareChapterWindow {
 	private Composite fileComposite;
 	private Composite chapterComposite;
 	
-	public Map<String, String> chapterList = new HashMap<String, String>();
+	public static Map<String, String> chapterList = new HashMap<String, String>();
 
 	public static String chapCacheName;
 	

@@ -33,7 +33,6 @@ public class ProgressThread extends Thread {
 		this.process = process;
 	}
 
-
 	@Override
 	public void run() {
 

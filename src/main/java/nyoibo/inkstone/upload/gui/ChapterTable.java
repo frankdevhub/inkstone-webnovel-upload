@@ -1,5 +1,6 @@
 package nyoibo.inkstone.upload.gui;
 
+import org.apache.commons.collections4.map.HashedMap;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.custom.ViewForm;
@@ -130,9 +131,13 @@ public class ChapterTable{
 	}
 
 	private void getTableValues() {
+		CompareChapterWindow.chapterList = new HashedMap<String, String>();
 		TableItem[] items = table.getItems();
+
+		if (items.length < 1)
+			return;
 		for (TableItem item : items) {
-			System.out.println(item.getText(0) + "======" + item.getText(1));
+			CompareChapterWindow.chapterList.put(item.getText(0), item.getText(1));
 		}
 	}
 
