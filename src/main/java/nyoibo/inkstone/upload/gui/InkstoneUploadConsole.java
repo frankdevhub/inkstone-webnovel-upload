@@ -224,7 +224,9 @@ public class InkstoneUploadConsole extends Dialog {
 
 
 		new ConsoleUtils(display, consoleTextArea);
-		
+        new WebLinkUtils(display, webLinkText);	
+		new ProgressChapterUtils(display, progressText);
+        
 		return container;
 	}
 
