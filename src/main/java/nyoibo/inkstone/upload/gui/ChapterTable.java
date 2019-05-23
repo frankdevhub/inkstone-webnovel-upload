@@ -48,6 +48,9 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.springframework.util.StringUtils;
 
+import nyoibo.inkstone.upload.data.logging.Logger;
+import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.utils.FileZipUtils;
 import nyoibo.inkstone.upload.utils.InkstoneRawHeaderUtils;
 
@@ -58,7 +61,9 @@ public class ChapterTable{
 	private Composite composite = null;
 	private Table table = null;
 	private Menu menu = null;
-	
+
+	private final Logger LOGGER = LoggerFactory.getLogger(ChapterTable.class);
+
 	public ChapterTable(Composite parent, String filePath) throws Exception {
 		this.composite = parent;
 		createViewForm(parent);
@@ -73,7 +78,6 @@ public class ChapterTable{
 
 			@Override
 			public boolean accept(File dir, String name) {
-				System.out.println(name);
 				if (name.lastIndexOf('.') > 0) {
 					int lastIndex = name.lastIndexOf('.');
 					String str = name.substring(lastIndex);
@@ -100,7 +104,6 @@ public class ChapterTable{
 
 			@Override
 			public boolean accept(File dir, String name) {
-				System.out.println(name);
 				if (name.lastIndexOf('.') > 0) {
 					return false;
 				}
@@ -266,9 +269,11 @@ public class ChapterTable{
 		if (selecteddir == null) {
 			return;
 		} else {
-			savePath = selecteddir;
+			savePath = selecteddir + "\\";
 			saveFileName = Long.toString(System.currentTimeMillis()) + "ChapAutoList.xls";
 			savePath = savePath + saveFileName;
+			LOGGER.begin().headerAction(MessageMethod.EVENT).info(savePath);
+			CompareChapterWindow.comaprePath =savePath;
 		}
 		if (savePath != null) {
 			getTableValues();
@@ -383,14 +388,16 @@ public class ChapterTable{
 			cell.setCellStyle(style);
 		}
 
+		int rowNum = 1;
 		for (Entry<String, String> entry : values.entrySet()) {
 			String cnName = entry.getKey();
 			String enName = entry.getValue();
-
 			if (!StringUtils.isEmpty(cnName) && !StringUtils.isEmpty(enName)) {
+				row = sheet.createRow(rowNum);
 				row.createCell(0).setCellValue(cnName);
 				row.createCell(1).setCellValue(enName);
 			}
+			rowNum++;
 		}
 
 		FileOutputStream fos = new FileOutputStream(new File(path));

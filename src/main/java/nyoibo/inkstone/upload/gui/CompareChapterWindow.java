@@ -34,7 +34,7 @@ public class CompareChapterWindow {
 	public static Map<String, String> compareList = new HashMap<String, String>();
 	public static String chapCacheName;
 	public static String dataPath;
-	
+	public static String comaprePath;
 	
 	public CompareChapterWindow(String filePath) throws Exception {
 		dataPath = filePath;
@@ -71,8 +71,4 @@ public class CompareChapterWindow {
 
 	}
 
-	public static void main(String[] args) throws Exception {
-		CompareChapterWindow window = new CompareChapterWindow("D:\\蜜爱1V1-首席宠上天");
-		window.open();
-	}
 }
