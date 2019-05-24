@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Image;
@@ -65,6 +63,7 @@ public class CompareChapterWindow extends Dialog{
 		new FileExplorer(fileComposite);
 		this.chapterComposite = new Composite(form, SWT.BEGINNING);
 		chapterComposite.setLayout(new GridLayout(1, true));
+
 		try {
 			new ChapterTable(chapterComposite, filePath);
 		} catch (Exception e) {
@@ -119,6 +118,9 @@ public class CompareChapterWindow extends Dialog{
 
 	}
 */
+	
+
+	
 	public static void main(String[] args) {
 		Display display = new Display();
 		Shell shell = new Shell(display);
