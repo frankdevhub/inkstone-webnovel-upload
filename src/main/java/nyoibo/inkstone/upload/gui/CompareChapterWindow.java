@@ -8,7 +8,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -45,7 +44,7 @@ public class CompareChapterWindow extends Dialog{
     
 	public CompareChapterWindow(Shell parentShell, String filePath) {
 		super(parentShell);
-		setShellStyle(getShellStyle()  |  SWT.RESIZE  |  SWT.MAX);
+		setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX | SWT.MIN);
 		this.shell = parentShell;
 		this.filePath = filePath;
 	}
