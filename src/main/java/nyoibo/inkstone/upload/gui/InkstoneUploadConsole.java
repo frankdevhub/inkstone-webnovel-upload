@@ -25,6 +25,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.web.action.InkstoneUploadMainService;
 
 /**
  * <p>Title:InkstoneUploadConsole.java</p>  
@@ -56,13 +57,13 @@ public class InkstoneUploadConsole extends Dialog {
 	private final int CONSOLE_OK_ID = 10;
 	
 	private ProgressThread progressThread;
-
-	private ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<>();
+    private InkstoneUploadMainService mainService;
+	
+	
+	private ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<String, Integer>();
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
 
-	
-	
 	public InkstoneUploadConsole(Shell parentShell) {
 		super(parentShell);
 	}

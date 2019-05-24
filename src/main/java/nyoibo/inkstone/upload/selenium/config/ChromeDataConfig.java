@@ -20,7 +20,9 @@ public class ChromeDataConfig {
     public static final String WIN_CHROME_DATA = "User Data";
     
     public static final String WIN_SOURCE = "C:/Users/Administrator/AppData/Local/Google/Chrome/User Data";
-    public static final String WIN_TARGET = "C:/Users/Administrator/AppData/Local/Google/Automation";
+    //public static final String WIN_TARGET = "C:/Users/Administrator/AppData/Local/Google/Automation";
+    public static final String WIN_TARGET = "D:/Automation";
+    
     
 	public synchronized static String createDataName(String thread) {
 		StringBuilder builder = new StringBuilder();

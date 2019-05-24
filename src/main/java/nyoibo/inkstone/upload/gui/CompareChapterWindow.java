@@ -60,7 +60,7 @@ public class CompareChapterWindow extends Dialog{
 		// composite.setLayout(layout);
 		this.form = new SashForm(shell, SWT.HORIZONTAL | SWT.BORDER);
 		form.setLayout(new FillLayout());
-		form.setLayout(layout);
+		//form.setLayout(layout);
 
 		fileComposite = new Composite(form, SWT.BEGINNING);
 		fileComposite.setLayout(layout);

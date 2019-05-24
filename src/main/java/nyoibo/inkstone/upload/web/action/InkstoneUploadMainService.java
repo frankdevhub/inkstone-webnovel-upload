@@ -41,18 +41,25 @@ public class InkstoneUploadMainService {
 	
 	private ExecutorService threadPool;
 	private String path; //chrome cache path
-
+    private String mirrorPath; // chrome chache mirror path
+	
 	private String bookListPath;
 	private String bookCompareListPath;
 
 	private String bookName;
-	
 	private WebDriver driver;
 	
-	private String configChromeData() throws IOException {
-		String root = ChromeDataConfig.getLocal();
+	private String dataFolderPath;
+	
+	
+	public InkstoneUploadMainService(){
+		
+	}
+	
+	private String configChromeData(String path) throws IOException {
+		// String root = ChromeDataConfig.getLocal();
 		String dataName = ChromeDataConfig.createDataName(SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW);
-		return ChromeDataConfig.config(root, dataName);
+		return ChromeDataConfig.config(path, dataName);
 	}
 
 	private void readBookList(String listPath) throws Exception {
@@ -66,11 +73,12 @@ public class InkstoneUploadMainService {
 	}
 
 	private void initRawUpload() throws Exception {
-		this.path = configChromeData();
+		this.mirrorPath = configChromeData(this.path);
 		DriverBase.instantiateDriverObject();
-		this.driver = DriverBase.getDriver(path);
-		
-		File folder = new File("C:/Users/Administrator/AppData/Local/Google/data").listFiles()[0];
+		// DANGER :
+		this.driver = DriverBase.getDriver(mirrorPath);
+
+		File folder = new File(dataFolderPath);
 
 		for (File f : folder.listFiles()) {
 			chapterFileList.put(InkstoneRawHeaderUtils.convertRawENeader(f.getName()), f.getAbsolutePath());
@@ -103,10 +111,10 @@ public class InkstoneUploadMainService {
 			InkstoneRawNovelService rawService = null;
 			if (i == 0) {
 				rawService = new InkstoneRawNovelService(false, url, this.bookName, process, bookCompareList, true,
-						driver ,chapterFileList);
+						driver, chapterFileList);
 			} else {
 				rawService = new InkstoneRawNovelService(false, url, this.bookName, process, bookCompareList, false,
-						driver ,chapterFileList);
+						driver, chapterFileList);
 			}
 
 			Thread uploadThread = new Thread(rawService);
@@ -118,7 +126,7 @@ public class InkstoneUploadMainService {
 	public void rawUploadStart() throws Exception {
 		initRawUpload();
 	}
-	
+
 	public ConcurrentHashMap<String, Integer> getProcess() {
 		return process;
 	}
@@ -127,11 +135,11 @@ public class InkstoneUploadMainService {
 		this.process = process;
 	}
 
-	public static void main(String[] args) throws Exception {
+	/*public static void main(String[] args) throws Exception {
 		//InkstoneUploadMainService service = new InkstoneUploadMainService();
 		//service.rawUploadStart();
 
-		/*File folder = new File("C:/Users/Administrator/AppData/Local/Google/data").listFiles()[0];
+		File folder = new File("C:/Users/Administrator/AppData/Local/Google/data").listFiles()[0];
 		Map<String, String> map = new HashMap<String, String>();
 		for (File f : folder.listFiles()) {
 			map.put(InkstoneRawHeaderUtils.convertRawENeader(f.getName()), f.getAbsolutePath());
@@ -154,6 +162,6 @@ public class InkstoneUploadMainService {
 		String res = map.get("1496");
 		System.out.println(res);
 		
-		*/
-	}
+		
+	}*/
 }
