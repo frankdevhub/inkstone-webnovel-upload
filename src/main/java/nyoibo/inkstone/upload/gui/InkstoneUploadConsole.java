@@ -59,8 +59,11 @@ public class InkstoneUploadConsole extends Dialog {
 	private ProgressThread progressThread;
     private InkstoneUploadMainService mainService;
 	
-	
 	private ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<String, Integer>();
+
+	private void startToRunUploadService() {
+
+	}
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
 
@@ -341,12 +344,6 @@ public class InkstoneUploadConsole extends Dialog {
 		Shell shell = new Shell(display);
 		// Shell shell = Display.getDefault().getActiveShell();
 		InkstoneUploadConsole console = new InkstoneUploadConsole(shell);
-		/*
-		 * ConsoleStream stream = new ConsoleStream(System.out,
-		 * console.getConsoleTextArea()); System.setOut(stream);
-		 * System.setErr(stream);
-		 */
-
 		console.open();
 
 		while (!shell.isDisposed()) {

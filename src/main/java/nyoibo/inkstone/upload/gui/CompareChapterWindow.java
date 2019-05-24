@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -41,7 +42,6 @@ public class CompareChapterWindow extends Dialog{
     public static String comaprePath;
     private Composite composite;
     
-    
 	public CompareChapterWindow(Shell parentShell, String filePath) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX | SWT.MIN);
@@ -55,25 +55,23 @@ public class CompareChapterWindow extends Dialog{
 		Composite container = (Composite) super.createDialogArea(parent);
 		composite = container;
 		display = container.getDisplay();
-
-		GridLayout layout = new GridLayout(3, false);
+		
 		// composite.setLayout(layout);
 		this.form = new SashForm(shell, SWT.HORIZONTAL | SWT.BORDER);
-		form.setLayout(new FillLayout());
-		//form.setLayout(layout);
+		form.setLayout(new GridLayout(1, true));
 
 		fileComposite = new Composite(form, SWT.BEGINNING);
-		fileComposite.setLayout(layout);
+		fileComposite.setLayout(new GridLayout(1, true));
 		new FileExplorer(fileComposite);
 		this.chapterComposite = new Composite(form, SWT.BEGINNING);
-		chapterComposite.setLayout(layout);
+		chapterComposite.setLayout(new GridLayout(1, true));
 		try {
 			new ChapterTable(chapterComposite, filePath);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		form.setWeights(new int[] { 100, 300 });
+		form.setWeights(new int[] { 200, 150 });
 		return container;
 	}
 
@@ -124,7 +122,7 @@ public class CompareChapterWindow extends Dialog{
 	public static void main(String[] args) {
 		Display display = new Display();
 		Shell shell = new Shell(display);
-		CompareChapterWindow test = new CompareChapterWindow(shell, "D:\\snyoibo");
+		CompareChapterWindow test = new CompareChapterWindow(shell, "D:\\nyoibo");
 		test.open();
 	}
 }
