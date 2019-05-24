@@ -81,7 +81,8 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 		container.setTouchEnabled(true);
 		container.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
-
+		
+		
 		return area;
 	}
 

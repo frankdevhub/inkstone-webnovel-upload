@@ -95,13 +95,6 @@ public class FileExplorer{
 		tree.addSelectionChangedListener(selectAction);
 	};
 
-/*	public static void main(String[] args) {
-		FileExplorer test = new FileExplorer(Display.getDefault().getActiveShell());
-		test.setBlockOnOpen(true);
-		test.open();
-		Display.getCurrent().dispose();
-	}*/
-
 	public class FileTreeContentProvider implements ITreeContentProvider {
 
 		public Object[] getChildren(Object element) {
