@@ -337,25 +337,23 @@ public class InkstoneUploadConsole extends Dialog {
 	}
 
 	public static void main(String[] args) throws InterruptedException {
-		Display display = Display.getDefault(); 
-	      Shell shell = new Shell(display); 
-		//Shell shell = Display.getDefault().getActiveShell();
+		Display display = Display.getDefault();
+		Shell shell = new Shell(display);
+		// Shell shell = Display.getDefault().getActiveShell();
 		InkstoneUploadConsole console = new InkstoneUploadConsole(shell);
-		/*ConsoleStream stream = new ConsoleStream(System.out, console.getConsoleTextArea());
-		System.setOut(stream);
-		System.setErr(stream);
-*/
-		
-		 console.open();
-		 
-		
-		 
-	      while(!shell.isDisposed()){ 
-	          if(!display.readAndDispatch()){ 
-	              display.sleep(); 
-	          } 
-	      } 
+		/*
+		 * ConsoleStream stream = new ConsoleStream(System.out,
+		 * console.getConsoleTextArea()); System.setOut(stream);
+		 * System.setErr(stream);
+		 */
 
+		console.open();
+
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
 
 	}
 }
