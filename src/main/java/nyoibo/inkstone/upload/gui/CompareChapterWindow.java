@@ -39,6 +39,7 @@ public class CompareChapterWindow extends Dialog{
 	public static String dataPath;
     public static String comaprePath;
     private Composite composite;
+    public static String runningChapterName;
     
 	public CompareChapterWindow(Shell parentShell, String filePath) {
 		super(parentShell);

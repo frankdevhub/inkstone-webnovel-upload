@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Shell;
 
 
 /**
- * <p>Title:InkstoneUploadMainWindow.java</p>  
+ * <p>Title:InkstoneUploaddMainWindow.java</p>  
  * <p>Description: </p>  
  * <p>Copyright: Copyright (c) 2019</p>  
  * <p>Company: www.frankdevhub.site</p>
