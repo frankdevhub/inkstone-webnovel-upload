@@ -4,27 +4,33 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FillLayout;
 
 /**
- * <p>Title:CompareChapterWindow.java</p>  
+ * <p>Title:DialogTest.java</p>  
  * <p>Description: </p>  
  * <p>Copyright: Copyright (c) 2019</p>  
  * <p>Company: www.frankdevhub.site</p>
  * <p>github: https://github.com/frankdevhub</p>  
  * @author frankdevhub   
- * @date:2019-05-23 12:13
+ * @date:2019-05-24 15:48
  */
 
-public class CompareChapterWindow extends Dialog{
-	
+public class DialogTest extends Dialog {
 	private Shell shell;
 	private SashForm form;
 
@@ -41,41 +47,68 @@ public class CompareChapterWindow extends Dialog{
     private Composite composite;
     public static String runningChapterName;
 
-	public CompareChapterWindow(Shell parentShell, String filePath) {
+	public DialogTest(Shell parentShell, String filePath) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX | SWT.MIN);
 		this.shell = parentShell;
 		this.filePath = filePath;
 	}
-
+	/**
+	 * Create contents of the dialog.
+	 * @param parent
+	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		dataPath = filePath;
-		
+
 		Composite container = (Composite) super.createDialogArea(parent);
 		composite = container;
-		display = container.getDisplay();
-		
+		container.setLayout(new FillLayout(SWT.HORIZONTAL));
+
 		// composite.setLayout(layout);
-		this.form = new SashForm(shell, SWT.HORIZONTAL | SWT.BORDER);
+		this.form = new SashForm(container, SWT.BEGINNING | SWT.BORDER);
 		form.setLayout(new GridLayout(1, true));
 
-		fileComposite = new Composite(form, SWT.V_SCROLL | SWT.BORDER);
+		fileComposite = new Composite(form, SWT.BEGINNING | SWT.BORDER);
 		fileComposite.setLayout(new GridLayout(1, true));
 		new FileExplorer(fileComposite);
-		this.chapterComposite = new Composite(form, SWT.V_SCROLL | SWT.BORDER);
+		this.chapterComposite = new Composite(form, SWT.BEGINNING | SWT.BORDER);
 		chapterComposite.setLayout(new GridLayout(1, true));
-
 		try {
 			new ChapterTable(chapterComposite, filePath);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception e1) {
+			e1.printStackTrace();
 		}
 
 		form.setWeights(new int[] { 200, 150 });
+		display = container.getDisplay();
+
+		try {
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return container;
 	}
 
+	/**
+	 * Create contents of the button bar.
+	 * @param parent
+	 */
+	@Override
+	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+	}
+
+	/**
+	 * Return the initial size of the dialog.
+	 */
+	@Override
+	protected Point getInitialSize() {
+		return new Point(450, 300);
+	}
+	
+	
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -86,49 +119,10 @@ public class CompareChapterWindow extends Dialog{
 	}
 
 	
-	
-/*	public CompareChapterWindow(String filePath,Shell shell) throws Exception {
-		dataPath = filePath;
-		
-		
-		this.shell = new Shell(new Display());
-		shell.setLayout(new FillLayout());
-		shell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
-		shell.setText("Config Chapter List");
-
-		this.form = new SashForm(shell, SWT.HORIZONTAL | SWT.BORDER);
-		form.setLayout(new FillLayout());
-
-		fileComposite = new Composite(form, SWT.BEGINNING);
-		fileComposite.setLayout(new FillLayout());
-		new FileExplorer(fileComposite);
-
-		this.chapterComposite = new Composite(form, SWT.BEGINNING);
-		chapterComposite.setLayout(new FillLayout());
-		new ChapterTable(chapterComposite, filePath);
-
-		form.setWeights(new int[] { 200, 150 });
-		shell.setSize(800, 450);
-
-	}*/
-
-/*	public void open() {
-		shell.open();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch())
-				display.sleep();
-		}
-		display.dispose();
-
-	}
-*/
-	
-
-	
 	public static void main(String[] args) {
 		Display display = new Display();
 		Shell shell = new Shell(display);
-		CompareChapterWindow test = new CompareChapterWindow(shell, "D:\\nyoibo");
+		DialogTest test = new DialogTest(shell, "D:\\nyoibo");
 		test.open();
 	}
 }
