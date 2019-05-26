@@ -106,20 +106,20 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 						HELP_INFORMATION);
 			}
 		});
-		Button startButton = createButton(parent, IDialogConstants.OK_ID, START_UPLOAD, true);
+		Button startButton = createButton(parent, IDialogConstants.OK_ID, START_UPLOAD, false);
 		startButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					uploadConsole = new InkstoneUploadConsole(Display.getCurrent().getActiveShell());
+					uploadConsole = new InkstoneUploadConsole(new Shell());
 				} catch (IOException e1) {
-					new ErrorDialogUtils(parent.getDisplay()).openErrorDialog("Can not initalize upload console.", e1);
+					//new ErrorDialogUtils(parent.getDisplay()).openErrorDialog("Can not initalize upload console.", e1);
 					e1.printStackTrace();
 				}
 				uploadConsole.open();
 			}
 		});
-		Button setExcelButton = createButton(parent, 1001, "Set Upload Chapters", true);
+		Button setExcelButton = createButton(parent, 1001, "Set Upload Chapters", false);
 		setExcelButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

@@ -71,9 +71,9 @@ public class InkstoneUploadConsole extends Dialog {
 	private ProgressThread progressThread;
 	private InkstoneUploadMainService mainService;
 	private Properties proHistory = new Properties();
-	
+
 	private ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<String, Integer>();
-	private static final String configPropertiesPath = "src/main/resources/configurations.properties";
+	private static final String configPropertiesPath = "src/main/resources/configuration.properties";
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
 
