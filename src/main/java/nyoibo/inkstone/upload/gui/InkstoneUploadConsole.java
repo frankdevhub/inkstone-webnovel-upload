@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -33,6 +34,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.message.MessageMethod;
+import nyoibo.inkstone.upload.utils.ThreadUtils;
 import nyoibo.inkstone.upload.web.action.InkstoneUploadMainService;
 
 /**
@@ -367,6 +369,13 @@ public class InkstoneUploadConsole extends Dialog {
 		cancelButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				boolean call = MessageDialog.openConfirm(Display.getCurrent().getActiveShell(), "Stop Upload",
+						"Are you sure to stop upload ?");
+				if (call) {
+					Thread check = ThreadUtils.check("innkstone-novel-upload");
+					if (check != null)
+						check.interrupt();
+				}
 
 			}
 		});
