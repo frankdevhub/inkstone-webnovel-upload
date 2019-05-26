@@ -1,8 +1,12 @@
 package nyoibo.inkstone.upload.gui;
 
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ProgressBar;
+
+import nyoibo.inkstone.upload.web.action.InkstoneUploadMainService;
 
 /**
  * <p>Title:ProgressThread.java</p>  
@@ -38,17 +42,23 @@ public class ProgressThread extends Thread {
 
 		while (true) {
 			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
+				Thread.sleep(5000);
+				display.asyncExec(new Runnable() {
+					public void run() {
+						if (progressBar.isDisposed())
+							return;
+						String currentChapterName = InkstoneUploadMainService.currentChapterName;
+						if (!StringUtils.isEmpty(currentChapterName))
+							if (process.get(currentChapterName) != null) {
+								int selection = process.get(currentChapterName);
+								progressBar.setSelection(selection);
+							}
 
+					}
+				});
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
-			display.asyncExec(new Runnable() {
-				public void run() {
-					if (progressBar.isDisposed())
-						return;
-					progressBar.setSelection(progressBar.getSelection() + 1);
-				}
-			});
 		}
 	}
 

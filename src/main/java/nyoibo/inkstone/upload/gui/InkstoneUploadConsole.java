@@ -75,7 +75,6 @@ public class InkstoneUploadConsole extends Dialog {
 	private InkstoneUploadMainService mainService;
 	private Properties proHistory = new Properties();
 
-	private ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<String, Integer>();
 	private static final String configPropertiesPath = "src/main/resources/usr.properties";
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
@@ -323,7 +322,7 @@ public class InkstoneUploadConsole extends Dialog {
 		progressBar.setLayoutData(gdProgressBar);
 		formToolkit.adapt(progressBar, true, true);
 
-		progressThread = new ProgressThread(display, progressBar, process);
+		progressThread = new ProgressThread(display, progressBar, InkstoneUploadMainService.process);
 
 		ScrolledComposite scrolledComposite = new ScrolledComposite(container,
 				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
