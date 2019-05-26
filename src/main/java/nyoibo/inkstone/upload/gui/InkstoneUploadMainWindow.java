@@ -1,6 +1,7 @@
 package nyoibo.inkstone.upload.gui;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import org.apache.maven.shared.utils.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -108,7 +109,12 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 		startButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				uplaodConsole = new InkstoneUploadConsole(Display.getCurrent().getActiveShell());
+				try {
+					uplaodConsole = new InkstoneUploadConsole(Display.getCurrent().getActiveShell());
+				} catch (IOException e1) {
+					new ErrorDialogUtils(parent.getDisplay()).openErrorDialog("Can not initalize upload console.", e1);
+					e1.printStackTrace();
+				}
 				uplaodConsole.open();
 			}
 		});

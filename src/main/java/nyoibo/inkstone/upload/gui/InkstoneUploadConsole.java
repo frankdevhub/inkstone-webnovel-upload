@@ -67,14 +67,14 @@ public class InkstoneUploadConsole extends Dialog {
 
 	private ProgressThread progressThread;
 	private InkstoneUploadMainService mainService;
+	private Properties proHistory = new Properties();
 
 	private ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<String, Integer>();
 	private static final String configPropertiesPath = "src/main/resources/configurations.properties";
-	
+
 	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
 
-	
-	private void startToRunUploadService() throws IOException {
+	private void startToRunUploadService() throws Exception {
 		int textIsEmpty = 0;
 		if (StringUtils.isEmpty(chromeCachePath))
 			textIsEmpty++;
@@ -84,12 +84,11 @@ public class InkstoneUploadConsole extends Dialog {
 			textIsEmpty++;
 
 		if (textIsEmpty > 0)
-			new ErrorDialogUtils(this.getParentShell().getDisplay()).openErrorDialog("Please input all configuration.",
-					new NullPointerException());
+			throw new Exception("Please input all configuration.");
 		saveProperties();
 
 	}
-	
+
 	private void saveProperties() throws IOException {
 
 		FileOutputStream fos = new FileOutputStream(configPropertiesPath, true);
@@ -105,8 +104,7 @@ public class InkstoneUploadConsole extends Dialog {
 
 		usrConfigPro.store(fos, "configuration");
 	}
-	
-	
+
 	private void readProperties() throws IOException {
 
 		Properties usrConfigPro = new Properties();
@@ -114,10 +112,12 @@ public class InkstoneUploadConsole extends Dialog {
 		usrConfigPro.load(in);
 		in.close();
 
+		this.proHistory = usrConfigPro;
 	}
 
-	public InkstoneUploadConsole(Shell parentShell) {
+	public InkstoneUploadConsole(Shell parentShell) throws IOException {
 		super(parentShell);
+		readProperties();
 	}
 
 	@Override
@@ -289,8 +289,12 @@ public class InkstoneUploadConsole extends Dialog {
 		okButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				startToRunUploadService();
-	
+				try {
+					startToRunUploadService();
+				} catch (Exception e1) {
+					new ErrorDialogUtils(parent.getDisplay()).openErrorDialog("Configuration Error.", e1);
+					e1.printStackTrace();
+				}
 
 			}
 		});
