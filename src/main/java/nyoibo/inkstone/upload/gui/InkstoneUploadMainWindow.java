@@ -1,4 +1,3 @@
-
 package nyoibo.inkstone.upload.gui;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -32,14 +31,14 @@ import org.eclipse.swt.widgets.Shell;
  */
 
 public class InkstoneUploadMainWindow extends TitleAreaDialog {
+
 	private static final String START_UPLOAD = "Start";
 	private static final String HELP_DIALOG_TITLE = "Help";
 	private static final String HELP_INFORMATION = "If you need help, please contact support at frank.fang@jianlaiglobal.com";
 
 	private InkstoneUploadConsole uplaodConsole;
 	private CompareChapterWindow compareChapterWindow;
-	private Display display;
-	
+
 	public InkstoneUploadConsole getUplaodConsole() {
 		return uplaodConsole;
 	}
@@ -68,8 +67,7 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		this.display = parent.getDisplay();
-	
+
 		parent.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.NORMAL));
 		parent.setToolTipText("");
 
@@ -81,7 +79,7 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 		container.setTouchEnabled(true);
 		container.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
+
 		return area;
 	}
 
@@ -119,7 +117,7 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 						compareChapterWindow = new CompareChapterWindow(Display.getCurrent().getActiveShell(),
 								selecteddir);
 						compareChapterWindow.open();
-						
+
 						setExcelButton.setEnabled(true);
 					} catch (Exception e1) {
 						new ErrorDialogUtils(Display.getDefault()).openErrorDialog("Failed to package chapter files",
@@ -143,10 +141,9 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 		newShell.setText("Inkstone-QiDian International's novel translation platform");
 		newShell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
 	}
-	
+
 	public static void main(String[] args) {
 		InkstoneUploadMainWindow main = new InkstoneUploadMainWindow(Display.getDefault().getActiveShell());
 		main.open();
 	}
 }
-

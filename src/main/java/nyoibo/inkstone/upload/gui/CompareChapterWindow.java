@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Shell;
  * @date:2019-05-23 12:13
  */
 
-public class CompareChapterWindow extends Dialog{
+public class CompareChapterWindow extends Dialog {
 
 	private SashForm form;
 
