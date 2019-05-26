@@ -1,5 +1,8 @@
 package nyoibo.inkstone.upload.gui;
 
+import java.io.FileNotFoundException;
+
+import org.apache.maven.shared.utils.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -37,6 +40,11 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 
 	private InkstoneUploadConsole uplaodConsole;
 	private CompareChapterWindow compareChapterWindow;
+
+	public static final String CHAPTERS_PATH = "D:\\nyoibo_automation";
+	public static String CHAPTER_EXCEL = "chapters_excel_path";
+	public static String BOOK_LIST_PATH = "book_list_path";
+	public static String CHROME_CACHE_PATH = "chrome_cache_path";
 
 	public InkstoneUploadConsole getUplaodConsole() {
 		return uplaodConsole;
@@ -115,6 +123,16 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 				folderdlg.setMessage("Please select your chapter stored path");
 				String selecteddir = folderdlg.open();
 
+				if (!StringUtils.isEmpty(selecteddir))
+					if (!selecteddir.equals(CHAPTERS_PATH)) {
+						new ErrorDialogUtils(parent.getDisplay()).openErrorDialog(
+								"Please create a folder named \"nyoibo_automation\" under root of disk D.",
+								new FileNotFoundException());
+						setExcelButton.setEnabled(true);
+
+						return;
+					}
+
 				if (selecteddir != null) {
 					try {
 						compareChapterWindow = new CompareChapterWindow(Display.getCurrent().getActiveShell(),
@@ -128,7 +146,7 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 						setExcelButton.setEnabled(true);
 					}
 				}
-
+				setExcelButton.setEnabled(true);
 			}
 		});
 	}

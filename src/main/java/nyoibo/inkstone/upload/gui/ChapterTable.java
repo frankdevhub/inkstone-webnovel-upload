@@ -156,9 +156,9 @@ public class ChapterTable {
 
 	private void createToolBar() {
 		toolBar = new ToolBar(viewForm, SWT.FLAT);
-		final ToolItem add = new ToolItem(toolBar, SWT.PUSH);
-		add.setText("add");
-		add.setImage(ImageFactory.loadImage(toolBar.getDisplay(), ImageFactory.ADD_OBJ));
+		final ToolItem edit = new ToolItem(toolBar, SWT.PUSH);
+		edit.setText("edit");
+		edit.setImage(ImageFactory.loadImage(toolBar.getDisplay(), ImageFactory.ADD_OBJ));
 		final ToolItem del = new ToolItem(toolBar, SWT.PUSH);
 		del.setText("delete");
 		del.setImage(ImageFactory.loadImage(toolBar.getDisplay(), ImageFactory.DELETE_OBJ));
@@ -174,9 +174,9 @@ public class ChapterTable {
 
 		Listener listener = new Listener() {
 			public void handleEvent(Event event) {
-				if (event.widget == add) {
+				if (event.widget == edit) {
 					TableItem item = new TableItem(table, SWT.NONE);
-					item.setText(new String[] { "第几章", "ChapterNumber" });
+					item.setText(new String[] { "", "" });
 					bindEditors();
 				} else if (event.widget == del) {
 					TableItem[] items = table.getItems();
@@ -207,7 +207,7 @@ public class ChapterTable {
 			}
 
 		};
-		add.addListener(SWT.Selection, listener);
+		edit.addListener(SWT.Selection, listener);
 		del.addListener(SWT.Selection, listener);
 		back.addListener(SWT.Selection, listener);
 		forward.addListener(SWT.Selection, listener);
