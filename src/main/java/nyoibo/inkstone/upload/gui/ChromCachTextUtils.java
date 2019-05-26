@@ -13,16 +13,16 @@ import org.eclipse.swt.widgets.Text;
  * @date:2019-05-24 02:26
  */
 
-public class WebLinkUtils {
+public class ChromCachTextUtils {
 	private static Display display;
 	private static Text textarea;
 
-	public WebLinkUtils(Display display, Text textarea) {
+	public ChromCachTextUtils(Display display, Text textarea) {
 		this.display = display;
 		this.textarea = textarea;
 	}
 
-	public synchronized static void pushToWebLink(String message) {
+	public synchronized static void pushToChromCacheText(String message) {
 		display.asyncExec(new Runnable() {
 			@Override
 			public void run() {

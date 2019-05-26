@@ -32,8 +32,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+import com.google.inject.spi.Message;
+
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.web.action.InkstoneUploadMainService;
 
 /**
@@ -51,12 +54,14 @@ public class InkstoneUploadConsole extends Dialog {
 	private Display display;
 	private Text bookListText;
 	private Text chapterListText;
+	private Text chromeCacheText;
+	private Text comapreListText;
 	private Text consoleTextArea;
 	private Text webLinkText;
 	private Text progressText;
 	private Text weblinkUrl;
 	private Button chromeCacheButton;
-	private Text chromeCacheText;
+
 
 	private String chromeCachePath;
 	private String bookListPath;
@@ -68,13 +73,15 @@ public class InkstoneUploadConsole extends Dialog {
 	private ProgressThread progressThread;
 	private InkstoneUploadMainService mainService;
 	private Properties proHistory = new Properties();
-
+	
 	private ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<String, Integer>();
 	private static final String configPropertiesPath = "src/main/resources/configurations.properties";
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
 
 	private void startToRunUploadService() throws Exception {
+		LOGGER.begin().headerMethod(MessageMethod.EVENT).info("check configuration and start to upload novels");
+
 		int textIsEmpty = 0;
 		if (StringUtils.isEmpty(chromeCachePath))
 			textIsEmpty++;
@@ -111,13 +118,20 @@ public class InkstoneUploadConsole extends Dialog {
 		InputStream in = new BufferedInputStream(new FileInputStream(configPropertiesPath));
 		usrConfigPro.load(in);
 		in.close();
-
 		this.proHistory = usrConfigPro;
+
 	}
 
 	public InkstoneUploadConsole(Shell parentShell) throws IOException {
 		super(parentShell);
+		this.display = parentShell.getDisplay();
 		readProperties();
+
+		new WebLinkUtils(display, webLinkText);
+		new ChromCachTextUtils(display, chromeCacheText).pushToChromCacheText(chromeCachePath);
+		new ChapterTextUtils(display, chapterListText).pushToChapterText(chapterListPath);
+		new CompareTextUtils(display, compa)
+		
 	}
 
 	@Override
