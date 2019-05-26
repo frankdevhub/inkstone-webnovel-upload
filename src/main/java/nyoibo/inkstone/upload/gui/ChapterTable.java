@@ -54,8 +54,7 @@ import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.utils.FileZipUtils;
 import nyoibo.inkstone.upload.utils.InkstoneRawHeaderUtils;
 
-
-public class ChapterTable{
+public class ChapterTable {
 	private ViewForm viewForm = null;
 	private ToolBar toolBar = null;
 	private Composite composite = null;
@@ -90,9 +89,12 @@ public class ChapterTable{
 
 		});
 
-		for (File f : fileList) {
-			FileUtils.forceDelete(f);
+		if (fileList != null) {
+			for (File f : fileList) {
+				FileUtils.forceDelete(f);
+			}
 		}
+
 	}
 
 	private void createData(String filePath) throws Exception {
@@ -133,6 +135,7 @@ public class ChapterTable{
 		}
 
 		Set<Entry<String, String>> entrySet = compareList.entrySet();
+
 		for (Entry<String, String> entry : entrySet) {
 			TableItem item = new TableItem(table, SWT.NONE);
 			item.setText(new String[] { entry.getKey(), entry.getValue() });
