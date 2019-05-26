@@ -73,7 +73,7 @@ public class InkstoneUploadConsole extends Dialog {
 	private Properties proHistory = new Properties();
 
 	private ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<String, Integer>();
-	private static final String configPropertiesPath = "src/main/resources/configuration.properties";
+	private static final String configPropertiesPath = "src/main/resources/usr.properties";
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
 
@@ -97,21 +97,21 @@ public class InkstoneUploadConsole extends Dialog {
 
 	private void saveProperties() throws IOException {
 
-		FileOutputStream fos = new FileOutputStream(configPropertiesPath, true);
+		FileOutputStream fos = new FileOutputStream(configPropertiesPath, false);
 
 		chapterListPath = chapterListText.getText();
 		System.out.println(chapterListPath);
 		bookListPath = bookListText.getText();
 		chromeCachePath = chromeCacheText.getText();
 		compareListPath = compareListText.getText();
-		
+
 		Properties usrConfigPro = new Properties();
 		usrConfigPro.setProperty(InkstoneUploadMainWindow.BOOK_LIST_PATH, bookListPath);
 		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_PATH, chapterListPath);
 		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL, compareListPath);
 		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHROME_CACHE_PATH, chromeCachePath);
 
-		usrConfigPro.store(fos, "configuration");
+		usrConfigPro.store(fos, "usr");
 		fos.flush();
 		fos.close();
 		ConsoleUtils
@@ -125,7 +125,21 @@ public class InkstoneUploadConsole extends Dialog {
 		usrConfigPro.load(in);
 		in.close();
 		this.proHistory = usrConfigPro;
+	}
 
+	private void setTextFromConfiguration() {
+
+		if (!StringUtils.isEmpty(proHistory.getProperty(InkstoneUploadMainWindow.BOOK_LIST_PATH)))
+			bookListText.setText(proHistory.getProperty(InkstoneUploadMainWindow.BOOK_LIST_PATH));
+		if (!StringUtils.isEmpty(proHistory.getProperty(InkstoneUploadMainWindow.CHAPTER_PATH)))
+			chapterListText.setText(proHistory.getProperty(InkstoneUploadMainWindow.CHAPTER_PATH));
+		if (!StringUtils.isEmpty(proHistory.getProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL)))
+			compareListText.setText(proHistory.getProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL));
+		if (!StringUtils.isEmpty(proHistory.getProperty(InkstoneUploadMainWindow.CHROME_CACHE_PATH)))
+			chromeCacheText.setText(proHistory.getProperty(InkstoneUploadMainWindow.CHROME_CACHE_PATH));
+
+		ConsoleUtils
+				.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("read usr local configuration"));
 	}
 
 	public InkstoneUploadConsole(Shell parentShell) throws IOException {
@@ -138,7 +152,7 @@ public class InkstoneUploadConsole extends Dialog {
 		new ChapterTextUtils(display, chapterListText).pushToChapterText(chapterListPath);
 		new CompareTextUtils(display, compareListText).pushToCompareText(compareListPath);
 		new BookListTextUtils(display, bookListText).pushToBookListLink(bookListPath);
-		
+
 	}
 
 	@Override
@@ -146,7 +160,7 @@ public class InkstoneUploadConsole extends Dialog {
 		Composite container = (Composite) super.createDialogArea(parent);
 		composite = container;
 		display = composite.getDisplay();
-		
+
 		GridLayout gridLayout = (GridLayout) container.getLayout();
 		gridLayout.numColumns = 4;
 
@@ -173,7 +187,7 @@ public class InkstoneUploadConsole extends Dialog {
 
 			}
 		});
-		
+
 		chromeCacheText = new Text(container, SWT.BORDER);
 		chromeCacheText.setEditable(false);
 		chromeCacheText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
@@ -209,7 +223,6 @@ public class InkstoneUploadConsole extends Dialog {
 		gdBookListText.widthHint = 422;
 		bookListText.setLayoutData(gdBookListText);
 
-		
 		Button compareListButton = formToolkit.createButton(container, "Config Raw->Trans Excel", SWT.NONE);
 		GridData gdCompareListButton = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
 		gdCompareListButton.widthHint = 425;
@@ -239,8 +252,7 @@ public class InkstoneUploadConsole extends Dialog {
 		GridData gdCompareListText = new GridData(SWT.LEFT, SWT.CENTER, true, false, 4, 1);
 		gdCompareListText.widthHint = 422;
 		compareListText.setLayoutData(gdCompareListText);
-		
-		
+
 		Button chapterListButton = formToolkit.createButton(container, "Config Chapters ", SWT.NONE);
 		GridData gdChapterListButton = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
 		gdChapterListButton.widthHint = 423;
@@ -301,7 +313,7 @@ public class InkstoneUploadConsole extends Dialog {
 		formToolkit.adapt(progressBar, true, true);
 
 		progressThread = new ProgressThread(display, progressBar, process);
-		
+
 		ScrolledComposite scrolledComposite = new ScrolledComposite(container,
 				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, false, false, 4, 1);
@@ -321,11 +333,12 @@ public class InkstoneUploadConsole extends Dialog {
 		scrolledComposite.setContent(consoleTextArea);
 		scrolledComposite.setMinSize(consoleTextArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
-
 		new ConsoleUtils(display, consoleTextArea);
-        new WebLinkUtils(display, webLinkText);	
+		new WebLinkUtils(display, webLinkText);
 		new ProgressChapterUtils(display, progressText);
-        
+
+		setTextFromConfiguration();
+
 		return container;
 	}
 
@@ -339,9 +352,9 @@ public class InkstoneUploadConsole extends Dialog {
 					okButton.setEnabled(false);
 					startToRunUploadService();
 					okButton.setEnabled(true);
-					
+
 				} catch (Exception e1) {
-					
+
 					okButton.setEnabled(true);
 					new ErrorDialogUtils(parent.getDisplay()).openErrorDialog("Configuration Error.", e1);
 					e1.printStackTrace();
