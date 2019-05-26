@@ -1,9 +1,18 @@
 package nyoibo.inkstone.upload.gui;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -55,17 +64,57 @@ public class InkstoneUploadConsole extends Dialog {
 	private ProgressBar progressBar;
 	private Composite composite;
 	private final int CONSOLE_OK_ID = 10;
-	
-	private ProgressThread progressThread;
-    private InkstoneUploadMainService mainService;
-	
-	private ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<String, Integer>();
 
-	private void startToRunUploadService() {
+	private ProgressThread progressThread;
+	private InkstoneUploadMainService mainService;
+
+	private ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<String, Integer>();
+	private static final String configPropertiesPath = "src/main/resources/configurations.properties";
+	
+	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
+
+	
+	private void startToRunUploadService() throws IOException {
+		int textIsEmpty = 0;
+		if (StringUtils.isEmpty(chromeCachePath))
+			textIsEmpty++;
+		if (StringUtils.isEmpty(bookListPath))
+			textIsEmpty++;
+		if (StringUtils.isEmpty(chapterListPath))
+			textIsEmpty++;
+
+		if (textIsEmpty > 0)
+			new ErrorDialogUtils(this.getParentShell().getDisplay()).openErrorDialog("Please input all configuration.",
+					new NullPointerException());
+		saveProperties();
 
 	}
 	
-	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
+	private void saveProperties() throws IOException {
+
+		FileOutputStream fos = new FileOutputStream(configPropertiesPath, true);
+
+		chapterListPath = chapterListText.getText();
+		bookListPath = bookListText.getText();
+		chromeCachePath = chromeCacheText.getText();
+
+		Properties usrConfigPro = new Properties();
+		usrConfigPro.setProperty(InkstoneUploadMainWindow.BOOK_LIST_PATH, bookListPath);
+		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL, chapterListPath);
+		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHROME_CACHE_PATH, chromeCachePath);
+
+		usrConfigPro.store(fos, "configuration");
+	}
+	
+	
+	private void readProperties() throws IOException {
+
+		Properties usrConfigPro = new Properties();
+		InputStream in = new BufferedInputStream(new FileInputStream(configPropertiesPath));
+		usrConfigPro.load(in);
+		in.close();
+
+	}
 
 	public InkstoneUploadConsole(Shell parentShell) {
 		super(parentShell);
@@ -240,7 +289,7 @@ public class InkstoneUploadConsole extends Dialog {
 		okButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
+				startToRunUploadService();
 	
 
 			}
@@ -339,18 +388,4 @@ public class InkstoneUploadConsole extends Dialog {
 		return display;
 	}
 
-	public static void main(String[] args) throws InterruptedException {
-		Display display = Display.getDefault();
-		Shell shell = new Shell(display);
-		// Shell shell = Display.getDefault().getActiveShell();
-		InkstoneUploadConsole console = new InkstoneUploadConsole(shell);
-		console.open();
-
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-
-	}
 }
