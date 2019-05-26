@@ -368,7 +368,7 @@ public class InkstoneUploadConsole extends Dialog {
 				} catch (Exception e1) {
 
 					okButton.setEnabled(true);
-					new ErrorDialogUtils(parent.getDisplay()).openErrorDialog("Configuration Error.", e1);
+					new ErrorDialogUtils(parent.getDisplay()).openErrorDialog("InkstoneUploadMainService Error", e1);
 					e1.printStackTrace();
 				}
 
