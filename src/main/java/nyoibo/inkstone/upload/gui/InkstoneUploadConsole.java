@@ -100,6 +100,7 @@ public class InkstoneUploadConsole extends Dialog {
 		FileOutputStream fos = new FileOutputStream(configPropertiesPath, true);
 
 		chapterListPath = chapterListText.getText();
+		System.out.println(chapterListPath);
 		bookListPath = bookListText.getText();
 		chromeCachePath = chromeCacheText.getText();
 		compareListPath = compareListText.getText();
@@ -110,8 +111,11 @@ public class InkstoneUploadConsole extends Dialog {
 		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL, compareListPath);
 		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHROME_CACHE_PATH, chromeCachePath);
 
-		
 		usrConfigPro.store(fos, "configuration");
+		fos.flush();
+		fos.close();
+		ConsoleUtils
+				.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("local usr configuration saved"));
 	}
 
 	private void readProperties() throws IOException {
@@ -332,8 +336,13 @@ public class InkstoneUploadConsole extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
+					okButton.setEnabled(false);
 					startToRunUploadService();
+					okButton.setEnabled(true);
+					
 				} catch (Exception e1) {
+					
+					okButton.setEnabled(true);
 					new ErrorDialogUtils(parent.getDisplay()).openErrorDialog("Configuration Error.", e1);
 					e1.printStackTrace();
 				}
