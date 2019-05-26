@@ -39,16 +39,17 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 	private static final String HELP_DIALOG_TITLE = "Help";
 	private static final String HELP_INFORMATION = "If you need help, please contact support at frank.fang@jianlaiglobal.com";
 
-	private InkstoneUploadConsole uplaodConsole;
+	private InkstoneUploadConsole uploadConsole;
 	private CompareChapterWindow compareChapterWindow;
 
-	public static final String CHAPTERS_PATH = "D:\\nyoibo_automation";
+	public static final String CHAPTERS_PATH_ROOT = "D:\\nyoibo_automation";
+	public static String CHAPTER_PATH = "chapters_file_path";
 	public static String CHAPTER_EXCEL = "chapters_excel_path";
 	public static String BOOK_LIST_PATH = "book_list_path";
 	public static String CHROME_CACHE_PATH = "chrome_cache_path";
 
 	public InkstoneUploadConsole getUplaodConsole() {
-		return uplaodConsole;
+		return uploadConsole;
 	}
 
 	public CompareChapterWindow getCompareChapterWindow() {
@@ -110,12 +111,12 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					uplaodConsole = new InkstoneUploadConsole(Display.getCurrent().getActiveShell());
+					uploadConsole = new InkstoneUploadConsole(Display.getCurrent().getActiveShell());
 				} catch (IOException e1) {
 					new ErrorDialogUtils(parent.getDisplay()).openErrorDialog("Can not initalize upload console.", e1);
 					e1.printStackTrace();
 				}
-				uplaodConsole.open();
+				uploadConsole.open();
 			}
 		});
 		Button setExcelButton = createButton(parent, 1001, "Set Upload Chapters", true);
@@ -130,7 +131,7 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 				String selecteddir = folderdlg.open();
 
 				if (!StringUtils.isEmpty(selecteddir))
-					if (!selecteddir.equals(CHAPTERS_PATH)) {
+					if (!selecteddir.startsWith(CHAPTERS_PATH_ROOT)) {
 						new ErrorDialogUtils(parent.getDisplay()).openErrorDialog(
 								"Please create a folder named \"nyoibo_automation\" under root of disk D.",
 								new FileNotFoundException());

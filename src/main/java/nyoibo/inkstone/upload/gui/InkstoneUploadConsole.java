@@ -2,7 +2,6 @@ package nyoibo.inkstone.upload.gui;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -31,8 +29,6 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-
-import com.google.inject.spi.Message;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
@@ -60,12 +56,14 @@ public class InkstoneUploadConsole extends Dialog {
 	private Text webLinkText;
 	private Text progressText;
 	private Text weblinkUrl;
+	private Text compareListText;
 	private Button chromeCacheButton;
-
 
 	private String chromeCachePath;
 	private String bookListPath;
 	private String chapterListPath;
+	private String compareListPath;
+
 	private ProgressBar progressBar;
 	private Composite composite;
 	private final int CONSOLE_OK_ID = 10;
@@ -89,11 +87,12 @@ public class InkstoneUploadConsole extends Dialog {
 			textIsEmpty++;
 		if (StringUtils.isEmpty(chapterListPath))
 			textIsEmpty++;
+		if (StringUtils.isEmpty(compareListPath))
+			textIsEmpty++;
 
 		if (textIsEmpty > 0)
 			throw new Exception("Please input all configuration.");
 		saveProperties();
-
 	}
 
 	private void saveProperties() throws IOException {
@@ -103,12 +102,15 @@ public class InkstoneUploadConsole extends Dialog {
 		chapterListPath = chapterListText.getText();
 		bookListPath = bookListText.getText();
 		chromeCachePath = chromeCacheText.getText();
-
+		compareListPath = compareListText.getText();
+		
 		Properties usrConfigPro = new Properties();
 		usrConfigPro.setProperty(InkstoneUploadMainWindow.BOOK_LIST_PATH, bookListPath);
-		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL, chapterListPath);
+		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_PATH, chapterListPath);
+		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL, compareListPath);
 		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHROME_CACHE_PATH, chromeCachePath);
 
+		
 		usrConfigPro.store(fos, "configuration");
 	}
 
@@ -130,7 +132,8 @@ public class InkstoneUploadConsole extends Dialog {
 		new WebLinkUtils(display, webLinkText);
 		new ChromCachTextUtils(display, chromeCacheText).pushToChromCacheText(chromeCachePath);
 		new ChapterTextUtils(display, chapterListText).pushToChapterText(chapterListPath);
-		new CompareTextUtils(display, compa)
+		new CompareTextUtils(display, compareListText).pushToCompareText(compareListPath);
+		new BookListTextUtils(display, bookListText).pushToBookListLink(bookListPath);
 		
 	}
 
@@ -209,6 +212,45 @@ public class InkstoneUploadConsole extends Dialog {
 		gdBookListText.widthHint = 422;
 		bookListText.setLayoutData(gdBookListText);
 
+		
+		Button compareListButton = formToolkit.createButton(container, "Config Raw->Trans Excel", SWT.NONE);
+		GridData gdCompareListButton = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
+		gdCompareListButton.widthHint = 425;
+		compareListButton.setLayoutData(gdCompareListButton);
+		compareListButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Display display = Display.getDefault();
+				Shell shell = Display.getCurrent().getActiveShell();
+				FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+				dialog.setFilterPath(System.getProperty("user.dir"));
+
+				dialog.setText("Please select raw->trans excel");
+				dialog.setFilterExtensions(new String[] { "*.xls", "*.xlsx" });
+				compareListPath = dialog.open();
+				if (compareListPath == null) {
+					return;
+				} else {
+					compareListText.setText(compareListPath);
+				}
+				shell.layout();
+				shell.dispose();
+				while (!shell.isDisposed()) {
+					if (!display.readAndDispatch())
+						display.sleep();
+				}
+				display.dispose();
+			}
+		});
+
+		compareListText = formToolkit.createText(container, "compareListText", SWT.NONE);
+		compareListText.setEditable(false);
+		compareListText.setText("");
+		GridData gdCompareListText = new GridData(SWT.LEFT, SWT.CENTER, true, false, 4, 1);
+		gdCompareListText.widthHint = 422;
+		compareListText.setLayoutData(gdCompareListText);
+		
+		
 		Button chapterListButton = formToolkit.createButton(container, "Config Chapters ", SWT.NONE);
 		GridData gdChapterListButton = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
 		gdChapterListButton.widthHint = 423;
