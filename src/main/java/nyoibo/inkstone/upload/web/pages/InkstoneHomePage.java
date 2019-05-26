@@ -1,7 +1,5 @@
 package nyoibo.inkstone.upload.web.pages;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -9,6 +7,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.gui.ConsoleUtils;
+import nyoibo.inkstone.upload.gui.WebLinkUtils;
 import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.selenium.AssignDriver;
 import nyoibo.inkstone.upload.selenium.DriverBase;
@@ -37,12 +37,8 @@ public class InkstoneHomePage implements Runnable{
 
 	private WebDriver driver;
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneHomePage.class);
-
-	private ConcurrentHashMap<String, Integer> process;
 	
-	public InkstoneHomePage(boolean foreign, WebDriver driver, String bookName,
-			ConcurrentHashMap<String, Integer> process) throws Exception {
-		this.process = process;
+	public InkstoneHomePage(boolean foreign, WebDriver driver, String bookName) throws Exception {
 		this.driver = driver;
 		if (foreign) {
 			this.accountName = SeleniumInkstone.INKSTONE_ACCOUNT_NAME_EN;
@@ -61,13 +57,17 @@ public class InkstoneHomePage implements Runnable{
 		submitBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_LOGIN_SUBMIT_ID));
 
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver(bookName));
+
+		ConsoleUtils
+				.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("Init InkstoneHomePage Thread"));
 	}
 
 	private void login() throws Exception {
-		LOGGER.begin().headerMethod(MessageMethod.EVENT).info("navigate to homepage");
+		ConsoleUtils.pushToConsole(LOGGER.begin().headerMethod(MessageMethod.EVENT).info("navigate to homepage"));
 		driver.get(SeleniumInkstone.INKSTONE);
 
-		process.put("start to login", 1);
+		WebLinkUtils.pushToWebLink(SeleniumInkstone.INKSTONE);
+		
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, 5, 100);
 			WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_HOME_TITLE, wait);
@@ -76,7 +76,7 @@ public class InkstoneHomePage implements Runnable{
 			driver.switchTo().frame(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID);
 			selectEmailLoginBtn.findWebElement().click();
 
-			LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe");
+			ConsoleUtils.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe"));
 			WebDriverUtils.findWebElement(accountNameInput).clear();
 			WebDriverUtils.findWebElement(accountNameInput).sendKeys(this.accountName);
 
@@ -84,10 +84,10 @@ public class InkstoneHomePage implements Runnable{
 			WebDriverUtils.findWebElement(accountPwdInput).sendKeys(this.accountPwd);
 
 			WebDriverUtils.findWebElement(submitBtn).click();
-			
+
 		} catch (Exception e) {
-			//another login page
-			
+			// another login page
+
 			JavascriptExecutor jsExec = (JavascriptExecutor) driver;
 			String function = "return document.readyState";
 			String code = (String) jsExec.executeScript(function);
@@ -95,18 +95,15 @@ public class InkstoneHomePage implements Runnable{
 			if (!code.isEmpty() && code.equals("complete")) {
 				String title = driver.getTitle();
 				if (title.equals(SeleniumInkstone.INKSTONE_DASHBOARD)) {
-					process.put("login", 1);
 					return;
 				}
 			} else {
-				process.put("login", -1);
 				throw e;
 			}
 
 		}
-          return;
+		return;
 	}
-
 
 	@Override
 	public void run() {

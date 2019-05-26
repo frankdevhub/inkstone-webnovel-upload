@@ -29,13 +29,7 @@ public class InkstoneRawNovelService implements Runnable{
 	private final InkstoneHomePage inkstoneHomePage;
 	private final InkstoneChapterPage inkstoneChapterPage;
 
-	private final String bookName;
 	private final boolean needLogin;
-
-	private final Map<String, String> bookCompareList;
-    private final Map<String,String> chapterFileList;
-	
-	private ConcurrentHashMap<String, Integer> process;
 
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneRawNovelService.class);
 
@@ -49,15 +43,9 @@ public class InkstoneRawNovelService implements Runnable{
 			throws Exception {
 		this.driver = driver;
 		this.needLogin = needLogin;
-		this.process = process;
-		this.bookName = bookName;
-
-		this.inkstoneHomePage = new InkstoneHomePage(foreign, driver, bookName, process);
-		this.inkstoneChapterPage = new InkstoneChapterPage(driver, bookUrl, bookName, process, bookCompareList, foreign,
+		this.inkstoneHomePage = new InkstoneHomePage(foreign, driver, bookName);
+		this.inkstoneChapterPage = new InkstoneChapterPage(driver, bookUrl, bookName, bookCompareList, foreign,
 				chapterFileList);
-
-		this.chapterFileList = chapterFileList;
-		this.bookCompareList = bookCompareList;
 	}
 
 	@Override
@@ -82,8 +70,8 @@ public class InkstoneRawNovelService implements Runnable{
 			try {
 				Thread.sleep(2000);
 				driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
-				
-                WebDriverUtils.waitPageLoadComplete(new WebDriverWait(driver,10));
+
+				WebDriverUtils.waitPageLoadComplete(new WebDriverWait(driver, 10));
 				Thread.sleep(2000);
 				LOGGER.begin().headerAction(MessageMethod.EVENT).info("start to do next chapter, loop to dashboard");
 

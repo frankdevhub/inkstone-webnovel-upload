@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
@@ -95,6 +94,9 @@ public class InkstoneUploadConsole extends Dialog {
 		if (textIsEmpty > 0)
 			throw new Exception("Please input all configuration.");
 		saveProperties();
+		this.mainService = new InkstoneUploadMainService(bookListPath, compareListPath, chapterListPath);
+		mainService.rawUploadStart();
+
 	}
 
 	private void saveProperties() throws IOException {

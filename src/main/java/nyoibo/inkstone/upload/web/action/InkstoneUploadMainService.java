@@ -46,23 +46,21 @@ public class InkstoneUploadMainService {
 
 	private String bookListPath;
 	private String bookCompareListPath;
-
 	private String bookName;
 	private WebDriver driver;
-	
+
 	private String dataFolderPath;
-	
-	public InkstoneUploadMainService(Map<String, String> bookListUrl, Map<String, String> bookCompareList,
-			Map<String, String> chapterFileList, String dataFolderPath) throws Exception {
+
+	public InkstoneUploadMainService(String bookListPath, String bookCompareListPath, String dataFolderPath)
+			throws Exception {
 		File mirrorCacheFile = new File(ChromeDataConfig.WIN_TARGET);
 		if (!mirrorCacheFile.exists())
 			throw new Exception("Please create a file named Automation under root at disk D");
 
-		this.bookListUrl = bookListUrl;
-		this.bookCompareList = bookCompareList;
-		this.chapterFileList = chapterFileList;
+		this.bookListPath = bookListPath;
+		this.bookCompareListPath = bookCompareListPath;
 		this.dataFolderPath = dataFolderPath;
-		
+
 		ConsoleUtils.pushToConsole("Init InkstoneUploadMainService");
 	}
 
@@ -71,9 +69,9 @@ public class InkstoneUploadMainService {
 		return ChromeDataConfig.config(path, dataName);
 	}
 
-	private void readBookList(String listPath) throws Exception {
+	private void readBookList() throws Exception {
 		ConsoleUtils.pushToConsole("do readBookList()");
-		File bookListFile = new File(listPath);
+		File bookListFile = new File(bookListPath);
 		this.bookListUrl = ExcelReaderUtils.readExcel(bookListFile);
 	}
 
@@ -98,13 +96,15 @@ public class InkstoneUploadMainService {
 		}
 
 		this.bookName = folder.getName();
-       
-		//int nCPU = Runtime.getRuntime().availableProcessors();
-		/*ExecutorService service = new ThreadPoolExecutor(3, 2 * nCPU, 0L, TimeUnit.MICROSECONDS,
-				new LinkedBlockingQueue<Runnable>(300));*/
+
+		// int nCPU = Runtime.getRuntime().availableProcessors();
+		/*
+		 * ExecutorService service = new ThreadPoolExecutor(3, 2 * nCPU, 0L,
+		 * TimeUnit.MICROSECONDS, new LinkedBlockingQueue<Runnable>(300));
+		 */
 
 		this.threadPool = Executors.newSingleThreadExecutor();
-		readBookList(bookListPath);
+		readBookList();
 		readCompareList();
 
 		String url = bookListUrl.get(bookName);
