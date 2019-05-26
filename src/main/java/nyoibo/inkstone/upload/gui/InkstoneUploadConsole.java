@@ -94,7 +94,7 @@ public class InkstoneUploadConsole extends Dialog {
 		if (textIsEmpty > 0)
 			throw new Exception("Please input all configuration.");
 		saveProperties();
-		this.mainService = new InkstoneUploadMainService(bookListPath, compareListPath, chapterListPath);
+		this.mainService = new InkstoneUploadMainService(bookListPath, compareListPath, chapterListPath, false);
 		mainService.rawUploadStart();
 
 	}

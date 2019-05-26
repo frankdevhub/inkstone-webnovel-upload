@@ -119,17 +119,20 @@ public class InkstoneChapterPage implements Runnable{
 
 		ConsoleUtils.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("get to book chapters view"));
 		driver.get(bookUrl);
-
+         
 		Thread.sleep(2000);
 
 		wait.until(pageTitleStartsWith(this.bookName));
 
-		LOGGER.begin().headerAction(MessageMethod.EVENT).info(this.bookName);
+		ConsoleUtils.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT)
+				.info(String.format("Into Raw Page Under Book:[%s]", this.bookName)));
 		WebElement firstChapter = firstRawChapter.findWebElement();
 
 		String currentChapterName = null;
 		InkstoneUploadMainService.currentChapterName = currentChapterName = firstChapter.getText();
 
+		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 5);
+		
 		String enChapName = bookCompareList.get(InkstoneRawHeaderUtils.convertRawCNHeader(currentChapterName));
 		if (enChapName == null)
 			throw new Exception(String.format(
@@ -147,6 +150,8 @@ public class InkstoneChapterPage implements Runnable{
 		WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_TRANSLATION, wait);
 		WebLinkUtils.pushToWebLink(SeleniumInkstone.INKSTONE_TRANSLATION);
 		
+		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 13);
+		
 		selectTranslate();
 		doTranslate();
 		doEdit();
@@ -156,6 +161,7 @@ public class InkstoneChapterPage implements Runnable{
 
 	private void selectTranslate() throws InterruptedException {
 		WebLinkUtils.pushToWebLink(driver.getCurrentUrl());
+		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 20);
 		
 		ConsoleUtils.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("click translate button"));
 		WebDriverUtils.findWebElement(transBtn).click();
@@ -164,11 +170,12 @@ public class InkstoneChapterPage implements Runnable{
 		ConsoleUtils.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch translate dialog"));
 
 		switchTransDialog();
-
+		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 37);
 		ConsoleUtils
 				.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("click yes to take this chapter"));
 		WebDriverUtils.findWebElement(conFirmTransBtn).click();
-
+		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 42);
+		
 		Thread.sleep(3000);
 
 		waitForSaveBtn();
@@ -178,6 +185,8 @@ public class InkstoneChapterPage implements Runnable{
 	}
 
 	private void doTranslate() throws Exception {
+		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 52);
+		
 		WebLinkUtils.pushToWebLink(driver.getCurrentUrl());
 		ConsoleUtils.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("doing translate"));
 
@@ -219,15 +228,17 @@ public class InkstoneChapterPage implements Runnable{
 			}
 		}
 
-		
+		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 56);
 
 		executor.executeScript("document.getElementById(\"editTitle\").value = \"" + titleString + "\"");
 		executor.executeScript(
 				"document.getElementById(\"editContent\").innerHTML = \"" + wordUtils.getContent() + "\"");
-		
+
 		WebDriverUtils.findWebElement(nextBtn).click();
 		ConsoleUtils.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch translate dialog"));
 		switchTransDialog();
+
+		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 59);
 
 		ConsoleUtils.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("click yes to submit work"));
 		WebElement confirmBtn = WebDriverUtils.findWebElement(conFirmTransBtn);
@@ -240,20 +251,26 @@ public class InkstoneChapterPage implements Runnable{
 	}
 
 	private void doEdit() throws Exception {
+		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 64);
+
 		WebLinkUtils.pushToWebLink(driver.getCurrentUrl());
 		WebDriverUtils.doWaitQuery(editBtn, wait);
 
+		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 75);
 		Thread.sleep(1000);
 		ConsoleUtils.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("doing edit"));
 		WebDriverUtils.findWebElement(editBtn).click();
 
 		switchTransDialog();
 		Thread.sleep(2000);
+		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 82);
 
 		ConsoleUtils.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("click yes to start edit"));
 		WebDriverUtils.findWebElement(conFirmTransBtn).click();
 		Thread.sleep(2000);
 		WebDriverUtils.doWaitQuery(doneBtn, wait);
+
+		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 89);
 
 		ConsoleUtils.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("sumbit edit"));
 		WebDriverUtils.findWebElement(doneBtn).click();
@@ -265,20 +282,23 @@ public class InkstoneChapterPage implements Runnable{
 		WebDriverUtils.findWebElement(conFirmTransBtn).click();
 
 		Thread.sleep(4000);
-
+		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 96);
 		try {
 			WebDriverUtils.findWebElement(publishBtn);
 			Thread.sleep(2000);
+			InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 98);
+
 			InkstoneUploadMainService.finishedChapters.add(InkstoneUploadMainService.currentChapterName);
-			
+
 			Thread.currentThread().interrupt();
-			
+
+			InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 100);
 		} catch (Exception e) {
 
 			try {
 				WebDriverUtils.findWebElement(reditBtn);
 				Thread.sleep(2000);
-
+				InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 100);
 				Thread.currentThread().interrupt();
 			} catch (Exception e1) {
 				e.printStackTrace();
@@ -287,7 +307,7 @@ public class InkstoneChapterPage implements Runnable{
 						String.format("book [%s] publish failed , please check inprogress item", this.bookName));
 			}
 		}
-		
+
 	}
 
 
