@@ -51,11 +51,12 @@ public class InkstoneUploadMainService {
 	
 	private String dataFolderPath;
 	
-	
-	public InkstoneUploadMainService(){
-		
+	public InkstoneUploadMainService() throws Exception {
+		File mirrorCacheFile = new File(ChromeDataConfig.WIN_TARGET);
+		if (!mirrorCacheFile.exists())
+			throw new Exception("Please create a file named Automation under root at disk D");
 	}
-	
+
 	private String configChromeData(String path) throws IOException {
 		// String root = ChromeDataConfig.getLocal();
 		String dataName = ChromeDataConfig.createDataName(SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW);
