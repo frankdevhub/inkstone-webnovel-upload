@@ -113,7 +113,6 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					parent.getDisplay().sleep();
 					uploadConsole = new InkstoneUploadConsole(new Shell());
 					uploadConsole.open();
 				} catch (IOException e1) {
@@ -136,7 +135,7 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 				if (!StringUtils.isEmpty(selecteddir))
 					if (!selecteddir.startsWith(CHAPTERS_PATH_ROOT)) {
 						new ErrorDialogUtils(parent.getDisplay()).openErrorDialog(
-								"Please create a folder named \"nyoibo_automation\" under root of disk D.",
+								"Please select a folder named \"nyoibo_automation\" under root of disk D.",
 								new FileNotFoundException());
 						setExcelButton.setEnabled(true);
 

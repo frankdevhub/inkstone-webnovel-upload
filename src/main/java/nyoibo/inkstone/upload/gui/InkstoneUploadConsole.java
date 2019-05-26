@@ -69,6 +69,7 @@ public class InkstoneUploadConsole extends Dialog {
 	private ProgressBar progressBar;
 	private Composite composite;
 	private final int CONSOLE_OK_ID = 10;
+	private final int CONSOLE_CANCEL_ID = 20;
 
 	private ProgressThread progressThread;
 	private InkstoneUploadMainService mainService;
@@ -131,14 +132,24 @@ public class InkstoneUploadConsole extends Dialog {
 
 	private void setTextFromConfiguration() {
 
-		if (!StringUtils.isEmpty(proHistory.getProperty(InkstoneUploadMainWindow.BOOK_LIST_PATH)))
+		if (!StringUtils.isEmpty(proHistory.getProperty(InkstoneUploadMainWindow.BOOK_LIST_PATH))) {
 			bookListText.setText(proHistory.getProperty(InkstoneUploadMainWindow.BOOK_LIST_PATH));
-		if (!StringUtils.isEmpty(proHistory.getProperty(InkstoneUploadMainWindow.CHAPTER_PATH)))
+			this.bookListPath = bookListText.getText();
+		}
+		if (!StringUtils.isEmpty(proHistory.getProperty(InkstoneUploadMainWindow.CHAPTER_PATH))) {
 			chapterListText.setText(proHistory.getProperty(InkstoneUploadMainWindow.CHAPTER_PATH));
-		if (!StringUtils.isEmpty(proHistory.getProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL)))
+			this.chapterListPath = chapterListText.getText();
+		}
+
+		if (!StringUtils.isEmpty(proHistory.getProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL))) {
 			compareListText.setText(proHistory.getProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL));
-		if (!StringUtils.isEmpty(proHistory.getProperty(InkstoneUploadMainWindow.CHROME_CACHE_PATH)))
+			this.compareListPath = compareListText.getText();
+		}
+
+		if (!StringUtils.isEmpty(proHistory.getProperty(InkstoneUploadMainWindow.CHROME_CACHE_PATH))) {
 			chromeCacheText.setText(proHistory.getProperty(InkstoneUploadMainWindow.CHROME_CACHE_PATH));
+			this.chromeCachePath = chromeCacheText.getText();
+		}
 
 		ConsoleUtils
 				.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("read usr local configuration"));
@@ -202,7 +213,6 @@ public class InkstoneUploadConsole extends Dialog {
 		bookListButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Display display = Display.getDefault();
 				Shell shell = Display.getCurrent().getActiveShell();
 				FileDialog dialog = new FileDialog(shell, SWT.OPEN);
 				dialog.setFilterPath(System.getProperty("user.dir"));
@@ -232,7 +242,6 @@ public class InkstoneUploadConsole extends Dialog {
 		compareListButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Display display = Display.getDefault();
 				Shell shell = Display.getCurrent().getActiveShell();
 				FileDialog dialog = new FileDialog(shell, SWT.OPEN);
 				dialog.setFilterPath(System.getProperty("user.dir"));
@@ -364,19 +373,27 @@ public class InkstoneUploadConsole extends Dialog {
 
 			}
 		});
-		Button cancelButton = createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+		Button cancelButton = createButton(parent, CONSOLE_CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 
 		cancelButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				boolean call = MessageDialog.openConfirm(Display.getCurrent().getActiveShell(), "Stop Upload",
+				boolean call = MessageDialog.openConfirm(parent.getDisplay().getActiveShell(), "Stop Upload",
 						"Are you sure to stop upload ?");
+				boolean exist = true;
 				if (call) {
 					Thread check = ThreadUtils.check("innkstone-novel-upload");
 					if (check != null)
 						check.interrupt();
+					else {
+						MessageDialog.openInformation(parent.getDisplay().getActiveShell(), "Stop Upload",
+								"Upload Service has been shutdown mannually, there may have some novels been pushed"
+										+ " to \"In Progress\" for the current shutdown.");
+						exist = false;
+					}
 				}
-
+				ConsoleUtils.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT)
+						.info(String.format("Upload Thread exists:[%s]", exist)));
 			}
 		});
 	}
