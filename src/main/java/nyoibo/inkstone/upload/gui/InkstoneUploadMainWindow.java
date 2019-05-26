@@ -19,7 +19,6 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-
 /**
  * <p>Title:InkstoneUploaddMainWindow.java</p>  
  * <p>Description: </p>  
@@ -41,6 +40,10 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 
 	public InkstoneUploadConsole getUplaodConsole() {
 		return uplaodConsole;
+	}
+
+	public CompareChapterWindow getCompareChapterWindow() {
+		return compareChapterWindow;
 	}
 
 	private class CustomComposite extends Composite {
