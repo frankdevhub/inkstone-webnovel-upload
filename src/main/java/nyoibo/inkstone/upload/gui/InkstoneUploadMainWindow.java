@@ -48,6 +48,8 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 	public static String BOOK_LIST_PATH = "book_list_path";
 	public static String CHROME_CACHE_PATH = "chrome_cache_path";
 
+	public static final int START_RUN_ID = 280;
+	
 	public InkstoneUploadConsole getUplaodConsole() {
 		return uploadConsole;
 	}
@@ -106,17 +108,18 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 						HELP_INFORMATION);
 			}
 		});
-		Button startButton = createButton(parent, IDialogConstants.OK_ID, START_UPLOAD, false);
+		Button startButton = createButton(parent, START_RUN_ID, START_UPLOAD, false);
 		startButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
+					parent.getDisplay().sleep();
 					uploadConsole = new InkstoneUploadConsole(new Shell());
+					uploadConsole.open();
 				} catch (IOException e1) {
-					//new ErrorDialogUtils(parent.getDisplay()).openErrorDialog("Can not initalize upload console.", e1);
+					new ErrorDialogUtils(parent.getDisplay()).openErrorDialog("Can not initalize upload console.", e1);
 					e1.printStackTrace();
 				}
-				uploadConsole.open();
 			}
 		});
 		Button setExcelButton = createButton(parent, 1001, "Set Upload Chapters", false);

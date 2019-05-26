@@ -51,7 +51,7 @@ public class InkstoneUploadConsole extends Dialog {
 	private Text bookListText;
 	private Text chapterListText;
 	private Text chromeCacheText;
-	private Text comapreListText;
+
 	private Text consoleTextArea;
 	private Text webLinkText;
 	private Text progressText;
@@ -59,10 +59,10 @@ public class InkstoneUploadConsole extends Dialog {
 	private Text compareListText;
 	private Button chromeCacheButton;
 
-	private String chromeCachePath;
-	private String bookListPath;
-	private String chapterListPath;
-	private String compareListPath;
+	private String chromeCachePath = "";
+	private String bookListPath = "";
+	private String chapterListPath = "";
+	private String compareListPath = "";
 
 	private ProgressBar progressBar;
 	private Composite composite;
@@ -126,7 +126,7 @@ public class InkstoneUploadConsole extends Dialog {
 
 	public InkstoneUploadConsole(Shell parentShell) throws IOException {
 		super(parentShell);
-		this.display = parentShell.getDisplay();
+		this.display = Display.getDefault();
 		readProperties();
 
 		new WebLinkUtils(display, webLinkText);
@@ -195,13 +195,6 @@ public class InkstoneUploadConsole extends Dialog {
 				} else {
 					bookListText.setText(bookListPath);
 				}
-				shell.layout();
-				shell.dispose();
-				while (!shell.isDisposed()) {
-					if (!display.readAndDispatch())
-						display.sleep();
-				}
-				display.dispose();
 			}
 		});
 
@@ -233,13 +226,6 @@ public class InkstoneUploadConsole extends Dialog {
 				} else {
 					compareListText.setText(compareListPath);
 				}
-				shell.layout();
-				shell.dispose();
-				while (!shell.isDisposed()) {
-					if (!display.readAndDispatch())
-						display.sleep();
-				}
-				display.dispose();
 			}
 		});
 

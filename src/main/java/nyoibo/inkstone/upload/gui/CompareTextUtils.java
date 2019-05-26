@@ -1,5 +1,6 @@
 package nyoibo.inkstone.upload.gui;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
@@ -23,12 +24,14 @@ public class CompareTextUtils {
 	}
 
 	public synchronized static void pushToCompareText(String message) {
-		display.asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				textarea.append(message);
-			}
-		});
+		if (!StringUtils.isEmpty(message)) {
+			display.asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					textarea.append(message);
+				}
+			});
+		}
 	}
 
 }
