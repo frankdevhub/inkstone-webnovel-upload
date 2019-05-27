@@ -25,7 +25,7 @@ public class ChromCachTextUtils {
 
 	public static void pushToChromCacheText(String message) {
 		if (!StringUtils.isEmpty(message)) {
-			display.asyncExec(new Runnable() {
+			display.syncExec(new Runnable() {
 				@Override
 				public void run() {
 					textarea.append(message);

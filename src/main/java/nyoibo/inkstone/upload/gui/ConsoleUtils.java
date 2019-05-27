@@ -24,12 +24,12 @@ public class ConsoleUtils {
 	}
 
 	public static void pushToConsole(String message) {
-		display.asyncExec(new Runnable() {
+		display.syncExec(new Runnable() {
 			@Override
 			public void run() {
 				textarea.append("\n");
 				textarea.append(message);
-				SWTResourceManager.LOCK.notifyAll();
+				textarea.pack();
 			}
 		});
 	}

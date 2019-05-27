@@ -23,9 +23,9 @@ public class ChapterTextUtils {
 		this.textarea = textarea;
 	}
 
-	public synchronized static void pushToChapterText(String message) {
+	public static void pushToChapterText(String message) {
 		if (!StringUtils.isEmpty(message)) {
-			display.asyncExec(new Runnable() {
+			display.syncExec(new Runnable() {
 				@Override
 				public void run() {
 					textarea.append(message);

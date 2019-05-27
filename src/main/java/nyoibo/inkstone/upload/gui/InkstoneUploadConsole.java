@@ -367,6 +367,7 @@ public class InkstoneUploadConsole extends Dialog {
 		okButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				okButton.setEnabled(false);
 				try {
 					parent.getDisplay().asyncExec(new Runnable() {
 						@Override
@@ -381,17 +382,12 @@ public class InkstoneUploadConsole extends Dialog {
 
 						}
 					});
-					okButton.setEnabled(false);
 					okButton.setEnabled(true);
 
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					okButton.setEnabled(true);
 					new ErrorDialogUtils(parent.getDisplay()).openErrorDialog("InkstoneUploadMainService Error", e1);
-				} finally {
-					WebDriver running = mainService.getDriver();
-					if (running != null)
-						running.quit();
 				}
 
 			}
