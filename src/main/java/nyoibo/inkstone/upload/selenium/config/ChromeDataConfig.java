@@ -24,9 +24,14 @@ public class ChromeDataConfig {
     public static final String WIN_SOURCE = "C:/Users/Administrator/AppData/Local/Google/Chrome/User Data";
     //public static final String WIN_TARGET = "C:/Users/Administrator/AppData/Local/Google/Automation";
     public static final String WIN_TARGET = "D:/Automation/";
-    
-    
+
 	public synchronized static String createDataName(String thread) {
+		try {
+			cleanData();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		StringBuilder builder = new StringBuilder();
 		long time = System.currentTimeMillis();
 		String timeStr = Long.toString(time);
@@ -34,7 +39,7 @@ public class ChromeDataConfig {
 		String dataName = builder.append(timeStr).append("-").append(thread).toString();
 		return dataName;
 	}
-   
+
 	public synchronized static String getLocal() {
 		return WIN_SOURCE;
 	}
@@ -51,12 +56,12 @@ public class ChromeDataConfig {
 		return destDir;
 	}
 
-	public synchronized static void cleanData(String dataName) throws IOException {
-		FileUtils configUtils = new FileUtils();
-		String path = getLocal() + "/" + dataName;
-		File data = new File(path);
-
-		FileUtils.deleteDirectory(data);
+	public synchronized static void cleanData() throws IOException {
+		File cacheFolder = new File(WIN_TARGET);
+		File[] files = cacheFolder.listFiles();
+		for (File file : files) {
+			FileUtils.forceDelete(file);
+		}
 	}
-   
+
 }

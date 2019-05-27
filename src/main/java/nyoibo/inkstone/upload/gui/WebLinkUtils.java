@@ -23,12 +23,19 @@ public class WebLinkUtils {
 	}
 
 	public synchronized static void pushToWebLink(String message) {
-		display.asyncExec(new Runnable() {
+		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				textarea.append(message);
 			}
 		});
+
+		display.asyncExec(thread);
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

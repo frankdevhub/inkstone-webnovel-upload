@@ -23,12 +23,18 @@ public class ProgressChapterUtils {
 	}
 
 	public synchronized static void pushToProgressChapterText(String message) {
-		display.asyncExec(new Runnable() {
+		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				textarea.append("\n");
 				textarea.append(message);
 			}
 		});
+
+		display.asyncExec(thread);
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

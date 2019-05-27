@@ -39,7 +39,6 @@ public class ProgressThread extends Thread {
 
 	@Override
 	public void run() {
-
 		while (true) {
 			try {
 				Thread.sleep(5000);
