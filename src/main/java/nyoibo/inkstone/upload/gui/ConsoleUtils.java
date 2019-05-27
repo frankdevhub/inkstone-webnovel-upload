@@ -25,6 +25,8 @@ public class ConsoleUtils {
 	}
 
 	public synchronized static void pushToConsole(String message) {
+
+		SWTResourceManager.lock.lock();
 		display.asyncExec(new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -34,6 +36,8 @@ public class ConsoleUtils {
 				}
 			}
 		}));
+		SWTResourceManager.lock.unlock();
+
 	}
 
 }

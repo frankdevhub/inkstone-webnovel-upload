@@ -64,6 +64,7 @@ public class InkstoneHomePage implements Runnable{
 	}
 
 	private void login() throws Exception {
+		
 		ConsoleUtils.pushToConsole(LOGGER.begin().headerMethod(MessageMethod.EVENT).info("navigate to homepage"));
 
 		driver.get(SeleniumInkstone.INKSTONE);
