@@ -111,7 +111,7 @@ public class CompareExcelReaderUtils {
 
 		InputStream is = new FileInputStream(file);
 		HSSFWorkbook hssfWorkbook = new HSSFWorkbook(is);
-		hssfWorkbook.getSheetAt(1);
+		hssfWorkbook.getSheetAt(0);
 		for (int numSheet = 0; numSheet < hssfWorkbook.getNumberOfSheets(); numSheet++) {
 			HSSFSheet hssfSheet = hssfWorkbook.getSheetAt(numSheet);
 			if (hssfSheet == null) {
