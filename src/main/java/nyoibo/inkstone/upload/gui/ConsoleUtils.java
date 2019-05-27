@@ -25,19 +25,16 @@ public class ConsoleUtils {
 	}
 
 	public synchronized static void pushToConsole(String message) {
-
-		SWTResourceManager.lock.lock();
-		display.asyncExec(new Thread(new Runnable() {
+		display.asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				if (!StringUtils.isEmpty(message)) {
+				synchronized (SWTResourceManager.LOCK) {
 					textarea.append("\n");
 					textarea.append(message);
+					SWTResourceManager.LOCK.notifyAll();
 				}
 			}
-		}));
-		SWTResourceManager.lock.unlock();
-
+		});
 	}
 
 }

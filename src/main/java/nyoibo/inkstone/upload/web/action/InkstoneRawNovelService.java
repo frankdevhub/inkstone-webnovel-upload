@@ -51,48 +51,51 @@ public class InkstoneRawNovelService implements Runnable{
 
 	@Override
 	public void run() {
-		SWTResourceManager.lock.lock();
-		
-		homePageThread = new Thread(inkstoneHomePage);
-		homePageThread.setDaemon(true);
-		chapterThread = new Thread(inkstoneChapterPage);
-		chapterThread.setDaemon(true);
-		
-		if (needLogin) {
-			try {
-				homePageThread.start();
-				homePageThread.join();
-				Thread.sleep(3000);
-				chapterThread.start();
-				chapterThread.join();
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				SWTResourceManager.lock.unlock();
+	
+		synchronized (SWTResourceManager.LOCK) {
+			homePageThread = new Thread(inkstoneHomePage);
+			homePageThread.setDaemon(true);
+			chapterThread = new Thread(inkstoneChapterPage);
+			chapterThread.setDaemon(true);
+
+			if (needLogin) {
+				try {
+					homePageThread.start();
+					homePageThread.join();
+					Thread.sleep(3000);
+					chapterThread.start();
+					chapterThread.join();
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+
+				}
+
+			} else {
+				try {
+					Thread.sleep(2000);
+					driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
+
+					WebDriverUtils.waitPageLoadComplete(new WebDriverWait(driver, 10));
+					Thread.sleep(2000);
+					LOGGER.begin().headerAction(MessageMethod.EVENT)
+							.info("start to do next chapter, loop to dashboard");
+
+					WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_DASHBOARD,
+							new WebDriverWait(driver, 10, 1000));
+					chapterThread.start();
+					chapterThread.join();
+					Thread.sleep(2000);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+
+				}
 			}
-
-		} else {
-			try {
-				Thread.sleep(2000);
-				driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
-
-				WebDriverUtils.waitPageLoadComplete(new WebDriverWait(driver, 10));
-				Thread.sleep(2000);
-				LOGGER.begin().headerAction(MessageMethod.EVENT).info("start to do next chapter, loop to dashboard");
-
-				WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_DASHBOARD, new WebDriverWait(driver, 10, 1000));
-				chapterThread.start();
-				chapterThread.join();
-				Thread.sleep(2000);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				SWTResourceManager.lock.unlock();
-			}
+			Thread.currentThread().interrupt();
+			LOGGER.begin().headerAction(MessageMethod.EVENT).info("raw main thread kill complete");
 		}
-		Thread.currentThread().interrupt();
-		LOGGER.begin().headerAction(MessageMethod.EVENT).info("raw main thread kill complete");
 
 	}
 }

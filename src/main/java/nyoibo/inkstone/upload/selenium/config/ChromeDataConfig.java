@@ -2,9 +2,7 @@ package nyoibo.inkstone.upload.selenium.config;
 
 import java.io.File;
 import java.io.IOException;
-
 import org.apache.commons.io.FileUtils;
-
 import nyoibo.inkstone.upload.gui.ConsoleUtils;
 
 /**
@@ -38,8 +36,9 @@ public class ChromeDataConfig {
 		return WIN_SOURCE;
 	}
 
-	public synchronized static String config(String root, String dataName) throws IOException {
+	public synchronized static String config(String root, String dataName) throws IOException, InterruptedException {
 		String destDir = WIN_TARGET + dataName;
+
 		ConsoleUtils.pushToConsole("dest-name:" + destDir);
 		ConsoleUtils.pushToConsole("chrome cache source:" + root);
 

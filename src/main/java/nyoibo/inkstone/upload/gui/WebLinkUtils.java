@@ -23,15 +23,15 @@ public class WebLinkUtils {
 	}
 
 	public synchronized static void pushToWebLink(String message) {
-		SWTResourceManager.lock.lock();
 		display.asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				textarea.append(message);
+				synchronized (SWTResourceManager.LOCK) {
+					textarea.append(message);
+					SWTResourceManager.LOCK.notifyAll();
+				}
 			}
 		});
-		SWTResourceManager.lock.unlock();
-		SWTResourceManager.condition.signal();
 	}
 
 }

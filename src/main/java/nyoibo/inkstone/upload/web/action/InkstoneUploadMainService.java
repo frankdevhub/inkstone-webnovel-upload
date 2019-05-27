@@ -69,7 +69,7 @@ public class InkstoneUploadMainService {
 		ConsoleUtils.pushToConsole("Init InkstoneUploadMainService");
 	}
 
-	private String configChromeData(String path) throws IOException {
+	private String configChromeData(String path) throws IOException, InterruptedException {
 		ChromeDataConfig.cleanData();
 		System.out.println("local chrome cache source:" + path);
 		String dataName = ChromeDataConfig.createDataName(SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW);
