@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.gui.SWTResourceManager;
 import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 import nyoibo.inkstone.upload.utils.WebDriverUtils;
@@ -50,6 +51,8 @@ public class InkstoneRawNovelService implements Runnable{
 
 	@Override
 	public void run() {
+		SWTResourceManager.lock.lock();
+		
 		homePageThread = new Thread(inkstoneHomePage);
 		homePageThread.setDaemon(true);
 		chapterThread = new Thread(inkstoneChapterPage);
@@ -64,6 +67,8 @@ public class InkstoneRawNovelService implements Runnable{
 				chapterThread.join();
 			} catch (Exception e) {
 				e.printStackTrace();
+			} finally {
+				SWTResourceManager.lock.unlock();
 			}
 
 		} else {
@@ -82,6 +87,8 @@ public class InkstoneRawNovelService implements Runnable{
 
 			} catch (Exception e) {
 				e.printStackTrace();
+			} finally {
+				SWTResourceManager.lock.unlock();
 			}
 		}
 		Thread.currentThread().interrupt();

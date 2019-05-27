@@ -26,12 +26,6 @@ public class ChromeDataConfig {
     public static final String WIN_TARGET = "D:/Automation/";
 
 	public synchronized static String createDataName(String thread) {
-		try {
-			cleanData();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
 		StringBuilder builder = new StringBuilder();
 		long time = System.currentTimeMillis();
 		String timeStr = Long.toString(time);

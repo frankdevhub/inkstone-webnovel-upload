@@ -70,6 +70,7 @@ public class InkstoneUploadMainService {
 	}
 
 	private String configChromeData(String path) throws IOException {
+		ChromeDataConfig.cleanData();
 		System.out.println("local chrome cache source:" + path);
 		String dataName = ChromeDataConfig.createDataName(SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW);
 		String cacheMirror = ChromeDataConfig.config(path, dataName);
