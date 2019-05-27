@@ -37,6 +37,7 @@ public class ConsoleUtils {
 		display.asyncExec(thread);
 
 		try {
+			thread.start();
 			thread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
