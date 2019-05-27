@@ -8,7 +8,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.gui.ConsoleUtils;
-import nyoibo.inkstone.upload.gui.WebLinkUtils;
+import nyoibo.inkstone.upload.gui.SWTResourceManager;
 import nyoibo.inkstone.upload.selenium.Query;
 
 /**
@@ -34,6 +34,18 @@ public class WebDriverUtils {
 
 	public static synchronized WebElement findWebElement(Query query) {
 		WebElement element = query.findWebElement();
+		try {
+			SWTResourceManager.LOCK.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			SWTResourceManager.LOCK.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		ConsoleUtils.pushToConsole(String.format("Find Query:[%s]", query.toString()));
 		return element;
 	}
@@ -49,6 +61,11 @@ public class WebDriverUtils {
 				return query.findWebElement();
 			}
 		});
+		try {
+			SWTResourceManager.LOCK.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		ConsoleUtils.pushToConsole(String.format("Find Query:[%s]", query.toString()));
 	}
 
@@ -59,6 +76,13 @@ public class WebDriverUtils {
 				return driver.findElement(By.cssSelector(css));
 			}
 		});
+
+		try {
+			SWTResourceManager.LOCK.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		ConsoleUtils.pushToConsole(String.format("Find element by xPath:[%s]", css));
 	}
 
@@ -70,6 +94,12 @@ public class WebDriverUtils {
 			}
 		});
 
+		try {
+			SWTResourceManager.LOCK.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		ConsoleUtils.pushToConsole(String.format("Find Element with id:[%s]", id));
 	}
 }

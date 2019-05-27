@@ -79,8 +79,9 @@ public class InkstoneHomePage implements Runnable{
 			driver.switchTo().frame(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID);
 			selectEmailLoginBtn.findWebElement().click();
 
-			SWTResourceManager.condition.wait();
+			SWTResourceManager.LOCK.wait();
 			ConsoleUtils.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe"));
+			
 			WebDriverUtils.findWebElement(accountNameInput).clear();
 			WebDriverUtils.findWebElement(accountNameInput).sendKeys(this.accountName);
 
