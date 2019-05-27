@@ -12,8 +12,6 @@ import java.util.concurrent.Executors;
 import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.WebDriver;
 
-import nyoibo.inkstone.upload.data.logging.Logger;
-import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.gui.ConsoleUtils;
 import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.selenium.config.ChromeDataConfig;
