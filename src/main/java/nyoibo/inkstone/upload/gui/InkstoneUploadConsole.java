@@ -345,6 +345,11 @@ public class InkstoneUploadConsole extends Dialog {
 								display.asyncExec(new Runnable() {
 									public void run() {
 										try {
+											wait();
+										} catch (InterruptedException e1) {
+											e1.printStackTrace();
+										}
+										try {
 											Thread.sleep(20);
 										} catch (InterruptedException e) {
 											e.printStackTrace();
@@ -363,7 +368,8 @@ public class InkstoneUploadConsole extends Dialog {
 					Thread progressThread = new Thread(progress);
 					progressThread.setDaemon(true);
 					progressThread.start();
-
+					
+					
 					Runnable service = new Runnable() {
 						@Override
 						public void run() {
