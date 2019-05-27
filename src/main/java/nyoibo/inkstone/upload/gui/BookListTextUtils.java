@@ -23,7 +23,7 @@ public class BookListTextUtils {
 		this.textarea = textarea;
 	}
 
-	public synchronized static void pushToBookListLink(String message) {
+	public static void pushToBookListLink(String message) {
 		if (!StringUtils.isEmpty(message)) {
 			display.asyncExec(new Runnable() {
 				@Override
@@ -33,5 +33,4 @@ public class BookListTextUtils {
 			});
 		}
 	}
-
 }

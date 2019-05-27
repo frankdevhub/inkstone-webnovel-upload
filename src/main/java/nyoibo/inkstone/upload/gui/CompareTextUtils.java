@@ -23,7 +23,7 @@ public class CompareTextUtils {
 		this.textarea = textarea;
 	}
 
-	public synchronized static void pushToCompareText(String message) {
+	public static void pushToCompareText(String message) {
 		if (!StringUtils.isEmpty(message)) {
 			display.asyncExec(new Runnable() {
 				@Override
@@ -33,5 +33,4 @@ public class CompareTextUtils {
 			});
 		}
 	}
-
 }

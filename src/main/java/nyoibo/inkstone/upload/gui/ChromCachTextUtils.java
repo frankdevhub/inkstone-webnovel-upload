@@ -23,7 +23,7 @@ public class ChromCachTextUtils {
 		this.textarea = textarea;
 	}
 
-	public synchronized static void pushToChromCacheText(String message) {
+	public static void pushToChromCacheText(String message) {
 		if (!StringUtils.isEmpty(message)) {
 			display.asyncExec(new Runnable() {
 				@Override
@@ -33,5 +33,4 @@ public class ChromCachTextUtils {
 			});
 		}
 	}
-
 }

@@ -23,15 +23,13 @@ public class ConsoleUtils {
 		this.textarea = textarea;
 	}
 
-	public synchronized static void pushToConsole(String message) {
+	public static void pushToConsole(String message) {
 		display.asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				synchronized (SWTResourceManager.LOCK) {
-					textarea.append("\n");
-					textarea.append(message);
-					SWTResourceManager.LOCK.notifyAll();
-				}
+				textarea.append("\n");
+				textarea.append(message);
+				SWTResourceManager.LOCK.notifyAll();
 			}
 		});
 	}

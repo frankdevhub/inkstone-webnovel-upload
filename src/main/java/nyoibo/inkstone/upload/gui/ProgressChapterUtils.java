@@ -22,7 +22,7 @@ public class ProgressChapterUtils {
 		this.textarea = textarea;
 	}
 
-	public synchronized static void pushToProgressChapterText(String message) {
+	public static void pushToProgressChapterText(String message) {
 		display.asyncExec(new Runnable() {
 			@Override
 			public void run() {
