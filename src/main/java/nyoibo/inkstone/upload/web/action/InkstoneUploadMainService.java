@@ -33,7 +33,7 @@ import nyoibo.inkstone.upload.utils.InkstoneRawHeaderUtils;
  */
 
 public class InkstoneUploadMainService {
-
+  
 	public static ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<String, Integer>();
 	public static ArrayList<String> finishedChapters = new ArrayList<String>();
 	public static String currentChapterName = null;
@@ -53,8 +53,6 @@ public class InkstoneUploadMainService {
 
 	private String dataFolderPath;
 	private final boolean foreign;
-
-	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadMainService.class);
 
 	public InkstoneUploadMainService(String bookListPath, String bookCompareListPath, String dataFolderPath,
 			String cacheSourcePath, boolean foreign) throws Exception {

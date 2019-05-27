@@ -330,7 +330,7 @@ public class InkstoneUploadConsole extends Dialog {
 		formToolkit.adapt(progressBar, true, true);
 
 		progressThread = new ProgressThread(display, progressBar, InkstoneUploadMainService.process);
-		progressThread.start();
+		//progressThread.start();
 		
 		ScrolledComposite scrolledComposite = new ScrolledComposite(container,
 				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);

@@ -59,16 +59,13 @@ public class InkstoneHomePage implements Runnable{
 		submitBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_LOGIN_SUBMIT_ID));
 
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver(bookName));
-
-		SWTResourceManager.condition.wait();
 		ConsoleUtils
 				.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("Init InkstoneHomePage Thread"));
 	}
 
 	private void login() throws Exception {
 		ConsoleUtils.pushToConsole(LOGGER.begin().headerMethod(MessageMethod.EVENT).info("navigate to homepage"));
-		
-		SWTResourceManager.condition.wait();
+
 		driver.get(SeleniumInkstone.INKSTONE);
 
 		WebLinkUtils.pushToWebLink(SeleniumInkstone.INKSTONE);
@@ -81,6 +78,7 @@ public class InkstoneHomePage implements Runnable{
 			driver.switchTo().frame(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID);
 			selectEmailLoginBtn.findWebElement().click();
 
+			SWTResourceManager.condition.wait();
 			ConsoleUtils.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe"));
 			WebDriverUtils.findWebElement(accountNameInput).clear();
 			WebDriverUtils.findWebElement(accountNameInput).sendKeys(this.accountName);
@@ -112,13 +110,10 @@ public class InkstoneHomePage implements Runnable{
 
 	@Override
 	public void run() {
-		SWTResourceManager.lock.lock();
 		try {
 			login();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			SWTResourceManager.lock.unlock();
 		}
 
 	}
