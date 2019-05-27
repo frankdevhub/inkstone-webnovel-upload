@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -83,6 +85,12 @@ public class InkstoneUploadMainService {
 		ConsoleUtils.pushToConsole("do readBookList()");
 		File bookListFile = new File(bookListPath);
 		this.bookListUrl = ExcelReaderUtils.readExcel(bookListFile);
+		
+		Set<Entry<String, String>> entrySet = bookListUrl.entrySet();
+		for (Entry entry : entrySet) {
+			System.out.println(entry.getKey() + "======" + entry.getValue());
+		}
+		
 	}
 
 	private void readCompareList() throws Exception {
@@ -140,6 +148,10 @@ public class InkstoneUploadMainService {
 
 	public void rawUploadStart() throws Exception {
 		initRawUpload();
+	}
+
+	public WebDriver getDriver() {
+		return this.driver;
 	}
 
 }

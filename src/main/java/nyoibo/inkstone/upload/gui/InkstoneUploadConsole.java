@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.openqa.selenium.WebDriver;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
@@ -84,13 +85,16 @@ public class InkstoneUploadConsole extends Dialog {
 		int textIsEmpty = 0;
 		if (StringUtils.isEmpty(chromeCachePath))
 			textIsEmpty++;
+		System.out.println(chromeCachePath);
 		if (StringUtils.isEmpty(bookListPath))
 			textIsEmpty++;
+		System.out.println(bookListPath);
 		if (StringUtils.isEmpty(chapterListPath))
 			textIsEmpty++;
+		System.out.println(chapterListPath);
 		if (StringUtils.isEmpty(compareListPath))
 			textIsEmpty++;
-
+		System.out.println(compareListPath);
 		if (textIsEmpty > 0)
 			throw new Exception("Please input all configuration.");
 		saveProperties();
@@ -369,6 +373,11 @@ public class InkstoneUploadConsole extends Dialog {
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					okButton.setEnabled(true);
+
+					WebDriver running = mainService.getDriver();
+					if (running != null)
+						running.quit();
+
 					new ErrorDialogUtils(parent.getDisplay()).openErrorDialog("InkstoneUploadMainService Error", e1);
 				}
 
