@@ -39,25 +39,21 @@ public class ProgressThread extends Thread {
 
 	@Override
 	public void run() {
-		while (true) {
-			try {
-				Thread.sleep(5000);
-				display.asyncExec(new Runnable() {
-					public void run() {
-						if (progressBar.isDisposed())
-							return;
-						String currentChapterName = InkstoneUploadMainService.currentChapterName;
-						if (!StringUtils.isEmpty(currentChapterName))
-							if (process.get(currentChapterName) != null) {
-								int selection = process.get(currentChapterName);
-								progressBar.setSelection(selection);
-							}
+		synchronized (SWTResourceManager.LOCK) {
+			display.asyncExec(new Runnable() {
+				public void run() {
+					if (progressBar.isDisposed())
+						return;
+					String currentChapterName = InkstoneUploadMainService.currentChapterName;
+					if (!StringUtils.isEmpty(currentChapterName))
+						if (process.get(currentChapterName) != null) {
+							int selection = process.get(currentChapterName);
+							progressBar.setSelection(selection);
+						}
+				}
+			});
 
-					}
-				});
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			SWTResourceManager.LOCK.notifyAll();
 		}
 	}
 
