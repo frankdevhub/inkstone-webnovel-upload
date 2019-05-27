@@ -85,12 +85,6 @@ public class InkstoneUploadMainService {
 		ConsoleUtils.pushToConsole("do readBookList()");
 		File bookListFile = new File(bookListPath);
 		this.bookListUrl = ExcelReaderUtils.readExcel(bookListFile);
-		
-		Set<Entry<String, String>> entrySet = bookListUrl.entrySet();
-		for (Entry entry : entrySet) {
-			System.out.println(entry.getKey() + "======" + entry.getValue());
-		}
-		
 	}
 
 	private void readCompareList() throws Exception {
