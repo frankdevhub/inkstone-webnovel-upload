@@ -41,7 +41,7 @@ public class InkstoneHomePage implements Runnable{
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneHomePage.class);
 	
 	public InkstoneHomePage(boolean foreign, WebDriver driver, String bookName) throws Exception {
-		
+
 		this.driver = driver;
 		if (foreign) {
 			this.accountName = SeleniumInkstone.INKSTONE_ACCOUNT_NAME_EN;
@@ -60,20 +60,18 @@ public class InkstoneHomePage implements Runnable{
 		submitBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_LOGIN_SUBMIT_ID));
 
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver(bookName));
-		
-		SWTResourceManager.LOCK.wait();
 		ConsoleUtils
 				.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("Init InkstoneHomePage Thread"));
 	}
 
 	private void login() throws Exception {
-		
+
 		ConsoleUtils.pushToConsole(LOGGER.begin().headerMethod(MessageMethod.EVENT).info("navigate to homepage"));
 
 		driver.get(SeleniumInkstone.INKSTONE);
 
 		WebLinkUtils.pushToWebLink(SeleniumInkstone.INKSTONE);
-		
+
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, 5, 100);
 			WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_HOME_TITLE, wait);
@@ -84,7 +82,7 @@ public class InkstoneHomePage implements Runnable{
 
 			SWTResourceManager.LOCK.wait();
 			ConsoleUtils.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe"));
-			
+
 			WebDriverUtils.findWebElement(accountNameInput).clear();
 			WebDriverUtils.findWebElement(accountNameInput).sendKeys(this.accountName);
 

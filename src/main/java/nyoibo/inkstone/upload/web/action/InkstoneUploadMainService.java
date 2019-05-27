@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.WebDriver;
 
 import nyoibo.inkstone.upload.gui.ConsoleUtils;
+import nyoibo.inkstone.upload.gui.SWTResourceManager;
 import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.selenium.config.ChromeDataConfig;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
@@ -54,6 +55,7 @@ public class InkstoneUploadMainService {
 
 	public InkstoneUploadMainService(String bookListPath, String bookCompareListPath, String dataFolderPath,
 			String cacheSourcePath, boolean foreign) throws Exception {
+
 		File mirrorCacheFile = new File(ChromeDataConfig.WIN_TARGET);
 		if (!mirrorCacheFile.exists())
 			throw new Exception("Please create a file named Automation under root at disk D");
@@ -65,6 +67,7 @@ public class InkstoneUploadMainService {
 		this.foreign = foreign;
 
 		ConsoleUtils.pushToConsole("Init InkstoneUploadMainService");
+
 	}
 
 	private String configChromeData(String path) throws IOException, InterruptedException {
