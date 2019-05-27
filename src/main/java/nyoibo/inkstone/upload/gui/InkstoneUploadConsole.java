@@ -97,8 +97,7 @@ public class InkstoneUploadConsole extends Dialog {
 		System.out.println(compareListPath);
 		if (textIsEmpty > 0)
 			throw new Exception("Please input all configuration.");
-		
-		webLinkText.setText("fuck you");
+
 		saveProperties();
 		this.mainService = new InkstoneUploadMainService(bookListPath, compareListPath, chapterListPath,
 				chromeCachePath, false);
