@@ -7,9 +7,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
-import nyoibo.inkstone.upload.gui.ConsoleUtils;
 import nyoibo.inkstone.upload.gui.SWTResourceManager;
-import nyoibo.inkstone.upload.gui.WebLinkUtils;
 import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.selenium.AssignDriver;
 import nyoibo.inkstone.upload.selenium.DriverBase;
@@ -60,17 +58,14 @@ public class InkstoneHomePage implements Runnable{
 		submitBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_LOGIN_SUBMIT_ID));
 
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver(bookName));
-		ConsoleUtils
-				.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("Init InkstoneHomePage Thread"));
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info("Init InkstoneHomePage Thread");
 	}
 
 	private void login() throws Exception {
 
-		ConsoleUtils.pushToConsole(LOGGER.begin().headerMethod(MessageMethod.EVENT).info("navigate to homepage"));
+		LOGGER.begin().headerMethod(MessageMethod.EVENT).info("navigate to homepage");
 
 		driver.get(SeleniumInkstone.INKSTONE);
-
-		WebLinkUtils.pushToWebLink(SeleniumInkstone.INKSTONE);
 
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, 5, 100);
@@ -81,7 +76,7 @@ public class InkstoneHomePage implements Runnable{
 			selectEmailLoginBtn.findWebElement().click();
 
 			SWTResourceManager.LOCK.wait();
-			ConsoleUtils.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe"));
+			LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe");
 
 			WebDriverUtils.findWebElement(accountNameInput).clear();
 			WebDriverUtils.findWebElement(accountNameInput).sendKeys(this.accountName);

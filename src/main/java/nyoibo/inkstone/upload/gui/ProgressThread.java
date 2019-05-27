@@ -1,11 +1,9 @@
 package nyoibo.inkstone.upload.gui;
 
 import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ProgressBar;
-
 import nyoibo.inkstone.upload.web.action.InkstoneUploadMainService;
 
 /**
@@ -18,7 +16,7 @@ import nyoibo.inkstone.upload.web.action.InkstoneUploadMainService;
  * @date:2019-05-20 01:18
  */
 
-public class ProgressThread extends Thread {
+public class ProgressThread implements Runnable{
 	private Display display;
 	private ProgressBar progressBar;
 	private ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<>();
@@ -39,9 +37,8 @@ public class ProgressThread extends Thread {
 
 	@Override
 	public void run() {
-		final int maximum = progressBar.getMaximum();
-		final int minimus = progressBar.getMinimum();
-		for (int i = minimus; i < maximum; i++) {
+		System.out.println(Thread.currentThread().getName());
+		for (int i = 1; i < 10; i++) {
 			display.asyncExec(new Runnable() {
 				public void run() {
 					if (progressBar.isDisposed())
@@ -59,7 +56,7 @@ public class ProgressThread extends Thread {
 						}
 				}
 			});
-			i--;
+			//i--;
 		}
 	}
 

@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.Random;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
@@ -29,23 +30,12 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.openqa.selenium.WebDriver;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.utils.ThreadUtils;
 import nyoibo.inkstone.upload.web.action.InkstoneUploadMainService;
-
-/**
- * <p>Title:InkstoneUploadConsole.java</p>  
- * <p>Description: </p>  
- * <p>Copyright: Copyright (c) 2019</p>  
- * <p>Company: www.frankdevhub.site</p>
- * <p>github: https://github.com/frankdevhub</p>  
- * @author frankdevhub   
- * @date:2019-05-19 18:06
- */
 
 public class InkstoneUploadConsole extends Dialog {
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
@@ -70,8 +60,6 @@ public class InkstoneUploadConsole extends Dialog {
 	private Composite composite;
 	private final int CONSOLE_OK_ID = 10;
 	private final int CONSOLE_CANCEL_ID = 20;
-
-	private ProgressThread progressThread;
 	private InkstoneUploadMainService mainService;
 	private Properties proHistory = new Properties();
 
@@ -124,8 +112,7 @@ public class InkstoneUploadConsole extends Dialog {
 		usrConfigPro.store(fos, "usr");
 		fos.flush();
 		fos.close();
-		ConsoleUtils
-				.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("local usr configuration saved"));
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info("local usr configuration saved");
 	}
 
 	private void readProperties() throws IOException {
@@ -158,18 +145,18 @@ public class InkstoneUploadConsole extends Dialog {
 			this.chromeCachePath = chromeCacheText.getText();
 		}
 
-		ConsoleUtils
-				.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("read usr local configuration"));
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info("read usr local configuration");
 	}
 
-	public InkstoneUploadConsole(Shell parentShell) throws IOException {
+	public InkstoneUploadConsole(Shell parentShell, Display display) throws IOException {
 		super(parentShell);
-		this.display = Display.getDefault();
+		// this.display = Display.getDefault();
+		this.display = display;
 		readProperties();
 
-		new WebLinkUtils(display, webLinkText);
 		new ChromCachTextUtils(display, chromeCacheText).pushToChromCacheText(chromeCachePath);
-		new ChapterTextUtils(display, chapterListText).pushToChapterText(chapterListPath);
+		// new ChapterTextUtils(display,
+		// chapterListText).pushToChapterText(chapterListPath);
 		new CompareTextUtils(display, compareListText).pushToCompareText(compareListPath);
 		new BookListTextUtils(display, bookListText).pushToBookListLink(bookListPath);
 
@@ -311,6 +298,7 @@ public class InkstoneUploadConsole extends Dialog {
 		GridData gdWeblinkUrl = new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1);
 		gdWeblinkUrl.widthHint = 186;
 		weblinkUrl.setLayoutData(gdWeblinkUrl);
+
 		formToolkit.adapt(weblinkUrl, true, true);
 
 		progressText = formToolkit.createText(container, "progressText", SWT.NONE);
@@ -330,9 +318,6 @@ public class InkstoneUploadConsole extends Dialog {
 		progressBar.setLayoutData(gdProgressBar);
 		formToolkit.adapt(progressBar, true, true);
 
-		progressThread = new ProgressThread(display, progressBar, InkstoneUploadMainService.process);
-		//progressThread.start();
-		
 		ScrolledComposite scrolledComposite = new ScrolledComposite(container,
 				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, false, false, 4, 1);
@@ -351,11 +336,6 @@ public class InkstoneUploadConsole extends Dialog {
 
 		scrolledComposite.setContent(consoleTextArea);
 		scrolledComposite.setMinSize(consoleTextArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-
-		new ConsoleUtils(display, consoleTextArea);
-		new WebLinkUtils(display, webLinkText);
-		new ProgressChapterUtils(display, progressText);
-
 		setTextFromConfiguration();
 
 		return container;
@@ -369,21 +349,69 @@ public class InkstoneUploadConsole extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				okButton.setEnabled(false);
 				try {
-					parent.getDisplay().asyncExec(new Runnable() {
+					Runnable progress = new Runnable() {
+						public void run() {
+							for (;;) {
+								display.asyncExec(new Runnable() {
+									public void run() {
+										try {
+											Thread.sleep(20);
+										} catch (InterruptedException e) {
+											e.printStackTrace();
+										}
+										if (progressBar.isDisposed())
+											return;
+										progressBar.setSelection(progressBar.getSelection() + 1);
+									}
+								});
+							}
+						}
+					};
+					Thread progressThread = new Thread(progress);
+					progressThread.setDaemon(true);
+					progressThread.start();
+
+					Runnable urlLink = new Runnable() {
+						@Override
+						public void run() {
+							for (;;) {
+								display.asyncExec(new Runnable() {
+									public void run() {
+										try {
+											Thread.sleep(10);
+										} catch (InterruptedException e) {
+											e.printStackTrace();
+										}
+										if (weblinkUrl.isDisposed())
+											return;
+										weblinkUrl.setText("ss" + new Random().nextInt());
+									}
+								});
+							}
+
+						}
+					};
+					Thread urlLinkThread = new Thread(urlLink);
+					urlLinkThread.setDaemon(true);
+					urlLinkThread.start();
+
+					Runnable service = new Runnable() {
 						@Override
 						public void run() {
 							try {
 								startToRunUploadService();
 							} catch (Exception e) {
 								e.printStackTrace();
-								new ErrorDialogUtils(parent.getDisplay())
+								new ErrorDialogUtils(display)
 										.openErrorDialog("InkstoneUploadMainService Error", e);
 							}
-
 						}
-					});
-					okButton.setEnabled(true);
+					};
+					Thread serviceThread = new Thread(service);
+					serviceThread.setDaemon(true);
+					serviceThread.start();
 
+					okButton.setEnabled(true);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					okButton.setEnabled(true);
@@ -411,10 +439,11 @@ public class InkstoneUploadConsole extends Dialog {
 						exist = false;
 					}
 				}
-				ConsoleUtils.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT)
-						.info(String.format("Upload Thread exists:[%s]", exist)));
+				LOGGER.begin().headerAction(MessageMethod.EVENT)
+						.info(String.format("Upload Thread exists:[%s]", exist));
 			}
 		});
+
 	}
 
 	@Override
@@ -427,78 +456,6 @@ public class InkstoneUploadConsole extends Dialog {
 		super.configureShell(newShell);
 		newShell.setText("WebNovel Upload Console");
 		newShell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
-	}
 
-	public ProgressThread getProgressThread() {
-		return progressThread;
 	}
-
-	public String getChromeCachePath() {
-		return chromeCachePath;
-	}
-
-	public String getBookListPath() {
-		return bookListPath;
-	}
-
-	public String getChapterListPath() {
-		return chapterListPath;
-	}
-
-	public Text getProgressText() {
-		return progressText;
-	}
-
-	public void setProgressText(Text progressText) {
-		this.progressText = progressText;
-	}
-
-	public Button getChromeCacheButton() {
-		return chromeCacheButton;
-	}
-
-	public void setChromeCacheButton(Button chromeCacheButton) {
-		this.chromeCacheButton = chromeCacheButton;
-	}
-
-	public Text getChromeCacheText() {
-		return chromeCacheText;
-	}
-
-	public void setChromeCacheText(Text chromeCacheText) {
-		this.chromeCacheText = chromeCacheText;
-	}
-
-	public Text getBookListText() {
-		return bookListText;
-	}
-
-	public Text getChapterListText() {
-		return chapterListText;
-	}
-
-	public Text getConsoleTextArea() {
-		return consoleTextArea;
-	}
-
-	public Text getWebLinkText() {
-		return webLinkText;
-	}
-
-	public Text getWeblinkUrl() {
-		return weblinkUrl;
-	}
-
-	public ProgressBar getProgressBar() {
-		return progressBar;
-	}
-
-	public Composite getComposite() {
-		return composite;
-	}
-
-	public Display getDisplay() {
-		return display;
-	}
-
 }

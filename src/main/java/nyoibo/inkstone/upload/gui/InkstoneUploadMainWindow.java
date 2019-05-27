@@ -113,8 +113,16 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					uploadConsole = new InkstoneUploadConsole(new Shell());
+					Shell shell = new Shell();
+					Display display = Display.getDefault();
+					uploadConsole = new InkstoneUploadConsole(shell, display);
 					uploadConsole.open();
+
+					while (!shell.isDisposed()) {
+						if (!display.readAndDispatch())
+							display.sleep();
+					}
+
 				} catch (IOException e1) {
 					new ErrorDialogUtils(parent.getDisplay()).openErrorDialog("Can not initalize upload console.", e1);
 					e1.printStackTrace();

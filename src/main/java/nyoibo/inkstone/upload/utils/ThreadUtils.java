@@ -21,6 +21,7 @@ public class ThreadUtils {
 
 		for (int i = 0; i < noThread; i++) {
 			String currentThreadName = lstThreads[i].getName();
+			System.out.println(currentThreadName);
 			if (currentThreadName.equals(thread)) {
 				alive = lstThreads[i];
 				break;

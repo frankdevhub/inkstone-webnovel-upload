@@ -6,8 +6,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import nyoibo.inkstone.upload.gui.ConsoleUtils;
 import nyoibo.inkstone.upload.gui.SWTResourceManager;
 import nyoibo.inkstone.upload.selenium.Query;
 
@@ -46,7 +44,7 @@ public class WebDriverUtils {
 			e.printStackTrace();
 		}
 		
-		ConsoleUtils.pushToConsole(String.format("Find Query:[%s]", query.toString()));
+		System.out.println(String.format("Find Query:[%s]", query.toString()));
 		return element;
 	}
 
@@ -66,7 +64,7 @@ public class WebDriverUtils {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		ConsoleUtils.pushToConsole(String.format("Find Query:[%s]", query.toString()));
+		System.out.println(String.format("Find Query:[%s]", query.toString()));
 	}
 
 	public static synchronized void doWaitCss(String css, WebDriverWait wait) {
@@ -83,7 +81,7 @@ public class WebDriverUtils {
 			e.printStackTrace();
 		}
 
-		ConsoleUtils.pushToConsole(String.format("Find element by xPath:[%s]", css));
+		System.out.println(String.format("Find element by xPath:[%s]", css));
 	}
 
 	public static synchronized void doWaitId(String id, WebDriverWait wait) {
@@ -100,6 +98,6 @@ public class WebDriverUtils {
 			e.printStackTrace();
 		}
 		
-		ConsoleUtils.pushToConsole(String.format("Find Element with id:[%s]", id));
+		System.out.println(String.format("Find Element with id:[%s]", id));
 	}
 }

@@ -12,8 +12,6 @@ import java.util.concurrent.Executors;
 import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.WebDriver;
 
-import nyoibo.inkstone.upload.gui.ConsoleUtils;
-import nyoibo.inkstone.upload.gui.SWTResourceManager;
 import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.selenium.config.ChromeDataConfig;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
@@ -65,9 +63,6 @@ public class InkstoneUploadMainService {
 		this.dataFolderPath = dataFolderPath;
 		this.path = cacheSourcePath;
 		this.foreign = foreign;
-
-		ConsoleUtils.pushToConsole("Init InkstoneUploadMainService");
-
 	}
 
 	private String configChromeData(String path) throws IOException, InterruptedException {
@@ -80,20 +75,18 @@ public class InkstoneUploadMainService {
 	}
 
 	private void readBookList() throws Exception {
-		ConsoleUtils.pushToConsole("do readBookList()");
 		File bookListFile = new File(bookListPath);
 		this.bookListUrl = ExcelReaderUtils.readExcel(bookListFile);
 	}
 
 	private void readCompareList() throws Exception {
-		ConsoleUtils.pushToConsole("do readCompareList()");
 		File compareFile = new File(bookCompareListPath);
 		this.bookCompareList = CompareExcelReaderUtils.readExcel(compareFile);
 	}
 
 	private void initRawUpload() throws Exception {
 		this.mirrorPath = configChromeData(this.path);
-		ConsoleUtils.pushToConsole(String.format("Chrome cache mirror path:[%s]", mirrorPath));
+		//ConsoleUtils.pushToConsole(String.format("Chrome cache mirror path:[%s]", mirrorPath));
 
 		DriverBase.instantiateDriverObject();
 		// DANGER :
@@ -118,7 +111,7 @@ public class InkstoneUploadMainService {
 		readCompareList();
 
 		String url = bookListUrl.get(bookName);
-		ConsoleUtils.pushToConsole(String.format("Book url:[%s]", url));
+		System.out.println(String.format("Book url:[%s]", url));
 		if (StringUtils.isEmpty(url))
 			throw new Exception(String.format("cannot find book:[%s]", bookName));
 
