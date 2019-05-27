@@ -131,6 +131,8 @@ public class InkstoneChapterPage implements Runnable{
 		String currentChapterName = null;
 		InkstoneUploadMainService.currentChapterName = currentChapterName = firstChapter.getText();
 
+		System.out.println("currentChapterName:"+firstChapter.getText());
+		
 		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 5);
 		
 		String enChapName = bookCompareList.get(InkstoneRawHeaderUtils.convertRawCNHeader(currentChapterName));
