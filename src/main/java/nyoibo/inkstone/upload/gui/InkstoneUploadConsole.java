@@ -69,7 +69,7 @@ public class InkstoneUploadConsole extends Dialog {
 
 	private void startToRunUploadService() throws Exception {
 		LOGGER.begin().headerMethod(MessageMethod.EVENT).info("check configuration and start to upload novels");
-
+		saveProperties();
 		int textIsEmpty = 0;
 		if (StringUtils.isEmpty(chromeCachePath))
 			textIsEmpty++;
@@ -86,7 +86,6 @@ public class InkstoneUploadConsole extends Dialog {
 		if (textIsEmpty > 0)
 			throw new Exception("Please input all configuration.");
 
-		saveProperties();
 		this.mainService = new InkstoneUploadMainService(bookListPath, compareListPath, chapterListPath,
 				chromeCachePath, false);
 		mainService.rawUploadStart();
@@ -96,13 +95,6 @@ public class InkstoneUploadConsole extends Dialog {
 	private void saveProperties() throws IOException {
 
 		FileOutputStream fos = new FileOutputStream(configPropertiesPath, false);
-
-		chapterListPath = chapterListText.getText();
-		System.out.println(chapterListPath);
-		bookListPath = bookListText.getText();
-		chromeCachePath = chromeCacheText.getText();
-		compareListPath = compareListText.getText();
-
 		Properties usrConfigPro = new Properties();
 		usrConfigPro.setProperty(InkstoneUploadMainWindow.BOOK_LIST_PATH, bookListPath);
 		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_PATH, chapterListPath);
@@ -376,10 +368,28 @@ public class InkstoneUploadConsole extends Dialog {
 						@Override
 						public void run() {
 							try {
-								startToRunUploadService();
+
+								display.asyncExec(new Runnable() {
+									public void run() {
+										chapterListPath = chapterListText.getText();
+										System.out.println(chapterListPath);
+										bookListPath = bookListText.getText();
+										chromeCachePath = chromeCacheText.getText();
+										compareListPath = compareListText.getText();
+										try {
+											startToRunUploadService();
+										} catch (Exception e) {
+											e.printStackTrace();
+											new ErrorDialogUtils(parent.getDisplay())
+													.openErrorDialog("InkstoneUploadMainService Error", e);
+										}
+									}
+								});
+
 							} catch (Exception e) {
 								e.printStackTrace();
-								new ErrorDialogUtils(display).openErrorDialog("InkstoneUploadMainService Error", e);
+								new ErrorDialogUtils(parent.getDisplay())
+										.openErrorDialog("InkstoneUploadMainService Error", e);
 							}
 						}
 					};
