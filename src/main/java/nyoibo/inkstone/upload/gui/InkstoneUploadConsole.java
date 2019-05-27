@@ -150,13 +150,11 @@ public class InkstoneUploadConsole extends Dialog {
 
 	public InkstoneUploadConsole(Shell parentShell, Display display) throws IOException {
 		super(parentShell);
-		// this.display = Display.getDefault();
 		this.display = display;
 		readProperties();
 
 		new ChromCachTextUtils(display, chromeCacheText).pushToChromCacheText(chromeCachePath);
-		// new ChapterTextUtils(display,
-		// chapterListText).pushToChapterText(chapterListPath);
+		new ChapterTextUtils(display, chapterListText).pushToChapterText(chapterListPath);
 		new CompareTextUtils(display, compareListText).pushToCompareText(compareListPath);
 		new BookListTextUtils(display, bookListText).pushToBookListLink(bookListPath);
 
@@ -362,6 +360,9 @@ public class InkstoneUploadConsole extends Dialog {
 										if (progressBar.isDisposed())
 											return;
 										progressBar.setSelection(progressBar.getSelection() + 1);
+										if (weblinkUrl.isDisposed())
+											return;
+										weblinkUrl.setText("ss" + new Random().nextInt());
 									}
 								});
 							}
@@ -371,30 +372,6 @@ public class InkstoneUploadConsole extends Dialog {
 					progressThread.setDaemon(true);
 					progressThread.start();
 
-					Runnable urlLink = new Runnable() {
-						@Override
-						public void run() {
-							for (;;) {
-								display.asyncExec(new Runnable() {
-									public void run() {
-										try {
-											Thread.sleep(10);
-										} catch (InterruptedException e) {
-											e.printStackTrace();
-										}
-										if (weblinkUrl.isDisposed())
-											return;
-										weblinkUrl.setText("ss" + new Random().nextInt());
-									}
-								});
-							}
-
-						}
-					};
-					Thread urlLinkThread = new Thread(urlLink);
-					urlLinkThread.setDaemon(true);
-					urlLinkThread.start();
-
 					Runnable service = new Runnable() {
 						@Override
 						public void run() {
@@ -402,8 +379,7 @@ public class InkstoneUploadConsole extends Dialog {
 								startToRunUploadService();
 							} catch (Exception e) {
 								e.printStackTrace();
-								new ErrorDialogUtils(display)
-										.openErrorDialog("InkstoneUploadMainService Error", e);
+								new ErrorDialogUtils(display).openErrorDialog("InkstoneUploadMainService Error", e);
 							}
 						}
 					};
