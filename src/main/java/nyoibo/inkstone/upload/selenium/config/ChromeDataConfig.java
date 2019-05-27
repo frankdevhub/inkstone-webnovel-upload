@@ -34,8 +34,6 @@ public class ChromeDataConfig {
 	}
    
 	public synchronized static String getLocal() {
-		String path = null;
-		
 		return WIN_SOURCE;
 	}
 

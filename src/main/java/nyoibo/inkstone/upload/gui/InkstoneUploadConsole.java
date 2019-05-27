@@ -94,7 +94,8 @@ public class InkstoneUploadConsole extends Dialog {
 		if (textIsEmpty > 0)
 			throw new Exception("Please input all configuration.");
 		saveProperties();
-		this.mainService = new InkstoneUploadMainService(bookListPath, compareListPath, chapterListPath, false);
+		this.mainService = new InkstoneUploadMainService(bookListPath, compareListPath, chapterListPath,
+				chromeCachePath, false);
 		mainService.rawUploadStart();
 
 	}
@@ -366,10 +367,9 @@ public class InkstoneUploadConsole extends Dialog {
 					okButton.setEnabled(true);
 
 				} catch (Exception e1) {
-
+					e1.printStackTrace();
 					okButton.setEnabled(true);
 					new ErrorDialogUtils(parent.getDisplay()).openErrorDialog("InkstoneUploadMainService Error", e1);
-					e1.printStackTrace();
 				}
 
 			}

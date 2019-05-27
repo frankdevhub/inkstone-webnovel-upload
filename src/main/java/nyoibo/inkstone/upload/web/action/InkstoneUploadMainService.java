@@ -53,7 +53,7 @@ public class InkstoneUploadMainService {
 	private final boolean foreign;
 
 	public InkstoneUploadMainService(String bookListPath, String bookCompareListPath, String dataFolderPath,
-			boolean foreign) throws Exception {
+			String mirrorPath, boolean foreign) throws Exception {
 		File mirrorCacheFile = new File(ChromeDataConfig.WIN_TARGET);
 		if (!mirrorCacheFile.exists())
 			throw new Exception("Please create a file named Automation under root at disk D");
@@ -61,6 +61,7 @@ public class InkstoneUploadMainService {
 		this.bookListPath = bookListPath;
 		this.bookCompareListPath = bookCompareListPath;
 		this.dataFolderPath = dataFolderPath;
+		this.mirrorPath = mirrorPath;
 		this.foreign = foreign;
 
 		ConsoleUtils.pushToConsole("Init InkstoneUploadMainService");
@@ -68,7 +69,9 @@ public class InkstoneUploadMainService {
 
 	private String configChromeData(String path) throws IOException {
 		String dataName = ChromeDataConfig.createDataName(SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW);
-		return ChromeDataConfig.config(path, dataName);
+		String cacheMirror = ChromeDataConfig.config(path, dataName);
+		System.out.println(cacheMirror);
+		return cacheMirror;
 	}
 
 	private void readBookList() throws Exception {
