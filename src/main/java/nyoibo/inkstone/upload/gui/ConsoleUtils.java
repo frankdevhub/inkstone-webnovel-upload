@@ -1,6 +1,5 @@
 package nyoibo.inkstone.upload.gui;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 

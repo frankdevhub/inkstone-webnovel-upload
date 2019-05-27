@@ -51,7 +51,6 @@ public class InkstoneRawNovelService implements Runnable{
 
 	@Override
 	public void run() {
-	
 		synchronized (SWTResourceManager.LOCK) {
 			homePageThread = new Thread(inkstoneHomePage);
 			homePageThread.setDaemon(true);

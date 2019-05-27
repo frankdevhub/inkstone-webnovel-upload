@@ -41,6 +41,7 @@ public class InkstoneHomePage implements Runnable{
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneHomePage.class);
 	
 	public InkstoneHomePage(boolean foreign, WebDriver driver, String bookName) throws Exception {
+		
 		this.driver = driver;
 		if (foreign) {
 			this.accountName = SeleniumInkstone.INKSTONE_ACCOUNT_NAME_EN;
@@ -59,6 +60,8 @@ public class InkstoneHomePage implements Runnable{
 		submitBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_LOGIN_SUBMIT_ID));
 
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver(bookName));
+		
+		SWTResourceManager.LOCK.wait();
 		ConsoleUtils
 				.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("Init InkstoneHomePage Thread"));
 	}
