@@ -79,14 +79,13 @@ public class InkstoneRawNovelService implements Runnable{
 				chapterThread.start();
 				chapterThread.join();
 				Thread.sleep(2000);
-				
-			
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		Thread.currentThread().interrupt();
-		LOGGER.begin().headerAction(MessageMethod.EVENT).info(" raw main thread kill complete");
-		
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info("raw main thread kill complete");
+
 	}
 }

@@ -23,20 +23,15 @@ public class WebLinkUtils {
 	}
 
 	public synchronized static void pushToWebLink(String message) {
-		Thread thread = new Thread(new Runnable() {
+		SWTResourceManager.lock.lock();
+		display.asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				textarea.append(message);
 			}
 		});
-
-		display.asyncExec(thread);
-		try {
-			thread.start();
-			thread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		SWTResourceManager.lock.unlock();
+		SWTResourceManager.condition.signal();
 	}
 
 }

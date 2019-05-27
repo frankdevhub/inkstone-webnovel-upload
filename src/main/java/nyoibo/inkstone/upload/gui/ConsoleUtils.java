@@ -25,7 +25,7 @@ public class ConsoleUtils {
 	}
 
 	public synchronized static void pushToConsole(String message) {
-		Thread thread = new Thread(new Runnable() {
+		display.asyncExec(new Thread(new Runnable() {
 			@Override
 			public void run() {
 				if (!StringUtils.isEmpty(message)) {
@@ -33,15 +33,7 @@ public class ConsoleUtils {
 					textarea.append(message);
 				}
 			}
-		});
-		display.asyncExec(thread);
-
-		try {
-			thread.start();
-			thread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		}));
 	}
 
 }

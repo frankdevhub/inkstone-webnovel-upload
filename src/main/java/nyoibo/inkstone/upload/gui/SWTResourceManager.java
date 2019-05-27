@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -30,6 +32,10 @@ import org.eclipse.swt.widgets.Display;
 
 
 public class SWTResourceManager {
+	
+	public static ReentrantLock lock = new ReentrantLock();
+	public static Condition condition = lock.newCondition();
+	
 	////////////////////////////////////////////////////////////////////////////
 	//
 	// Color

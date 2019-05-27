@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.gui.ConsoleUtils;
+import nyoibo.inkstone.upload.gui.SWTResourceManager;
 import nyoibo.inkstone.upload.gui.WebLinkUtils;
 import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.selenium.AssignDriver;
@@ -15,6 +16,7 @@ import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.selenium.Query;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 import nyoibo.inkstone.upload.utils.WebDriverUtils;
+
 /**
  * <p>Title:InkstoneHomePage.java</p>  
  * <p>Description: </p>  
@@ -58,12 +60,15 @@ public class InkstoneHomePage implements Runnable{
 
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver(bookName));
 
+		SWTResourceManager.condition.wait();
 		ConsoleUtils
 				.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("Init InkstoneHomePage Thread"));
 	}
 
 	private void login() throws Exception {
 		ConsoleUtils.pushToConsole(LOGGER.begin().headerMethod(MessageMethod.EVENT).info("navigate to homepage"));
+		
+		SWTResourceManager.condition.wait();
 		driver.get(SeleniumInkstone.INKSTONE);
 
 		WebLinkUtils.pushToWebLink(SeleniumInkstone.INKSTONE);
@@ -107,11 +112,15 @@ public class InkstoneHomePage implements Runnable{
 
 	@Override
 	public void run() {
+		SWTResourceManager.lock.lock();
 		try {
 			login();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			SWTResourceManager.lock.unlock();
 		}
+
 	}
 
 }
