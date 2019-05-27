@@ -12,6 +12,8 @@ import java.util.concurrent.Executors;
 import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.WebDriver;
 
+import nyoibo.inkstone.upload.data.logging.Logger;
+import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.gui.ConsoleUtils;
 import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.selenium.config.ChromeDataConfig;
@@ -52,8 +54,10 @@ public class InkstoneUploadMainService {
 	private String dataFolderPath;
 	private final boolean foreign;
 
+	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadMainService.class);
+
 	public InkstoneUploadMainService(String bookListPath, String bookCompareListPath, String dataFolderPath,
-			String mirrorPath, boolean foreign) throws Exception {
+			String cacheSourcePath, boolean foreign) throws Exception {
 		File mirrorCacheFile = new File(ChromeDataConfig.WIN_TARGET);
 		if (!mirrorCacheFile.exists())
 			throw new Exception("Please create a file named Automation under root at disk D");
@@ -61,13 +65,14 @@ public class InkstoneUploadMainService {
 		this.bookListPath = bookListPath;
 		this.bookCompareListPath = bookCompareListPath;
 		this.dataFolderPath = dataFolderPath;
-		this.mirrorPath = mirrorPath;
+		this.path = cacheSourcePath;
 		this.foreign = foreign;
 
 		ConsoleUtils.pushToConsole("Init InkstoneUploadMainService");
 	}
 
 	private String configChromeData(String path) throws IOException {
+		System.out.println("local chrome cache source:" + path);
 		String dataName = ChromeDataConfig.createDataName(SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW);
 		String cacheMirror = ChromeDataConfig.config(path, dataName);
 		System.out.println(cacheMirror);

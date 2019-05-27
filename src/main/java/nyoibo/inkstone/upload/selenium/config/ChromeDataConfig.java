@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 
+import nyoibo.inkstone.upload.gui.ConsoleUtils;
+
 /**
  * <p>Title:ChromeDataConfig.java</p>  
  * <p>Description: </p>  
@@ -39,7 +41,8 @@ public class ChromeDataConfig {
 
 	public synchronized static String config(String root, String dataName) throws IOException {
 		String destDir = WIN_TARGET + dataName;
-		System.out.println("dest-name:" + destDir);
+		ConsoleUtils.pushToConsole("dest-name:" + destDir);
+		ConsoleUtils.pushToConsole("chrome cache source:" + root);
 
 		File rootFile = new File(root);
 		File destFile = new File(destDir);
