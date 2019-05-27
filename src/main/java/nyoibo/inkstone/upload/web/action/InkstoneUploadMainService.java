@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -135,7 +133,12 @@ public class InkstoneUploadMainService {
 			}
 
 			Thread uploadThread = new Thread(rawService);
-			this.threadPool.execute(uploadThread);
+			try {
+				this.threadPool.execute(uploadThread);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+			}
 		}
 		this.threadPool.shutdown();
 	}
