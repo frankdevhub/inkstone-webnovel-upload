@@ -369,19 +369,30 @@ public class InkstoneUploadConsole extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
+					parent.getDisplay().asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								startToRunUploadService();
+							} catch (Exception e) {
+								e.printStackTrace();
+								new ErrorDialogUtils(parent.getDisplay())
+										.openErrorDialog("InkstoneUploadMainService Error", e);
+							}
+
+						}
+					});
 					okButton.setEnabled(false);
-					startToRunUploadService();
 					okButton.setEnabled(true);
 
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					okButton.setEnabled(true);
-
+					new ErrorDialogUtils(parent.getDisplay()).openErrorDialog("InkstoneUploadMainService Error", e1);
+				} finally {
 					WebDriver running = mainService.getDriver();
 					if (running != null)
 						running.quit();
-
-					new ErrorDialogUtils(parent.getDisplay()).openErrorDialog("InkstoneUploadMainService Error", e1);
 				}
 
 			}
@@ -422,7 +433,7 @@ public class InkstoneUploadConsole extends Dialog {
 		newShell.setText("WebNovel Upload Console");
 		newShell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
 	}
-	
+
 	public ProgressThread getProgressThread() {
 		return progressThread;
 	}
