@@ -39,11 +39,18 @@ public class ProgressThread extends Thread {
 
 	@Override
 	public void run() {
-		synchronized (SWTResourceManager.LOCK) {
+		final int maximum = progressBar.getMaximum();
+		final int minimus = progressBar.getMinimum();
+		for (int i = minimus; i < maximum; i++) {
 			display.asyncExec(new Runnable() {
 				public void run() {
 					if (progressBar.isDisposed())
 						return;
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 					String currentChapterName = InkstoneUploadMainService.currentChapterName;
 					if (!StringUtils.isEmpty(currentChapterName))
 						if (process.get(currentChapterName) != null) {
@@ -52,8 +59,7 @@ public class ProgressThread extends Thread {
 						}
 				}
 			});
-
-			SWTResourceManager.LOCK.notifyAll();
+			i--;
 		}
 	}
 
