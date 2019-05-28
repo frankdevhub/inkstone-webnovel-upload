@@ -378,13 +378,11 @@ public class InkstoneUploadConsole extends Dialog {
 								display.asyncExec(new Runnable() {
 									public void run() {
 										chapterListPath = chapterListText.getText();
-										System.out.println(chapterListPath);
 										bookListPath = bookListText.getText();
 										chromeCachePath = chromeCacheText.getText();
 										compareListPath = compareListText.getText();
 										try {
 											Thread.sleep(20);
-											startToRunUploadService();
 										} catch (Exception e) {
 											e.printStackTrace();
 											new ErrorDialogUtils(parent.getDisplay())
@@ -392,7 +390,7 @@ public class InkstoneUploadConsole extends Dialog {
 										}
 									}
 								});
-
+								startToRunUploadService();
 							} catch (Exception e) {
 								e.printStackTrace();
 								new ErrorDialogUtils(parent.getDisplay())
@@ -401,7 +399,7 @@ public class InkstoneUploadConsole extends Dialog {
 						}
 					};
 					Thread serviceThread = new Thread(service);
-					//serviceThread.setDaemon(true);
+					serviceThread.setDaemon(true);
 					serviceThread.start();
 
 					okButton.setEnabled(true);
