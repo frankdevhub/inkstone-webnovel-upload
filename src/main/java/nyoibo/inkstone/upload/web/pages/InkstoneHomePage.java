@@ -7,7 +7,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
-import nyoibo.inkstone.upload.gui.SWTResourceManager;
 import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.selenium.AssignDriver;
 import nyoibo.inkstone.upload.selenium.DriverBase;
@@ -71,11 +70,12 @@ public class InkstoneHomePage implements Runnable{
 			WebDriverWait wait = new WebDriverWait(driver, 5, 100);
 			WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_HOME_TITLE, wait);
 
+			Thread.sleep(2000);
 			signIntoBtn.findWebElement().click();
+			Thread.sleep(2000);
 			driver.switchTo().frame(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID);
 			selectEmailLoginBtn.findWebElement().click();
-
-			SWTResourceManager.LOCK.wait();
+			Thread.sleep(500);
 			LOGGER.begin().headerAction(MessageMethod.EVENT).info("switch to login iframe");
 
 			WebDriverUtils.findWebElement(accountNameInput).clear();

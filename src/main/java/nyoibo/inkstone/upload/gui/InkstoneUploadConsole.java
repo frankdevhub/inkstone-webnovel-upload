@@ -383,6 +383,7 @@ public class InkstoneUploadConsole extends Dialog {
 										chromeCachePath = chromeCacheText.getText();
 										compareListPath = compareListText.getText();
 										try {
+											Thread.sleep(20);
 											startToRunUploadService();
 										} catch (Exception e) {
 											e.printStackTrace();
@@ -400,7 +401,7 @@ public class InkstoneUploadConsole extends Dialog {
 						}
 					};
 					Thread serviceThread = new Thread(service);
-					serviceThread.setDaemon(true);
+					//serviceThread.setDaemon(true);
 					serviceThread.start();
 
 					okButton.setEnabled(true);

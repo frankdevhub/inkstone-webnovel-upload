@@ -32,18 +32,6 @@ public class WebDriverUtils {
 
 	public static synchronized WebElement findWebElement(Query query) {
 		WebElement element = query.findWebElement();
-		try {
-			SWTResourceManager.LOCK.wait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		try {
-			SWTResourceManager.LOCK.wait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
 		System.out.println(String.format("Find Query:[%s]", query.toString()));
 		return element;
 	}
@@ -59,11 +47,6 @@ public class WebDriverUtils {
 				return query.findWebElement();
 			}
 		});
-		try {
-			SWTResourceManager.LOCK.wait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		System.out.println(String.format("Find Query:[%s]", query.toString()));
 	}
 
@@ -74,13 +57,6 @@ public class WebDriverUtils {
 				return driver.findElement(By.cssSelector(css));
 			}
 		});
-
-		try {
-			SWTResourceManager.LOCK.wait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
 		System.out.println(String.format("Find element by xPath:[%s]", css));
 	}
 
@@ -92,12 +68,6 @@ public class WebDriverUtils {
 			}
 		});
 
-		try {
-			SWTResourceManager.LOCK.wait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
 		System.out.println(String.format("Find Element with id:[%s]", id));
 	}
 }

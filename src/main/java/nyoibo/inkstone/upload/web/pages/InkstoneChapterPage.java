@@ -107,8 +107,7 @@ public class InkstoneChapterPage implements Runnable{
 	}
 
 	public void editLatestRaw() throws Exception {
-	//	ConsoleUtils
-	//			.pushToConsole(LOGGER.begin().headerAction(MessageMethod.EVENT).info("navigate to inkstone dashboard"));
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info("navigate to inkstone dashboard");
 		Thread.sleep(2000);
 
 		WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_DASHBOARD, wait);
@@ -146,8 +145,9 @@ public class InkstoneChapterPage implements Runnable{
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Using file path: %s", filePath));
 
 		firstChapter.click();
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info("click first raw button");
 		WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_TRANSLATION, wait);
-		
+
 		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 13);
 		
 		selectTranslate();
@@ -171,12 +171,12 @@ public class InkstoneChapterPage implements Runnable{
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("click yes to take this chapter");
 		WebDriverUtils.findWebElement(conFirmTransBtn).click();
 		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 42);
-		
+
 		Thread.sleep(3000);
 
 		waitForSaveBtn();
 
-	LOGGER.begin().headerAction(MessageMethod.EVENT).info("proceed to translate status");
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info("proceed to translate status");
 	}
 
 	private void doTranslate() throws Exception {

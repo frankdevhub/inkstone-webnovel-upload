@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -110,6 +112,12 @@ public class InkstoneUploadMainService {
 		readBookList();
 		readCompareList();
 
+		Set<Entry<String,String>> entrySet = bookListUrl.entrySet();
+		for(Entry<String,String> entry:entrySet){
+			System.out.println(entry.getKey()+"==="+entry.getValue());
+		}
+		
+		
 		String url = bookListUrl.get(bookName);
 		System.out.println(String.format("Book url:[%s]", url));
 		if (StringUtils.isEmpty(url))
