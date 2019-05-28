@@ -38,7 +38,7 @@ public class InkstoneHomePage implements Runnable{
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneHomePage.class);
 	
 	public InkstoneHomePage(boolean foreign, WebDriver driver, String bookName) throws Exception {
-
+		System.out.println("reCreate");
 		this.driver = driver;
 		if (foreign) {
 			this.accountName = SeleniumInkstone.INKSTONE_ACCOUNT_NAME_EN;
