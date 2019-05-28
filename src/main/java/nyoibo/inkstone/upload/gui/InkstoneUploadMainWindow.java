@@ -51,7 +51,7 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 	public static String CHROME_CACHE_PATH = "chrome_cache_path";
 
 	public static final int START_RUN_ID = 280;
-	
+
 	public InkstoneUploadConsole getUplaodConsole() {
 		return uploadConsole;
 	}
@@ -72,7 +72,6 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 					Point size = CustomComposite.this.getSize();
 					Point p = CustomComposite.this.getLocation();
 					e.gc.drawImage(img, 0, 0, img.getBounds().width, img.getBounds().height, p.x, p.y, size.x, size.y);
-
 				}
 			});
 		}
@@ -154,12 +153,14 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 
 				if (selecteddir != null) {
 					try {
-						compareChapterWindow = new CompareChapterWindow(Display.getCurrent().getActiveShell(),
-								selecteddir);
+						Display display = new Display();
+						Shell shell = new Shell(display);
+						compareChapterWindow = new CompareChapterWindow(shell, selecteddir);
 						compareChapterWindow.open();
 
 						setExcelButton.setEnabled(true);
 					} catch (Exception e1) {
+						e1.printStackTrace();
 						new ErrorDialogUtils(Display.getDefault()).openErrorDialog("Failed to package chapter files",
 								e1);
 						setExcelButton.setEnabled(true);

@@ -2,22 +2,9 @@ package nyoibo.inkstone.upload.utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.thymeleaf.util.StringUtils;
-
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
-import nyoibo.inkstone.upload.message.MessageMethod;
-
-/**
- * <p>Title:InkstoneRawHeaderUtils.java</p>  
- * <p>Description: </p>  
- * <p>Copyright: Copyright (c) 2019</p>  
- * <p>Company: www.frankdevhub.site</p>
- * <p>github: https://github.com/frankdevhub</p>  
- * @author frankdevhub   
- * @date:2019-05-19 17:35
- */
 
 public class InkstoneRawHeaderUtils {
 
@@ -25,8 +12,7 @@ public class InkstoneRawHeaderUtils {
 	private static final String numRegx = "\\d+(\\.\\d+){0,1}";
 	private static final String chapCNRegx = "第([\\s\\S]*?)章";
 	private static final String selectENRegx = "(?<=\\()[^\\)]+";
-	
-	
+
 	public static String convertRawCNHeader(String header) throws Exception {
 		if (header == null)
 			return null;
@@ -38,17 +24,20 @@ public class InkstoneRawHeaderUtils {
 		Matcher matcher = Pattern.compile(chapCNRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group(1).trim();
-			//LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
+			System.out.println(convert);
+			// LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch
+			// raw header key:[%s]", convert));
 
-			int number = StringNumberUtils.numberCN2Arab(convert);
-			convert = Integer.toString(number).replace(".0", "");
+			//int number = StringNumberUtils.numberCN2Arab(convert);
 
 		} else {
 			matcher = Pattern.compile(numRegx).matcher(header);
 			if (matcher.find()) {
 				convert = matcher.group();
-			/*	LOGGER.begin().headerAction(MessageMethod.EVENT)
-						.info(String.format("Catch raw header key:[%s]", convert));*/
+				/*
+				 * LOGGER.begin().headerAction(MessageMethod.EVENT)
+				 * .info(String.format("Catch raw header key:[%s]", convert));
+				 */
 			}
 		}
 
@@ -56,8 +45,6 @@ public class InkstoneRawHeaderUtils {
 			throw new Exception(String.format("Cannot recognize the raw header in format：[%s] if need help, "
 					+ "please contact support for this bug.", header));
 		}
-
-		convert = convert.replaceAll(".0", "");
 
 		String tail = getInnerPart(header);
 		if (tail == null) {
@@ -69,9 +56,9 @@ public class InkstoneRawHeaderUtils {
 	}
 
 	public static String convertRawENeader(String header) throws Exception {
-		if(header == null)
+		if (header == null)
 			return null;
-		
+
 		header = header.replaceAll("（", "(");
 		header = header.replaceAll("）", ")");
 
@@ -80,7 +67,8 @@ public class InkstoneRawHeaderUtils {
 		Matcher matcher = Pattern.compile(numRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group();
-			//LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
+			// LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch
+			// raw header key:[%s]", convert));
 		}
 
 		if (StringUtils.isEmpty(convert)) {
@@ -89,7 +77,6 @@ public class InkstoneRawHeaderUtils {
 		}
 
 		String tail = getInnerPart(header);
-		convert = convert.replaceAll(".0", "");
 		if (tail == null) {
 			return convert;
 		} else {
@@ -101,11 +88,12 @@ public class InkstoneRawHeaderUtils {
 	public static String getInnerPart(String header) {
 		String convert = null;
 		header = header.toLowerCase();
-		
+
 		Matcher matcher = Pattern.compile(selectENRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group();
-			//LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
+			// LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch
+			// raw header key:[%s]", convert));
 		} else {
 			matcher = Pattern.compile(selectENRegx).matcher(header);
 			if (matcher.find()) {
@@ -136,12 +124,19 @@ public class InkstoneRawHeaderUtils {
 		}
 	}
 
-	/*public static void main(String[] args) throws Exception {
-		String test = " Copy of Chapter 302 — Greatest Weakness.docx";
-		System.out.println(InkstoneRawHeaderUtils.convertRawENeader(test));
+	/*
+	 * public static void main(String[] args) throws Exception { String test =
+	 * " Copy of Chapter 302 — Greatest Weakness.docx";
+	 * System.out.println(InkstoneRawHeaderUtils.convertRawENeader(test));
+	 * 
+	 * WordExtractorUtils utils = new WordExtractorUtils();
+	 * utils.extractFile(new
+	 * File("D:/蜜爱1V1-首席宠上天/Copy of Chapter 344 - Her Hope.docx"));
+	 * System.out.println(utils.getTitle()); }
+	 */
 
-		WordExtractorUtils utils = new WordExtractorUtils();
-		utils.extractFile(new File("D:/蜜爱1V1-首席宠上天/Copy of Chapter 344 - Her Hope.docx"));
-        System.out.println(utils.getTitle());
+/*	public static void main(String[] args) throws Exception {
+		System.out.println("RES:" + InkstoneRawHeaderUtils.convertRawCNHeader("第303章 最大命门"));
+		System.out.println("ENS"+InkstoneRawHeaderUtils.convertRawENeader("Copy of Chapter 300 — Big Guy and Small Guy"));
 	}*/
 }

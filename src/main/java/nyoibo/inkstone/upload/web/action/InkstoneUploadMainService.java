@@ -84,6 +84,11 @@ public class InkstoneUploadMainService {
 	private void readCompareList() throws Exception {
 		File compareFile = new File(bookCompareListPath);
 		this.bookCompareList = CompareExcelReaderUtils.readExcel(compareFile);
+		
+		Set<Entry<String,String>> set = bookCompareList.entrySet();
+		for(Entry<String,String>entry:set){
+			System.out.println(entry.getKey()+"======"+entry.getValue());
+		}
 	}
 
 	private void initRawUpload() throws Exception {
