@@ -367,7 +367,7 @@ public class InkstoneUploadConsole extends Dialog {
 					};
 					Thread progressThread = new Thread(progress);
 					progressThread.setDaemon(true);
-					progressThread.start();
+					//progressThread.start();
 					
 					
 					Runnable service = new Runnable() {
