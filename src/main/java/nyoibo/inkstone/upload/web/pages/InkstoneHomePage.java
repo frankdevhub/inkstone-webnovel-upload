@@ -14,20 +14,10 @@ import nyoibo.inkstone.upload.selenium.Query;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 import nyoibo.inkstone.upload.utils.WebDriverUtils;
 
-/**
- * <p>Title:InkstoneHomePage.java</p>  
- * <p>Description: </p>  
- * <p>Copyright: Copyright (c) 2019</p>  
- * <p>Company: www.frankdevhub.site</p>
- * <p>github: https://github.com/frankdevhub</p>  
- * @author frankdevhub   
- * @date:2019-05-08 11:00
- */
-
-public class InkstoneHomePage implements Runnable{
+public class InkstoneHomePage implements Runnable {
 	private String accountName;
 	private String accountPwd;
-  
+
 	private Query signIntoBtn;
 	private Query selectEmailLoginBtn;
 	private Query accountNameInput;
@@ -36,9 +26,8 @@ public class InkstoneHomePage implements Runnable{
 
 	private WebDriver driver;
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneHomePage.class);
-	
+
 	public InkstoneHomePage(boolean foreign, WebDriver driver, String bookName) throws Exception {
-		System.out.println("reCreate");
 		this.driver = driver;
 		if (foreign) {
 			this.accountName = SeleniumInkstone.INKSTONE_ACCOUNT_NAME_EN;

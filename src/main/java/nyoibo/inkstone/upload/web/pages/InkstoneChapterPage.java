@@ -124,9 +124,11 @@ public class InkstoneChapterPage implements Runnable {
 
 		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 5);
 
+		System.out.println("CN_CHAP_NAME" + InkstoneRawHeaderUtils.convertRawCNHeader(currentChapterName));
 		String enChapName = bookCompareList.get(InkstoneRawHeaderUtils.convertRawCNHeader(currentChapterName));
-		System.out.println(InkstoneRawHeaderUtils.convertRawCNHeader(currentChapterName));
+		System.out.println("EN_CHAP_NAME" + enChapName);
 		
+
 		if (enChapName == null)
 			throw new Exception(String.format(
 					"Cannot find related translated file with raw :[%s] please check mannually", currentChapterName));

@@ -57,6 +57,7 @@ public class InkstoneRawNovelService implements Runnable{
 
 		if (needLogin) {
 			try {
+				System.out.println("START FIRST");
 				homePageThread.start();
 				homePageThread.join();
 				Thread.sleep(3000);
@@ -67,6 +68,7 @@ public class InkstoneRawNovelService implements Runnable{
 			}
 		} else {
 			try {
+				System.out.println("START NEXT");
 				Thread.sleep(2000);
 				driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
 
