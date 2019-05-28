@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
@@ -12,15 +13,7 @@ import java.util.zip.ZipFile;
 
 import org.codehaus.plexus.util.FileUtils;
 
-/**
- * <p>Title:DriveZipUtils.java</p>  
- * <p>Description: </p>  
- * <p>Copyright: Copyright (c) 2019</p>  
- * <p>Company: www.frankdevhub.site</p>
- * <p>github: https://github.com/frankdevhub</p>  
- * @author frankdevhub   
- * @date:2019-05-23 17:17
- */
+import info.monitorenter.cpdetector.io.CodepageDetectorProxy;
 
 public class FileZipUtils {
 	private static final String ZIP_SUFFIX = "zip";
@@ -52,20 +45,44 @@ public class FileZipUtils {
 			throw new Exception(String.format("Cannot find zip file in path [%s]", filePath));
 
 		for (File zip : unZipFiles) {
+			System.out.println(filePath);
 			unZipFile(zip, filePath);
 			FileUtils.forceDelete(zip);
 		}
-		
+
 	}
 
+	public String getFileEncode(File file) {
+		String encode = "UTF-8";
+		Charset charset = null;
+		try {
+			CodepageDetectorProxy detector = CodepageDetectorProxy.getInstance();
+			charset = detector.detectCodepage(file.toURI().toURL());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (charset != null) {
+			encode = charset.name();
+		}
+		return encode;
+	}
+
+	@SuppressWarnings("resource")
 	private void unZipFile(File file, String filePath) throws ZipException, IOException {
 		ZipFile zipFile = null;
-		zipFile = new ZipFile(file);
+
+		System.out.println("file path:" + filePath);
+
+		String fileEncode = getFileEncode(file);
+		System.out.println(fileEncode);
+		zipFile = new ZipFile(file.getAbsolutePath(), Charset.forName(fileEncode));
 
 		Enumeration<?> entries = zipFile.entries();
 		while (entries.hasMoreElements()) {
 			ZipEntry entry = (ZipEntry) entries.nextElement();
 
+			System.out.println("Entry-Name:"+entry.getName());
+			
 			if (entry.isDirectory()) {
 				unZipFolderNames.add(entry.getName());
 
@@ -74,11 +91,19 @@ public class FileZipUtils {
 
 				dir.mkdirs();
 			} else {
+
 				File targetFile = new File(filePath + "/" + entry.getName());
 				if (!targetFile.getParentFile().exists()) {
 					targetFile.getParentFile().mkdirs();
 				}
 
+				System.out.println("=absolute_path==" + targetFile.getAbsolutePath());
+				File p =targetFile.getParentFile();
+				System.out.println("parent:"+ p.getAbsolutePath());
+				System.out.println("parent-exist:"+p.exists());
+				
+				System.out.println(targetFile.exists());
+				
 				targetFile.createNewFile();
 				InputStream is = zipFile.getInputStream(entry);
 				FileOutputStream fos = new FileOutputStream(targetFile);

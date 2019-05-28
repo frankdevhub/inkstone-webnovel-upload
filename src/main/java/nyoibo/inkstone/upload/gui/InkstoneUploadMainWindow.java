@@ -153,7 +153,7 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 
 				if (selecteddir != null) {
 					try {
-						Display display = new Display();
+						Display display = Display.getDefault();
 						Shell shell = new Shell(display);
 						compareChapterWindow = new CompareChapterWindow(shell, selecteddir);
 						compareChapterWindow.open();

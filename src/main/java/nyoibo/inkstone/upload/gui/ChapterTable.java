@@ -119,7 +119,7 @@ public class ChapterTable {
 		}
 		wrapDataMap(filePath);
 	}
-	
+
 	private void wrapDataMap(String filePath) throws Exception {
 		File dataFile = new File(filePath);
 		File[] dataFileList = dataFile.listFiles();
@@ -140,7 +140,7 @@ public class ChapterTable {
 			TableItem item = new TableItem(table, SWT.NONE);
 			item.setText(new String[] { entry.getKey(), entry.getValue() });
 		}
-		
+
 		CompareChapterWindow.chapterList = chapterList;
 		CompareChapterWindow.compareList = compareList;
 	}
@@ -276,7 +276,7 @@ public class ChapterTable {
 			saveFileName = Long.toString(System.currentTimeMillis()) + "ChapAutoList.xls";
 			savePath = savePath + saveFileName;
 			LOGGER.begin().headerAction(MessageMethod.EVENT).info(savePath);
-			CompareChapterWindow.comaprePath =savePath;
+			CompareChapterWindow.comaprePath = savePath;
 		}
 		if (savePath != null) {
 			getTableValues();
@@ -356,8 +356,7 @@ public class ChapterTable {
 			}
 
 		});
-	
-		
+
 	}
 
 	private void createMenu(Composite parent) {
@@ -425,7 +424,5 @@ public class ChapterTable {
 			}
 		}
 	}
-
-
 
 }
