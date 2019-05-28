@@ -23,17 +23,7 @@ import nyoibo.inkstone.upload.utils.WebDriverUtils;
 import nyoibo.inkstone.upload.utils.WordExtractorUtils;
 import nyoibo.inkstone.upload.web.action.InkstoneUploadMainService;
 
-/**
- * <p>Title:InkstoneProjectPage.java</p>  
- * <p>Description: </p>  
- * <p>Copyright: Copyright (c) 2019</p>  
- * <p>Company: www.frankdevhub.site</p>
- * <p>github: https://github.com/frankdevhub</p>  
- * @author frankdevhub   
- * @date:2019-05-09 14:49
- */
-
-public class InkstoneChapterPage implements Runnable{
+public class InkstoneChapterPage implements Runnable {
 
 	private long start;
 	private long end;
@@ -55,18 +45,20 @@ public class InkstoneChapterPage implements Runnable{
 	private final Query doneBtn;
 	private final Query publishBtn;
 	private final Query reditBtn;
-	
+
 	private final boolean foreign;
-	
+
 	private final Map<String, String> bookCompareList;
 	private final Map<String, String> chapterFileList;
-	
+
 	private String filePath;
-	
+
 	private WebDriverWait wait;
-	
+
 	private ExpectedCondition<Boolean> pageTitleStartsWith(final String searchString) {
-		return driver -> driver.getTitle().toLowerCase().contains(searchString.toLowerCase());
+		System.out.println("Driver:" + driver.getTitle());
+		System.out.println("FolderName" + searchString);
+		return driver -> driver.getTitle().toLowerCase().contains(searchString.toLowerCase().split(" ")[0]);
 	}
 
 	public InkstoneChapterPage(WebDriver driver, String bookUrl, String bookName, Map<String, String> bookCompareList,
@@ -116,7 +108,7 @@ public class InkstoneChapterPage implements Runnable{
 
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("get to book chapters view");
 		driver.get(bookUrl);
-         
+
 		Thread.sleep(2000);
 
 		wait.until(pageTitleStartsWith(this.bookName));
@@ -128,11 +120,13 @@ public class InkstoneChapterPage implements Runnable{
 		String currentChapterName = null;
 		InkstoneUploadMainService.currentChapterName = currentChapterName = firstChapter.getText();
 
-		System.out.println("currentChapterName:"+firstChapter.getText());
-		
+		System.out.println("currentChapterName:" + firstChapter.getText());
+
 		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 5);
-		
+
 		String enChapName = bookCompareList.get(InkstoneRawHeaderUtils.convertRawCNHeader(currentChapterName));
+		System.out.println(InkstoneRawHeaderUtils.convertRawCNHeader(currentChapterName));
+		
 		if (enChapName == null)
 			throw new Exception(String.format(
 					"Cannot find related translated file with raw :[%s] please check mannually", currentChapterName));
@@ -149,17 +143,17 @@ public class InkstoneChapterPage implements Runnable{
 		WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_TRANSLATION, wait);
 
 		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 13);
-		
+
 		selectTranslate();
 		doTranslate();
 		doEdit();
-		
+
 		return;
 	}
 
 	private void selectTranslate() throws InterruptedException {
 		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 20);
-		
+
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("click translate button");
 		WebDriverUtils.findWebElement(transBtn).click();
 
@@ -246,8 +240,8 @@ public class InkstoneChapterPage implements Runnable{
 
 		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 75);
 		Thread.sleep(1000);
-		
-        LOGGER.begin().headerAction(MessageMethod.EVENT).info("doing edit");
+
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info("doing edit");
 		WebDriverUtils.findWebElement(editBtn).click();
 
 		switchTransDialog();
@@ -299,7 +293,6 @@ public class InkstoneChapterPage implements Runnable{
 
 	}
 
-
 	@Override
 	public void run() {
 		try {
@@ -313,10 +306,11 @@ public class InkstoneChapterPage implements Runnable{
 		}
 	}
 
-/*	public static void main(String[] args) {
-          String a = "Chapter 308 — She Had No Idea What Stunt Nian Junting Was Going to Pull";
-          System.out.println(a.split("-")[1]);
-          System.out.println(a.split("—")[1]);
-	}*/
-	
+	/*
+	 * public static void main(String[] args) { String a =
+	 * "Chapter 308 — She Had No Idea What Stunt Nian Junting Was Going to Pull"
+	 * ; System.out.println(a.split("-")[1]);
+	 * System.out.println(a.split("—")[1]); }
+	 */
+
 }

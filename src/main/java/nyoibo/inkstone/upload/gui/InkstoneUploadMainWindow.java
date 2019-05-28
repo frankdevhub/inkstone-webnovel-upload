@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import nyoibo.inkstone.upload.utils.InkstoneRawHeaderUtils;
+
 /**
  * <p>Title:InkstoneUploaddMainWindow.java</p>  
  * <p>Description: </p>  
@@ -180,7 +182,7 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 		newShell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		InkstoneUploadMainWindow main = new InkstoneUploadMainWindow(Display.getDefault().getActiveShell());
 		main.open();
 	}
