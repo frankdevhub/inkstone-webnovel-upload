@@ -1,4 +1,4 @@
-package nyoibo.inkstone.upload;
+package nyoibo.inkstone.upload.utils;
 
 import java.io.File;
 import com.jacob.activeX.ActiveXComponent;
