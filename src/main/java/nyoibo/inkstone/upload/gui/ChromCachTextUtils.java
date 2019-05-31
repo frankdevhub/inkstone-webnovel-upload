@@ -19,8 +19,8 @@ public class ChromCachTextUtils {
 	private static Text textarea;
 
 	public ChromCachTextUtils(Display display, Text textarea) {
-		this.display = display;
-		this.textarea = textarea;
+		ChromCachTextUtils.display = display;
+		ChromCachTextUtils.textarea = textarea;
 	}
 
 	public static void pushToChromCacheText(String message) {

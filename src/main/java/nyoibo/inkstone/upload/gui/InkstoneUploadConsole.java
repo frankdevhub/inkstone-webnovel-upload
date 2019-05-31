@@ -145,10 +145,14 @@ public class InkstoneUploadConsole extends Dialog {
 		this.display = display;
 		readProperties();
 
-		new ChromCachTextUtils(display, chromeCacheText).pushToChromCacheText(chromeCachePath);
-		new ChapterTextUtils(display, chapterListText).pushToChapterText(chapterListPath);
-		new CompareTextUtils(display, compareListText).pushToCompareText(compareListPath);
-		new BookListTextUtils(display, bookListText).pushToBookListLink(bookListPath);
+		new ChromCachTextUtils(display, chromeCacheText);
+		ChromCachTextUtils.pushToChromCacheText(chromeCachePath);
+		new ChapterTextUtils(display, chapterListText);
+		ChapterTextUtils.pushToChapterText(chapterListPath);
+		new CompareTextUtils(display, compareListText);
+		CompareTextUtils.pushToCompareText(compareListPath);
+		new BookListTextUtils(display, bookListText);
+		BookListTextUtils.pushToBookListLink(bookListPath);
 
 	}
 
