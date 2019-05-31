@@ -307,7 +307,7 @@ public class ChapterTable {
 		table.setLayoutData(gridData);
 		table.setLinesVisible(true);
 
-		String[] tableHeader = { "CN_ChapterName", "EN_ChapterName" };
+		String[] tableHeader = { "RAW_ChapterName", "EN_ChapterName" };
 		for (int i = 0; i < tableHeader.length; i++) {
 			TableColumn tableColumn = new TableColumn(table, SWT.NONE);
 			tableColumn.setText(tableHeader[i]);
