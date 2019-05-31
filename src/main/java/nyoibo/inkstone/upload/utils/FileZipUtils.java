@@ -21,12 +21,16 @@ import org.apache.commons.compress.utils.IOUtils;
 import org.codehaus.plexus.util.FileUtils;
 
 import info.monitorenter.cpdetector.io.CodepageDetectorProxy;
+import nyoibo.inkstone.upload.data.logging.Logger;
+import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 
 public class FileZipUtils {
 
 	private static final String ZIP_SUFFIX = "zip";
 	private ArrayList<File> unZipFiles = new ArrayList<File>();
 	private ArrayList<String> unZipFolderNames = new ArrayList<String>();
+
+	private final Logger LOGGER = LoggerFactory.getLogger(FileZipUtils.class);
 
 	public void unZipDriveZip(String filePath) throws Exception {
 		boolean hasZip = false;

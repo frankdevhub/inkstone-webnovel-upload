@@ -22,19 +22,12 @@ public class ImageFactory {
 	}
 
 	public static final String REAL_PATH = "src/main/resources/gui/";
-
 	public static final String DELETE_EDIT = "delete_edit.gif";
-
 	public static final String SAVE_EDIT = "save_edit.gif";
-
 	public static final String SCOPY_EDIT = "copy_edit.gif";
-
 	public static final String CUT_EDIT = "cut_edit.gif";
-
 	public static final String PRINT_EDIT = "print_edit.gif";
-
 	public static final String HELP_CONTENTS = "help_contents.gif";
-
 	public static final String ECLIPSE = "eclipse.gif";
 
 	public static final String SAMPLES = "samples.gif";
@@ -60,7 +53,7 @@ public class ImageFactory {
 	public static final String FILE = "file.gif";
 	public static final String FOLDER = "folder.gif";
 
-	private static Hashtable hashTableImage = new Hashtable();
+	private static Hashtable<String, Image> hashTableImage = new Hashtable<String, Image>();
 
 	public static Image loadImage(Display display, String imageName) {
 		Image image = (Image) hashTableImage.get(imageName.toUpperCase());
@@ -72,7 +65,7 @@ public class ImageFactory {
 	}
 
 	public static void dispose() {
-		Enumeration e = hashTableImage.elements();
+		Enumeration<Image> e = hashTableImage.elements();
 		while (e.hasMoreElements()) {
 			Image image = (Image) e.nextElement();
 			if (!image.isDisposed())
