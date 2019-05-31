@@ -31,9 +31,9 @@ public class GoogleDriveFtpAdapterFactory {
 	public static final Log LOGGER = LogFactory.getLog(GoogleDriveFtpAdapterFactory.class);
 
 	private static GoogleDriveFtpAdapter googleDriveFtpAdapter;
-	
+
 	private static final String DATA_FOLDER = "data";
-	
+
 	public static GoogleDriveFtpAdapter getInstance() {
 		if (googleDriveFtpAdapter == null) {
 			synchronized (GoogleDriveFtpAdapter.class) {
@@ -46,20 +46,18 @@ public class GoogleDriveFtpAdapterFactory {
 		return googleDriveFtpAdapter;
 	}
 
-	
 	@SuppressWarnings("static-access")
 	public static String getAuthorizationUrl() throws IOException {
 		if (getInstance().isInit()) {
 			GoogleDriveFactory driveFactory = getInstance().getGoogleDriveFactory();
 			AuthorizationCodeRequestUrl url = driveFactory.getAuthorizationApp().getRequestUrl();
-			if(url==null)
+			if (url == null)
 				throw new NullPointerException("AuthorizationRequestUrl is null");
 			return url.toString();
 		}
 		return null;
 	}
 
-	
 	private static void cleanDataFolders() {
 		try {
 			FileUtils.forceDelete(new File(DATA_FOLDER));
@@ -67,7 +65,7 @@ public class GoogleDriveFtpAdapterFactory {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static void init() {
 		try {
 			cleanDataFolders();
