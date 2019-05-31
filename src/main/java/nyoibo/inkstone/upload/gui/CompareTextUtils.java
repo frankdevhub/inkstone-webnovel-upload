@@ -19,8 +19,8 @@ public class CompareTextUtils {
 	private static Text textarea;
 
 	public CompareTextUtils(Display display, Text textarea) {
-		this.display = display;
-		this.textarea = textarea;
+		CompareTextUtils.display = display;
+		CompareTextUtils.textarea = textarea;
 	}
 
 	public static void pushToCompareText(String message) {

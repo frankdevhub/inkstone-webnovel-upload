@@ -9,8 +9,8 @@ public class ChapterTextUtils {
 	private static Text textarea;
 
 	public ChapterTextUtils(Display display, Text textarea) {
-		this.display = display;
-		this.textarea = textarea;
+		ChapterTextUtils.display = display;
+		ChapterTextUtils.textarea = textarea;
 	}
 
 	public static void pushToChapterText(String message) {

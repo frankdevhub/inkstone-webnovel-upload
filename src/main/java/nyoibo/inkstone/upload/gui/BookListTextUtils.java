@@ -19,8 +19,8 @@ public class BookListTextUtils {
 	private static Text textarea;
 
 	public BookListTextUtils(Display display, Text textarea) {
-		this.display = display;
-		this.textarea = textarea;
+		BookListTextUtils.display = display;
+		BookListTextUtils.textarea = textarea;
 	}
 
 	public static void pushToBookListLink(String message) {

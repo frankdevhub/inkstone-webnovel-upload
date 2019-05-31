@@ -1,6 +1,5 @@
 package nyoibo.inkstone.upload.selenium.config;
 
-
 import java.io.IOException;
 
 import org.openqa.selenium.UnexpectedAlertBehaviour;
