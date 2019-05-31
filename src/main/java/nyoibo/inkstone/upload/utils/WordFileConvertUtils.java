@@ -122,7 +122,7 @@ public class WordFileConvertUtils {
 		} catch (Exception err) {
 			System.err.println("ELS - Chart : Cannot create new folder");
 			err.printStackTrace();
-		} 
+		}
 	}
 
 }

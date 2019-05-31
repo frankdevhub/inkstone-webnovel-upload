@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 import org.thymeleaf.util.StringUtils;
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.message.MessageMethod;
 
 public class InkstoneRawHeaderUtils {
 
@@ -25,19 +26,16 @@ public class InkstoneRawHeaderUtils {
 		if (matcher.find()) {
 			convert = matcher.group(1).trim();
 			System.out.println(convert);
-			// LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch
-			// raw header key:[%s]", convert));
-
-			//int number = StringNumberUtils.numberCN2Arab(convert);
+			LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
 
 		} else {
 			matcher = Pattern.compile(numRegx).matcher(header);
 			if (matcher.find()) {
 				convert = matcher.group();
-				/*
-				 * LOGGER.begin().headerAction(MessageMethod.EVENT)
-				 * .info(String.format("Catch raw header key:[%s]", convert));
-				 */
+
+				LOGGER.begin().headerAction(MessageMethod.EVENT)
+						.info(String.format("Catch raw header key:[%s]", convert));
+
 			}
 		}
 
@@ -67,8 +65,7 @@ public class InkstoneRawHeaderUtils {
 		Matcher matcher = Pattern.compile(numRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group();
-			// LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch
-			// raw header key:[%s]", convert));
+			LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
 		}
 
 		if (StringUtils.isEmpty(convert)) {
@@ -92,8 +89,7 @@ public class InkstoneRawHeaderUtils {
 		Matcher matcher = Pattern.compile(selectENRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group();
-			// LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch
-			// raw header key:[%s]", convert));
+			LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
 		} else {
 			matcher = Pattern.compile(selectENRegx).matcher(header);
 			if (matcher.find()) {
