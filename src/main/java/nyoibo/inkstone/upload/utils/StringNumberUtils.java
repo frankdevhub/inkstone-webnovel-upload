@@ -24,13 +24,10 @@ public class StringNumberUtils {
 		}
 
 		String[] nums = new String[bigUnits.length + 1];
-
 		nums[0] = tempNumberCN;
 
 		for (int i = (bigUnits.length - 1); i >= 0; i--) {
-
 			int find = tempNumberCN.indexOf(bigUnits[i]);
-
 			if (find != -1) {
 				String[] tempStrs = tempNumberCN.split(bigUnits[i]);
 
@@ -53,18 +50,14 @@ public class StringNumberUtils {
 		}
 
 		String tempResultNum = "";
-
 		for (int i = nums.length - 1; i >= 0; i--) {
-
 			if (nums[i] != null) {
 				tempResultNum += numberKCN2Arab(nums[i]);
 			} else {
 				tempResultNum += "0000";
 			}
 		}
-
 		return Integer.parseInt(tempResultNum);
-
 	}
 
 	public static int numberCharCN2Arab(char onlyCNNumber) {
@@ -97,11 +90,9 @@ public class StringNumberUtils {
 		if (onlyArabNumber == '0') {
 			return numZero;
 		}
-
 		if (onlyArabNumber > '0' && onlyArabNumber <= '9') {
 			return numChars[onlyArabNumber - '0' - 1];
 		}
-
 		return onlyArabNumber;
 	}
 
@@ -119,12 +110,10 @@ public class StringNumberUtils {
 
 		for (int i = total - 1; i >= 0; i--) {
 			start = (i - 1) * per + inc;
-
 			if (start < 0) {
 				start = 0;
 			}
 			end = i * per + inc;
-
 			numStrs[i] = tempNum.substring(start, end);
 		}
 
@@ -134,45 +123,36 @@ public class StringNumberUtils {
 		for (int i = 0; i < rempNumsLen; i++) {
 			if (i > 0 && Integer.parseInt(numStrs[i]) < 1000) {
 				tempResultNum += numZero + numberKArab2CN(Integer.parseInt(numStrs[i]));
-
 			} else {
 				tempResultNum += numberKArab2CN(Integer.parseInt(numStrs[i]));
 			}
-
 			if (i < rempNumsLen - 1) {
 				tempResultNum += bigUnits[rempNumsLen - i - 2];
 			}
 		}
-
 		tempResultNum = tempResultNum.replaceAll(numZero + "$", "");
 		return tempResultNum;
 
 	}
 
 	private static String numberKArab2CN(Integer num) {
-
 		char[] numChars = (num + "").toCharArray();
 		String tempStr = "";
-
 		int inc = units.length - numChars.length;
 		for (int i = 0; i < numChars.length; i++) {
-
 			if (numChars[i] != '0') {
 				tempStr += numberCharArab2CN(numChars[i]) + units[i + inc];
 			} else {
 				tempStr += numberCharArab2CN(numChars[i]);
 			}
 		}
-
 		tempStr = tempStr.replaceAll(numZero + "+", numZero + "");
 		tempStr = tempStr.replaceAll(numZero + "$", "");
 
 		return tempStr;
-
 	}
 
 	private static String numberKCN2Arab(String numberCN) {
-
 		if ("".equals(numberCN)) {
 			return "";
 		}
@@ -182,10 +162,8 @@ public class StringNumberUtils {
 				int idx = numberCN.indexOf(units[i]);
 				if (idx > 0) {
 					char tempNumChar = numberCN.charAt(idx - 1);
-
 					int tempNumInt = numberCharCN2Arab(tempNumChar);
 					nums[i] = tempNumInt;
-
 				}
 			}
 			char ones = numberCN.charAt(numberCN.length() - 1);
@@ -194,14 +172,11 @@ public class StringNumberUtils {
 				nums[nums.length - 2] = 1;
 			}
 		}
-
 		String tempNum = "";
-
 		for (int i = 0; i < nums.length; i++) {
 			tempNum += nums[i];
 		}
 		return (tempNum);
 	}
-
 
 }
