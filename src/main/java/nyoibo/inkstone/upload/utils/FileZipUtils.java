@@ -23,6 +23,7 @@ import org.codehaus.plexus.util.FileUtils;
 import info.monitorenter.cpdetector.io.CodepageDetectorProxy;
 
 public class FileZipUtils {
+
 	private static final String ZIP_SUFFIX = "zip";
 	private ArrayList<File> unZipFiles = new ArrayList<File>();
 	private ArrayList<String> unZipFolderNames = new ArrayList<String>();
@@ -224,8 +225,7 @@ public class FileZipUtils {
 		rootdir = outputDirectory + File.separator + rootname;
 		return rootdir;
 	}
-  
-	
+
 	public static void main(String[] args) {
 		System.out.println(File.separator);
 		new FileZipUtils().unPackZip("D:\\nyoibo_automation\\5. Finished Editing-20190528T051007Z-001.zip",
