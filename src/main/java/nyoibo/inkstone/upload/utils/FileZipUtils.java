@@ -23,6 +23,7 @@ import org.codehaus.plexus.util.FileUtils;
 import info.monitorenter.cpdetector.io.CodepageDetectorProxy;
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.message.MessageMethod;
 
 public class FileZipUtils {
 
@@ -33,8 +34,8 @@ public class FileZipUtils {
 	private final Logger LOGGER = LoggerFactory.getLogger(FileZipUtils.class);
 
 	public void unZipDriveZip(String filePath) throws Exception {
-		boolean hasZip = false;
 
+		boolean hasZip = false;
 		File downloadZipDir = new File(filePath);
 
 		if (!downloadZipDir.exists()) {
@@ -55,13 +56,10 @@ public class FileZipUtils {
 
 		if (!hasZip)
 			throw new Exception(String.format("Cannot find zip file in path [%s]", filePath));
-
 		for (File zip : unZipFiles) {
-			System.out.println(filePath);
 			// unZipFile(zip, filePath);
 			FileUtils.forceDelete(zip);
 		}
-
 	}
 
 	public String getFileEncode(File file) {
@@ -82,12 +80,12 @@ public class FileZipUtils {
 	@SuppressWarnings("resource")
 	public void unZipFile(File file, String filePath) throws ZipException, IOException {
 		ZipFile zipFile = null;
-
-		System.out.println("file path:" + filePath);
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("zip path is :[%s]", filePath));
 
 		String fileEncode = getFileEncode(file);
-		System.out.println(fileEncode);
-		System.out.println("file absolute path:" + file.getAbsolutePath());
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("zip fileEncode:[%s]", fileEncode));
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("zip:[%s]", file.getAbsolutePath()));
+
 		zipFile = new ZipFile(file.getAbsolutePath(), Charset.forName(fileEncode));
 
 		Enumeration<?> entries = zipFile.entries();
@@ -109,10 +107,11 @@ public class FileZipUtils {
 					targetFile.getParentFile().mkdirs();
 				}
 
-				System.out.println("=absolute_path==" + targetFile.getAbsolutePath());
 				File p = targetFile.getParentFile();
-				System.out.println("parent:" + p.getAbsolutePath());
-				System.out.println("parent-exist:" + p.exists());
+				LOGGER.begin().headerAction(MessageMethod.EVENT)
+						.info(String.format("entry parent folder:%s[]", p.getAbsolutePath()));
+				LOGGER.begin().headerAction(MessageMethod.EVENT)
+						.info(String.format("entry parent file exists:[%s]", p.exists()));
 
 				targetFile.createNewFile();
 				InputStream is = zipFile.getInputStream(entry);
@@ -209,7 +208,7 @@ public class FileZipUtils {
 				if (!parent.exists()) {
 					parent.mkdirs();
 				}
-				System.out.println(zip.getName());
+
 				FileOutputStream fos = new FileOutputStream(zip.getParent() + File.separator + zip.getName(), false);
 				byte[] buffer = new byte[1024];
 				int i = zis.read(buffer);
@@ -231,7 +230,6 @@ public class FileZipUtils {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(File.separator);
 		new FileZipUtils().unPackZip("D:\\nyoibo_automation\\5. Finished Editing-20190528T051007Z-001.zip",
 				"D:\\nyoibo_automation");
 	}
