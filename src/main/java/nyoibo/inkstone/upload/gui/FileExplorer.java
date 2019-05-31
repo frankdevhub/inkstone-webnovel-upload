@@ -45,11 +45,8 @@ public class FileExplorer{
 	private TreeViewer tree;
 	private TableViewer table;
 	private SelectAction selectAction;
-    private ChapterTable chapterTable;
-	private Composite parent;
-    
-	public FileExplorer(Composite parent) {
-		this.parent = parent;
+	
+    public FileExplorer(Composite parent) {
 		selectAction = new SelectAction();
 		createContents(parent);
 	}
@@ -103,7 +100,7 @@ public class FileExplorer{
 
 		public Object[] getElements(Object element) {
 			File[] roots = File.listRoots();
-			List rootFolders = new ArrayList();
+			List<File> rootFolders = new ArrayList<File>();
 			for (int i = 0; i < roots.length; i++) {
 				if (roots[i].isDirectory())
 					rootFolders.add(roots[i]);
@@ -189,6 +186,7 @@ public class FileExplorer{
 			return null;
 		}
 
+		@SuppressWarnings("deprecation")
 		public String getColumnText(Object element, int columnIndex) {
 			File file = (File) element;
 			if (columnIndex == 0)
