@@ -1,8 +1,8 @@
 package nyoibo.inkstone.upload.utils;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,9 +15,9 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.util.FileUtils;
 
 import info.monitorenter.cpdetector.io.CodepageDetectorProxy;
@@ -30,6 +30,7 @@ public class FileZipUtils {
 	private static final String ZIP_SUFFIX = "zip";
 	private ArrayList<File> unZipFiles = new ArrayList<File>();
 	private ArrayList<String> unZipFolderNames = new ArrayList<String>();
+	private ArrayList<String> failedUnZipNames = new ArrayList<String>();
 
 	private final Logger LOGGER = LoggerFactory.getLogger(FileZipUtils.class);
 
@@ -77,8 +78,9 @@ public class FileZipUtils {
 		return encode;
 	}
 
-	@SuppressWarnings("resource")
-	public void unZipFile(File file, String filePath) throws ZipException, IOException {
+	public ArrayList<String> unZipFile(File file, String filePath) throws ZipException, IOException {
+		failedUnZipNames = new ArrayList<String>();
+
 		ZipFile zipFile = null;
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("zip path is :[%s]", filePath));
 
@@ -91,42 +93,47 @@ public class FileZipUtils {
 		Enumeration<?> entries = zipFile.entries();
 		while (entries.hasMoreElements()) {
 			ZipEntry entry = (ZipEntry) entries.nextElement();
-			System.out.println("Entry-Name:" + entry.getName());
+			String fileName = reFormatPath(entry.getName());
+			InputStream is = null;
+			FileOutputStream fos = null;
+			BufferedOutputStream bos = null;
+			byte[] buf = new byte[2048];
 
 			if (entry.isDirectory()) {
-				unZipFolderNames.add(entry.getName());
-
-				String dirPath = filePath + "/" + entry.getName();
+				unZipFolderNames.add(fileName);
+				String dirPath = filePath + File.separator + fileName;
 				File dir = new File(dirPath);
-
 				dir.mkdirs();
 			} else {
+				File targetFile = new File(filePath + File.separator + fileName);
+				try {
+					if (file.getParentFile() != null && !file.getParentFile().exists()) {
+						targetFile.getParentFile().mkdirs();
+					}
+					targetFile.createNewFile();
+					is = zipFile.getInputStream(entry);
+					fos = new FileOutputStream(targetFile);
+					bos = new BufferedOutputStream(fos);
 
-				File targetFile = new File(filePath + "/" + entry.getName());
-				if (file.getParentFile() != null && !file.getParentFile().exists()) {
-					targetFile.getParentFile().mkdirs();
+					int len;
+					while ((len = is.read(buf)) != -1) {
+						fos.write(buf, 0, len);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					failedUnZipNames.add(targetFile.getAbsolutePath());
+				} finally {
+					bos.flush();
+					bos.close();
+					fos.close();
+
+					is.close();
 				}
 
-				File p = targetFile.getParentFile();
-				LOGGER.begin().headerAction(MessageMethod.EVENT)
-						.info(String.format("entry parent folder:%s[]", p.getAbsolutePath()));
-				LOGGER.begin().headerAction(MessageMethod.EVENT)
-						.info(String.format("entry parent file exists:[%s]", p.exists()));
-
-				targetFile.createNewFile();
-				InputStream is = zipFile.getInputStream(entry);
-				FileOutputStream fos = new FileOutputStream(targetFile);
-
-				int len;
-				byte[] buf = new byte[2048];
-				while ((len = is.read(buf)) != -1) {
-					fos.write(buf, 0, len);
-				}
-				fos.flush();
-				fos.close();
 			}
 		}
-
+		zipFile.close();
+		return failedUnZipNames;
 	}
 
 	public void pack(File source, String dir, ZipArchiveOutputStream zipOutStream) throws IOException {
@@ -164,7 +171,7 @@ public class FileZipUtils {
 		return target;
 	}
 
-	public static void closeStream(Object stream) {
+	private static void closeStream(Object stream) {
 		if (stream != null) {
 			if (stream instanceof InputStream) {
 				InputStream in = (InputStream) stream;
@@ -187,51 +194,37 @@ public class FileZipUtils {
 		}
 	}
 
-	public String unPackZip(String zipFileName, String outputDirectory) {
-		String rootdir = "";
-		File dir = new File(outputDirectory);
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream(zipFileName);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		ZipArchiveInputStream zis = new ZipArchiveInputStream(fis);
-		try {
-			ZipArchiveEntry zipEntry = zis.getNextZipEntry();
-			while (zipEntry != null) {
-				File zip = new File(outputDirectory + File.separator + zipEntry.getName());
-				File parent = zip.getParentFile();
-				if (!parent.exists()) {
-					parent.mkdirs();
-				}
-
-				FileOutputStream fos = new FileOutputStream(zip.getParent() + File.separator + zip.getName(), false);
-				byte[] buffer = new byte[1024];
-				int i = zis.read(buffer);
-				while (i > 0) {
-					fos.write(buffer, 0, i);
-					i = zis.read(buffer);
-				}
-				closeStream(fos);
-				zipEntry = zis.getNextZipEntry();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		File root = new File(zipFileName);
-		String rootname = root.getName();
-		rootname = rootname.substring(0, rootname.lastIndexOf("."));
-		rootdir = outputDirectory + File.separator + rootname;
-		return rootdir;
+	private String trim(String entryName) {
+		char[] value = entryName.toCharArray();
+		int len = value.length;
+		/*
+		 * int st = 0; while ((st < len) && (value[st] <= ' ')) st++;
+		 */
+		while (value[len - 1] <= ' ')
+			len--;
+		return (len < value.length) ? entryName.substring(0, len) : entryName;
 	}
 
-	public static void main(String[] args) {
-		new FileZipUtils().unPackZip("D:\\nyoibo_automation\\5. Finished Editing-20190528T051007Z-001.zip",
+	private String reFormatPath(String path) {
+		String format = StringUtils.EMPTY;
+		String[] splitList = path.split("/");
+		int group = splitList.length;
+
+		for (int i = 0; i < group; i++) {
+			if (i < group - 1) {
+				format = format + trim(splitList[i]) + File.separator;
+			} else {
+				format = format + splitList[i];
+			}
+		}
+		return format;
+	}
+
+	public static void main(String[] args) throws ZipException, IOException {
+
+		new FileZipUtils().unZipFile(new File("D:\\nyoibo_automation\\5. Finished Editing-20190528T051007Z-001.zip"),
 				"D:\\nyoibo_automation");
+
 	}
 
 }
