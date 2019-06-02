@@ -381,7 +381,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 											if (progressBar.isDisposed())
 												return;
 											if (InkstoneUploadMainService.process
-													.get(InkstoneUploadMainService.currentChapterName) == null) {
+													.get(InkstoneUploadMainService.currentChapterName).equals(null)) {
 												progressBar.setSelection(0);
 											} else {
 												progressBar.setSelection(InkstoneUploadMainService.process
