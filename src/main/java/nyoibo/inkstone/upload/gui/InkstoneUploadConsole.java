@@ -104,23 +104,28 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 		Properties usrConfigPro = new Properties();
 
 		usrConfigPro.setProperty(InkstoneUploadMainWindow.BOOK_LIST_PATH, bookListPath);
+		if ((null != proHistory.get(InkstoneUploadMainWindow.BOOK_LIST_PATH)
+				&& !proHistory.get(InkstoneUploadMainWindow.BOOK_LIST_PATH).equals(bookListPath))
+				|| null != proHistory.get(InkstoneUploadMainWindow.BOOK_LIST_MODIFY) && !proHistory
+						.get(InkstoneUploadMainWindow.BOOK_LIST_MODIFY).equals(new File(bookListPath).lastModified()))
+			change++;
 
-		if (null != proHistory.get(InkstoneUploadMainWindow.BOOK_LIST_PATH))
-			if (!proHistory.get(InkstoneUploadMainWindow.BOOK_LIST_PATH).equals(bookListPath) || !proHistory
-					.get(InkstoneUploadMainWindow.BOOK_LIST_MODIFY).equals(new File(bookListPath).lastModified()))
-				change++;
 		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_PATH, chapterListPath);
+		if ((null != proHistory.get(InkstoneUploadMainWindow.CHAPTER_PATH)
+				&& !proHistory.get(InkstoneUploadMainWindow.CHAPTER_PATH).equals(bookListPath))
+				|| null != proHistory.get(InkstoneUploadMainWindow.CHAPTER_PATH_DATE)
+						&& !proHistory.get(InkstoneUploadMainWindow.CHAPTER_PATH_DATE)
+								.equals(new File(chapterListPath).lastModified()))
+			change++;
 
-		if (null != proHistory.get(InkstoneUploadMainWindow.CHAPTER_PATH))
-			if (!proHistory.get(InkstoneUploadMainWindow.CHAPTER_PATH).equals(chapterListPath) || !proHistory
-					.get(InkstoneUploadMainWindow.CHAPTER_PATH_DATE).equals(new File(chapterListPath).lastModified()))
-				change++;
 		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL, compareListPath);
+		if ((null != proHistory.get(InkstoneUploadMainWindow.CHAPTER_EXCEL)
+				&& !proHistory.get(InkstoneUploadMainWindow.CHAPTER_EXCEL).equals(compareListPath))
+				|| null != proHistory.get(InkstoneUploadMainWindow.COMPARE_LIST_DATE)
+						&& !proHistory.get(InkstoneUploadMainWindow.COMPARE_LIST_DATE)
+								.equals(new File(compareListPath).lastModified()))
+			change++;
 
-		if (null != proHistory.get(InkstoneUploadMainWindow.CHAPTER_PATH))
-			if (!proHistory.get(InkstoneUploadMainWindow.CHAPTER_EXCEL).equals(compareListPath) || !proHistory
-					.get(InkstoneUploadMainWindow.COMPARE_LIST_DATE).equals(new File(compareListPath).lastModified()))
-				change++;
 		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHROME_CACHE_PATH, chromeCachePath);
 
 		if (change > 0)
