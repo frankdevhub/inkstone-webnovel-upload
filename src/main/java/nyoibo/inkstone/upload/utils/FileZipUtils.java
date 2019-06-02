@@ -108,23 +108,26 @@ public class FileZipUtils {
 				dir.mkdirs();
 			} else {
 				File targetFile = new File(filePath + File.separator + fileName);
-				is = zipFile.getInputStream(entry);
-				fos = new FileOutputStream(targetFile);
-				bos = new BufferedOutputStream(fos);
 				System.out.println(targetFile.getAbsolutePath());
 				try {
 					if (file.getParentFile() != null && !file.getParentFile().exists()) {
-						targetFile.getParentFile().mkdirs();
+						createParentPath(targetFile.getAbsolutePath());
 					}
 					targetFile.createNewFile();
-					int len;
-					while ((len = is.read(buf)) != -1) {
-						fos.write(buf, 0, len);
-					}
+
 				} catch (Exception e) {
 					e.printStackTrace();
 					failedUnZipNames.add(targetFile.getAbsolutePath());
 				} finally {
+					is = zipFile.getInputStream(entry);
+					fos = new FileOutputStream(targetFile);
+					bos = new BufferedOutputStream(fos);
+
+					int len;
+					while ((len = is.read(buf)) != -1) {
+						fos.write(buf, 0, len);
+					}
+
 					bos.flush();
 					bos.close();
 					fos.close();
@@ -217,6 +220,19 @@ public class FileZipUtils {
 			}
 		}
 		return format;
+	}
+
+	private void createParentPath(String childPath) {
+		String[] splitList = childPath.split("\\\\");
+		StringBuilder pathBuilder = new StringBuilder();
+
+		for (int i = 0; i < splitList.length; i++) {
+			pathBuilder = pathBuilder.append(splitList[i]).append(File.separator);
+			File check = new File(pathBuilder.toString());
+			if (!check.exists())
+				check.mkdirs();
+		}
+
 	}
 
 	public static void main(String[] args) throws ZipException, IOException {
