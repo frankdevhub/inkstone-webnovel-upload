@@ -335,6 +335,15 @@ public class InkstoneUploadConsole extends Dialog {
 		return container;
 	}
 
+	private void handleError(Exception e, Display parent) {
+		display.asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				new ErrorDialogUtils(parent).openErrorDialog("InkstoneUploadMainService Error", e);
+			}
+		});
+	}
+
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		Button okButton = createButton(parent, CONSOLE_OK_ID, IDialogConstants.OK_LABEL, false);
@@ -371,9 +380,8 @@ public class InkstoneUploadConsole extends Dialog {
 					};
 					Thread progressThread = new Thread(progress);
 					progressThread.setDaemon(true);
-					//progressThread.start();
-					
-					
+					// progressThread.start();
+
 					Runnable service = new Runnable() {
 						@Override
 						public void run() {
@@ -389,16 +397,14 @@ public class InkstoneUploadConsole extends Dialog {
 											Thread.sleep(20);
 										} catch (Exception e) {
 											e.printStackTrace();
-											new ErrorDialogUtils(parent.getDisplay())
-													.openErrorDialog("InkstoneUploadMainService Error", e);
+											handleError(e, parent.getDisplay());
 										}
 									}
 								});
 								startToRunUploadService();
 							} catch (Exception e) {
 								e.printStackTrace();
-								new ErrorDialogUtils(parent.getDisplay())
-										.openErrorDialog("InkstoneUploadMainService Error", e);
+								handleError(e, parent.getDisplay());
 							}
 						}
 					};
@@ -418,6 +424,7 @@ public class InkstoneUploadConsole extends Dialog {
 		Button cancelButton = createButton(parent, CONSOLE_CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 
 		cancelButton.addSelectionListener(new SelectionAdapter() {
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean call = MessageDialog.openConfirm(parent.getDisplay().getActiveShell(), "Stop Upload",
@@ -437,6 +444,7 @@ public class InkstoneUploadConsole extends Dialog {
 				LOGGER.begin().headerAction(MessageMethod.EVENT)
 						.info(String.format("Upload Thread exists:[%s]", exist));
 			}
+
 		});
 
 	}
@@ -453,4 +461,13 @@ public class InkstoneUploadConsole extends Dialog {
 		newShell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
 
 	}
+
+	public static void main(String[] args) throws IOException {
+		Display display = new Display();
+		Shell shell = new Shell(display);
+
+		InkstoneUploadConsole console = new InkstoneUploadConsole(shell, display);
+		console.open();
+	}
+
 }
