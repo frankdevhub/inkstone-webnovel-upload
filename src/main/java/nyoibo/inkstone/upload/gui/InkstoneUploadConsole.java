@@ -104,22 +104,28 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 		Properties usrConfigPro = new Properties();
 
 		usrConfigPro.setProperty(InkstoneUploadMainWindow.BOOK_LIST_PATH, bookListPath);
-		if (!proHistory.get(InkstoneUploadMainWindow.BOOK_LIST_PATH).equals(bookListPath) || !proHistory
-				.get(InkstoneUploadMainWindow.BOOK_LIST_MODIFY).equals(new File(bookListPath).lastModified()))
-			change++;
+
+		if (null != proHistory.get(InkstoneUploadMainWindow.BOOK_LIST_PATH))
+			if (!proHistory.get(InkstoneUploadMainWindow.BOOK_LIST_PATH).equals(bookListPath) || !proHistory
+					.get(InkstoneUploadMainWindow.BOOK_LIST_MODIFY).equals(new File(bookListPath).lastModified()))
+				change++;
 		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_PATH, chapterListPath);
 
-		if (!proHistory.get(InkstoneUploadMainWindow.CHAPTER_PATH).equals(chapterListPath) || !proHistory
-				.get(InkstoneUploadMainWindow.CHAPTER_PATH_DATE).equals(new File(chapterListPath).lastModified()))
-			change++;
+		if (null != proHistory.get(InkstoneUploadMainWindow.CHAPTER_PATH))
+			if (!proHistory.get(InkstoneUploadMainWindow.CHAPTER_PATH).equals(chapterListPath) || !proHistory
+					.get(InkstoneUploadMainWindow.CHAPTER_PATH_DATE).equals(new File(chapterListPath).lastModified()))
+				change++;
 		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL, compareListPath);
 
-		if (!proHistory.get(InkstoneUploadMainWindow.CHAPTER_EXCEL).equals(compareListPath) || !proHistory
-				.get(InkstoneUploadMainWindow.COMPARE_LIST_DATE).equals(new File(compareListPath).lastModified()))
-			change++;
+		if (null != proHistory.get(InkstoneUploadMainWindow.CHAPTER_PATH))
+			if (!proHistory.get(InkstoneUploadMainWindow.CHAPTER_EXCEL).equals(compareListPath) || !proHistory
+					.get(InkstoneUploadMainWindow.COMPARE_LIST_DATE).equals(new File(compareListPath).lastModified()))
+				change++;
 		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHROME_CACHE_PATH, chromeCachePath);
+
 		if (change > 0)
 			skipReadingExcel = false;
+
 		usrConfigPro.store(fos, "usr");
 		fos.flush();
 		fos.close();
@@ -380,13 +386,17 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 										public void run() {
 											if (progressBar.isDisposed())
 												return;
-											if (InkstoneUploadMainService.process
-													.get(InkstoneUploadMainService.currentChapterName).equals(null)) {
-												progressBar.setSelection(0);
-											} else {
-												progressBar.setSelection(InkstoneUploadMainService.process
-														.get(InkstoneUploadMainService.currentChapterName));
-											}
+											/*
+											 * if (InkstoneUploadMainService.
+											 * process
+											 * .get(InkstoneUploadMainService.
+											 * currentChapterName).equals(null))
+											 * { progressBar.setSelection(0); }
+											 * else { progressBar.setSelection(
+											 * InkstoneUploadMainService.process
+											 * .get(InkstoneUploadMainService.
+											 * currentChapterName)); }
+											 */
 											if (consoleStr.size() != 0) {
 												consoleTextArea.append("\n");
 												String next = consoleStr.get(0);
@@ -480,7 +490,6 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 	@Override
 	public void pushLog(String message) {
 		InkstoneUploadConsole.consoleStr.add(message);
-		InkstoneUploadConsole.flag = false;
 	}
 
 }

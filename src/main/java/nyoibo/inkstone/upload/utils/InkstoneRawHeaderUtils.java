@@ -2,9 +2,12 @@ package nyoibo.inkstone.upload.utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.thymeleaf.util.StringUtils;
+
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.gui.InkstoneUploadConsole;
 import nyoibo.inkstone.upload.message.MessageMethod;
 
 public class InkstoneRawHeaderUtils {
@@ -26,15 +29,15 @@ public class InkstoneRawHeaderUtils {
 		if (matcher.find()) {
 			convert = matcher.group(1).trim();
 			System.out.println(convert);
-			LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
 
 		} else {
 			matcher = Pattern.compile(numRegx).matcher(header);
 			if (matcher.find()) {
 				convert = matcher.group();
 
-				LOGGER.begin().headerAction(MessageMethod.EVENT)
+				String push = LOGGER.begin().headerAction(MessageMethod.EVENT)
 						.info(String.format("Catch raw header key:[%s]", convert));
+				InkstoneUploadConsole.consoleStr.add(push);
 
 			}
 		}
@@ -65,7 +68,9 @@ public class InkstoneRawHeaderUtils {
 		Matcher matcher = Pattern.compile(numRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group();
-			LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
+			String push = LOGGER.begin().headerAction(MessageMethod.EVENT)
+					.info(String.format("Catch raw header key:[%s]", convert));
+			InkstoneUploadConsole.consoleStr.add(push);
 		}
 
 		if (StringUtils.isEmpty(convert)) {
@@ -89,7 +94,9 @@ public class InkstoneRawHeaderUtils {
 		Matcher matcher = Pattern.compile(selectENRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group();
-			LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("Catch raw header key:[%s]", convert));
+			String push = LOGGER.begin().headerAction(MessageMethod.EVENT)
+					.info(String.format("Catch raw header key:[%s]", convert));
+			InkstoneUploadConsole.consoleStr.add(push);
 		} else {
 			matcher = Pattern.compile(selectENRegx).matcher(header);
 			if (matcher.find()) {
@@ -131,8 +138,11 @@ public class InkstoneRawHeaderUtils {
 	 * System.out.println(utils.getTitle()); }
 	 */
 
-/*	public static void main(String[] args) throws Exception {
-		System.out.println("RES:" + InkstoneRawHeaderUtils.convertRawCNHeader("第303章 最大命门"));
-		System.out.println("ENS"+InkstoneRawHeaderUtils.convertRawENeader("Copy of Chapter 300 — Big Guy and Small Guy"));
-	}*/
+	/*
+	 * public static void main(String[] args) throws Exception {
+	 * System.out.println("RES:" +
+	 * InkstoneRawHeaderUtils.convertRawCNHeader("第303章 最大命门"));
+	 * System.out.println("ENS"+InkstoneRawHeaderUtils.
+	 * convertRawENeader("Copy of Chapter 300 — Big Guy and Small Guy")); }
+	 */
 }
