@@ -14,8 +14,11 @@ import java.util.concurrent.Executors;
 import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.WebDriver;
 
+import nyoibo.inkstone.upload.data.logging.Logger;
+import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.gui.ConsoleTextAreaListener;
 import nyoibo.inkstone.upload.gui.InkstoneUploadConsole;
+import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.selenium.config.ChromeDataConfig;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
@@ -43,6 +46,7 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 	private WebDriver driver;
 
 	private String dataFolderPath;
+	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadMainService.class);
 
 	public InkstoneUploadMainService(String bookListPath, String bookCompareListPath, String dataFolderPath,
 			String cacheSourcePath, boolean foreign) throws Exception {
@@ -59,10 +63,10 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 
 	private String configChromeData(String path) throws IOException, InterruptedException {
 		ChromeDataConfig.cleanData();
-		System.out.println("local chrome cache source:" + path);
+		pushLog(LOGGER.begin().headerAction(MessageMethod.EVENT).info("local chrome cache source:" + path));
 		String dataName = ChromeDataConfig.createDataName(SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW);
 		String cacheMirror = ChromeDataConfig.config(path, dataName);
-		System.out.println(cacheMirror);
+		pushLog(LOGGER.begin().headerAction(MessageMethod.EVENT).info(cacheMirror));
 		return cacheMirror;
 	}
 
@@ -145,5 +149,6 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 	@Override
 	public void pushLog(String message) {
 		InkstoneUploadConsole.consoleStr.add(message);
+		InkstoneUploadConsole.flag = false;
 	}
 }

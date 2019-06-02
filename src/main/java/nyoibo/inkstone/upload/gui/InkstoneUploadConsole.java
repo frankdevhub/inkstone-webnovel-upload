@@ -362,8 +362,13 @@ public class InkstoneUploadConsole extends Dialog {
 										public void run() {
 											if (progressBar.isDisposed())
 												return;
-											progressBar.setSelection(InkstoneUploadMainService.process
-													.get(InkstoneUploadMainService.currentChapterName));
+											if (InkstoneUploadMainService.process
+													.get(InkstoneUploadMainService.currentChapterName) == null) {
+												progressBar.setSelection(0);
+											} else {
+												progressBar.setSelection(InkstoneUploadMainService.process
+														.get(InkstoneUploadMainService.currentChapterName));
+											}
 											if (consoleStr.size() != 0) {
 												consoleTextArea.append("\n");
 												String next = consoleStr.get(0);

@@ -15,6 +15,7 @@ import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.selenium.Query;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 import nyoibo.inkstone.upload.utils.WebDriverUtils;
+import nyoibo.inkstone.upload.web.action.InkstoneUploadMainService;
 
 public class InkstoneHomePage implements Runnable, ConsoleTextAreaListener {
 	private String accountName;
@@ -48,11 +49,14 @@ public class InkstoneHomePage implements Runnable, ConsoleTextAreaListener {
 		submitBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_LOGIN_SUBMIT_ID));
 
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver(bookName));
-		pushLog(LOGGER.begin().headerAction(MessageMethod.EVENT).info("Init InkstoneHomePage Thread"));
+		pushLog(LOGGER.begin().headerAction(MessageMethod.EVENT).info("Init InkstoneHomePage Thread complete."));
+
+		InkstoneUploadMainService.currentChapterName = "InkstoneLogin";
 	}
 
 	private void login() throws Exception {
 
+		InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 10);
 		pushLog(LOGGER.begin().headerMethod(MessageMethod.EVENT).info("navigate to homepage"));
 		driver.get(SeleniumInkstone.INKSTONE);
 
@@ -61,6 +65,7 @@ public class InkstoneHomePage implements Runnable, ConsoleTextAreaListener {
 			WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_HOME_TITLE, wait);
 
 			Thread.sleep(2000);
+			InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 20);
 			signIntoBtn.findWebElement().click();
 			Thread.sleep(2000);
 			driver.switchTo().frame(SeleniumInkstone.INKSTONE_MAIL_LOGIN_FRAME_ID);

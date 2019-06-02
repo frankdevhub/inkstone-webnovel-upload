@@ -83,5 +83,6 @@ public class InkstoneRawNovelService implements Runnable, ConsoleTextAreaListene
 	@Override
 	public void pushLog(String message) {
 		InkstoneUploadConsole.consoleStr.add(message);
+		InkstoneUploadConsole.flag = false;
 	}
 }
