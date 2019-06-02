@@ -95,6 +95,7 @@ public class FileZipUtils {
 		while (entries.hasMoreElements()) {
 			ZipEntry entry = (ZipEntry) entries.nextElement();
 			String fileName = reFormatPath(entry.getName());
+			System.out.println("fileName:" + fileName);
 			InputStream is = null;
 			FileOutputStream fos = null;
 			BufferedOutputStream bos = null;
@@ -198,9 +199,6 @@ public class FileZipUtils {
 	private String trim(String entryName) {
 		char[] value = entryName.toCharArray();
 		int len = value.length;
-		/*
-		 * int st = 0; while ((st < len) && (value[st] <= ' ')) st++;
-		 */
 		while (value[len - 1] <= ' ')
 			len--;
 		return (len < value.length) ? entryName.substring(0, len) : entryName;
