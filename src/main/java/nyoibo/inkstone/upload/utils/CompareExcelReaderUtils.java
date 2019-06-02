@@ -15,15 +15,8 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-/**
- * <p>Title:ExcelReaderUtils.java</p>  
- * <p>Description: </p>  
- * <p>Copyright: Copyright (c) 2019</p>  
- * <p>Company: www.frankdevhub.site</p>
- * <p>github: https://github.com/frankdevhub</p>  
- * @author frankdevhub   
- * @date:2019-05-13 09:32
- */
+import nyoibo.inkstone.upload.gui.InkstoneUploadConsole;
+import nyoibo.inkstone.upload.web.action.InkstoneUploadMainService;
 
 public class CompareExcelReaderUtils {
 	public static final String OFFICE_EXCEL_2003_POSTFIX = "xls";
@@ -85,9 +78,16 @@ public class CompareExcelReaderUtils {
 
 	private static Map<String, String> readXlsx(File file) throws Exception {
 		Map<String, String> container = new HashMap<String, String>();
+		InkstoneUploadMainService.currentChapterName = "ReadCompareList";
+		InkstoneUploadMainService.fileTotal = 0;
+		InkstoneUploadMainService.initFileCount = 0;
 
 		InputStream is = new FileInputStream(file);
+		@SuppressWarnings("resource")
 		XSSFWorkbook xssfWorkbook = new XSSFWorkbook(is);
+		int total = xssfWorkbook.getSheetAt(0).getPhysicalNumberOfRows();
+		int inited = 0;
+
 		for (int numSheet = 0; numSheet < xssfWorkbook.getNumberOfSheets(); numSheet++) {
 			XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(numSheet);
 			if (xssfSheet == null) {
@@ -102,16 +102,26 @@ public class CompareExcelReaderUtils {
 							InkstoneRawHeaderUtils.convertRawENeader(getValue(value)));
 				}
 			}
+
+			inited++;
+			int status = (100 * inited) / total;
+			InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, status);
 		}
 		return container;
 	}
 
 	private static Map<String, String> readXls(File file) throws Exception {
+		InkstoneUploadMainService.currentChapterName = "ReadCompareList";
 		Map<String, String> container = new HashMap<String, String>();
+		InkstoneUploadMainService.fileTotal = 0;
+		InkstoneUploadMainService.initFileCount = 0;
 
 		InputStream is = new FileInputStream(file);
+		@SuppressWarnings("resource")
 		HSSFWorkbook hssfWorkbook = new HSSFWorkbook(is);
-		hssfWorkbook.getSheetAt(0);
+		int total = hssfWorkbook.getSheetAt(0).getPhysicalNumberOfRows();
+		int inited = 0;
+
 		for (int numSheet = 0; numSheet < hssfWorkbook.getNumberOfSheets(); numSheet++) {
 			HSSFSheet hssfSheet = hssfWorkbook.getSheetAt(numSheet);
 			if (hssfSheet == null) {
@@ -123,18 +133,26 @@ public class CompareExcelReaderUtils {
 				if (hssfRow != null) {
 					HSSFCell key = hssfRow.getCell(0);
 					HSSFCell value = hssfRow.getCell(1);
-					getValue(key);
-					getValue(value);
-					container.put(InkstoneRawHeaderUtils.convertRawCNHeader(getValue(key)),
-							InkstoneRawHeaderUtils.convertRawENeader(getValue(value)));
+					String keyStr = getValue(key);
+					String valueStr = getValue(value);
+					if (InkstoneUploadConsole.skipReadingExcel) {
+						container.put(keyStr, valueStr);
+					} else {
+						container.put(InkstoneRawHeaderUtils.convertRawCNHeader(getValue(key)),
+								InkstoneRawHeaderUtils.convertRawENeader(getValue(value)));
+					}
 				}
+				inited++;
+				int status = (100 * inited) / total;
+				InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, status);
 			}
 		}
 		return container;
 	}
 
-/*	public static void main(String[] args) throws Exception {
-		System.out.println(InkstoneRawHeaderUtils.convertRawCNHeader("1497(1)"));
-	}*/
-
+	/*
+	 * public static void main(String[] args) throws Exception {
+	 * System.out.println(InkstoneRawHeaderUtils.convertRawCNHeader("1497(1)"));
+	 * }
+	 */
 }

@@ -34,11 +34,8 @@ public class InkstoneRawHeaderUtils {
 			matcher = Pattern.compile(numRegx).matcher(header);
 			if (matcher.find()) {
 				convert = matcher.group();
-
-				String push = LOGGER.begin().headerAction(MessageMethod.EVENT)
-						.info(String.format("Catch raw header key:[%s]", convert));
-				InkstoneUploadConsole.consoleStr.add(push);
-
+				pushLog(LOGGER.begin().headerAction(MessageMethod.EVENT)
+						.info(String.format("Catch raw header key:[%s]", convert)));
 			}
 		}
 
@@ -68,16 +65,13 @@ public class InkstoneRawHeaderUtils {
 		Matcher matcher = Pattern.compile(numRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group();
-			String push = LOGGER.begin().headerAction(MessageMethod.EVENT)
-					.info(String.format("Catch raw header key:[%s]", convert));
-			InkstoneUploadConsole.consoleStr.add(push);
+			pushLog(LOGGER.begin().headerAction(MessageMethod.EVENT)
+					.info(String.format("Catch raw header key:[%s]", convert)));
 		}
-
 		if (StringUtils.isEmpty(convert)) {
 			throw new Exception(String.format("Cannot recognize the raw header in format：[%s] if need help, "
 					+ "please contact support for this bug.", header));
 		}
-
 		String tail = getInnerPart(header);
 		if (tail == null) {
 			return convert;
@@ -94,9 +88,8 @@ public class InkstoneRawHeaderUtils {
 		Matcher matcher = Pattern.compile(selectENRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group();
-			String push = LOGGER.begin().headerAction(MessageMethod.EVENT)
-					.info(String.format("Catch raw header key:[%s]", convert));
-			InkstoneUploadConsole.consoleStr.add(push);
+			pushLog(LOGGER.begin().headerAction(MessageMethod.EVENT)
+					.info(String.format("Catch raw header key:[%s]", convert)));
 		} else {
 			matcher = Pattern.compile(selectENRegx).matcher(header);
 			if (matcher.find()) {
@@ -145,4 +138,9 @@ public class InkstoneRawHeaderUtils {
 	 * System.out.println("ENS"+InkstoneRawHeaderUtils.
 	 * convertRawENeader("Copy of Chapter 300 — Big Guy and Small Guy")); }
 	 */
+
+	private static void pushLog(String message) {
+		InkstoneUploadConsole.consoleStr.add(message);
+		InkstoneUploadConsole.flag = false;
+	}
 }

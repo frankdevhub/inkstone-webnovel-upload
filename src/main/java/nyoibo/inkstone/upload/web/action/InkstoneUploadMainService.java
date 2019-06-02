@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,6 +30,8 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 	public static ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<String, Integer>();
 	public static ArrayList<String> finishedChapters = new ArrayList<String>();
 	public static String currentChapterName = "InkstoneLogin";
+	public static int fileTotal = 0;
+	public static int initFileCount = 0;
 
 	private Map<String, String> bookListUrl = new HashMap<String, String>();
 	private Map<String, String> bookCompareList = new HashMap<String, String>();
@@ -108,11 +108,6 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 		this.threadPool = Executors.newSingleThreadExecutor();
 		readBookList();
 		readCompareList();
-
-		Set<Entry<String, String>> entrySet = bookListUrl.entrySet();
-		for (Entry<String, String> entry : entrySet) {
-			System.out.println(entry.getKey() + "===" + entry.getValue());
-		}
 
 		String url = bookListUrl.get(bookName);
 		System.out.println(String.format("Book url:[%s]", url));

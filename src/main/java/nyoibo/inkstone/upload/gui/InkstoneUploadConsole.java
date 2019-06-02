@@ -495,6 +495,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 	@Override
 	public void pushLog(String message) {
 		InkstoneUploadConsole.consoleStr.add(message);
+		InkstoneUploadConsole.flag = false;
 	}
 
 }
