@@ -79,6 +79,7 @@ public class FileZipUtils {
 	}
 
 	public ArrayList<String> unZipFile(File file, String filePath) throws ZipException, IOException {
+		unZipFolderNames = new ArrayList<String>();
 		failedUnZipNames = new ArrayList<String>();
 
 		ZipFile zipFile = null;
@@ -106,15 +107,15 @@ public class FileZipUtils {
 				dir.mkdirs();
 			} else {
 				File targetFile = new File(filePath + File.separator + fileName);
+				is = zipFile.getInputStream(entry);
+				fos = new FileOutputStream(targetFile);
+				bos = new BufferedOutputStream(fos);
+				System.out.println(targetFile.getAbsolutePath());
 				try {
 					if (file.getParentFile() != null && !file.getParentFile().exists()) {
 						targetFile.getParentFile().mkdirs();
 					}
 					targetFile.createNewFile();
-					is = zipFile.getInputStream(entry);
-					fos = new FileOutputStream(targetFile);
-					bos = new BufferedOutputStream(fos);
-
 					int len;
 					while ((len = is.read(buf)) != -1) {
 						fos.write(buf, 0, len);
@@ -222,7 +223,7 @@ public class FileZipUtils {
 
 	public static void main(String[] args) throws ZipException, IOException {
 
-		new FileZipUtils().unZipFile(new File("D:\\nyoibo_automation\\5. Finished Editing-20190528T051007Z-001.zip"),
+		new FileZipUtils().unZipFile(new File("D:\\nyoibo_automation\\201905-20190530T040136Z-001.zip"),
 				"D:\\nyoibo_automation");
 
 	}
