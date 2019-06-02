@@ -84,18 +84,12 @@ public class FileZipUtils {
 
 		ZipFile zipFile = null;
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("zip path is :[%s]", filePath));
-
 		String fileEncode = getFileEncode(file);
-		LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("zip fileEncode:[%s]", fileEncode));
-		LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("zip:[%s]", file.getAbsolutePath()));
-
 		zipFile = new ZipFile(file.getAbsolutePath(), Charset.forName(fileEncode));
-
 		Enumeration<?> entries = zipFile.entries();
 		while (entries.hasMoreElements()) {
 			ZipEntry entry = (ZipEntry) entries.nextElement();
 			String fileName = reFormatPath(entry.getName());
-			System.out.println("fileName:" + fileName);
 			InputStream is = null;
 			FileOutputStream fos = null;
 			BufferedOutputStream bos = null;
@@ -108,7 +102,6 @@ public class FileZipUtils {
 				dir.mkdirs();
 			} else {
 				File targetFile = new File(filePath + File.separator + fileName);
-				System.out.println(targetFile.getAbsolutePath());
 				try {
 					if (targetFile.getParentFile() != null && !targetFile.getParentFile().exists()) {
 						createParentPath(targetFile.getAbsolutePath());
@@ -239,7 +232,7 @@ public class FileZipUtils {
 
 	public static void main(String[] args) throws ZipException, IOException {
 
-		new FileZipUtils().unZipFile(new File("D:\\nyoibo_automation\\201905-20190530T040136Z-001.zip"),
+		new FileZipUtils().unZipFile(new File("D:\\nyoibo_automation\\5-Finished Editing-20190528T172455Z-001.zip"),
 				"D:\\nyoibo_automation");
 
 	}

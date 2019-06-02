@@ -23,18 +23,6 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import nyoibo.inkstone.upload.utils.InkstoneRawHeaderUtils;
-
-/**
- * <p>Title:InkstoneUploaddMainWindow.java</p>  
- * <p>Description: </p>  
- * <p>Copyright: Copyright (c) 2019</p>  
- * <p>Company: www.frankdevhub.site</p>
- * <p>github: https://github.com/frankdevhub</p>  
- * @author frankdevhub   
- * @date:2019-05-19 18:05
- */
-
 public class InkstoneUploadMainWindow extends TitleAreaDialog {
 
 	private static final String START_UPLOAD = "Start";

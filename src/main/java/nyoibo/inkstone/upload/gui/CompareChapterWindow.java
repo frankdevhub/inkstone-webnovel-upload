@@ -19,16 +19,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Shell;
 
-/**
- * <p>Title:CompareChapterWindow.java</p>  
- * <p>Description: </p>  
- * <p>Copyright: Copyright (c) 2019</p>  
- * <p>Company: www.frankdevhub.site</p>
- * <p>github: https://github.com/frankdevhub</p>  
- * @author frankdevhub   
- * @date:2019-05-23 12:13
- */
-
 public class CompareChapterWindow extends Dialog {
 
 	private SashForm form;
