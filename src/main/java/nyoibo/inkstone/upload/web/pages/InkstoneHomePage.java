@@ -7,6 +7,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.gui.ConsoleTextAreaListener;
+import nyoibo.inkstone.upload.gui.InkstoneUploadConsole;
 import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.selenium.AssignDriver;
 import nyoibo.inkstone.upload.selenium.DriverBase;
@@ -14,7 +16,7 @@ import nyoibo.inkstone.upload.selenium.Query;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 import nyoibo.inkstone.upload.utils.WebDriverUtils;
 
-public class InkstoneHomePage implements Runnable {
+public class InkstoneHomePage implements Runnable, ConsoleTextAreaListener {
 	private String accountName;
 	private String accountPwd;
 
@@ -46,13 +48,12 @@ public class InkstoneHomePage implements Runnable {
 		submitBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_LOGIN_SUBMIT_ID));
 
 		AssignDriver.initQueryObjects(this, DriverBase.getDriver(bookName));
-		LOGGER.begin().headerAction(MessageMethod.EVENT).info("Init InkstoneHomePage Thread");
+		pushLog(LOGGER.begin().headerAction(MessageMethod.EVENT).info("Init InkstoneHomePage Thread"));
 	}
 
 	private void login() throws Exception {
 
-		LOGGER.begin().headerMethod(MessageMethod.EVENT).info("navigate to homepage");
-
+		pushLog(LOGGER.begin().headerMethod(MessageMethod.EVENT).info("navigate to homepage"));
 		driver.get(SeleniumInkstone.INKSTONE);
 
 		try {
@@ -103,6 +104,11 @@ public class InkstoneHomePage implements Runnable {
 			e.printStackTrace();
 		}
 
+	}
+
+	@Override
+	public void pushLog(String message) {
+		InkstoneUploadConsole.consoleStr.add(message);
 	}
 
 }

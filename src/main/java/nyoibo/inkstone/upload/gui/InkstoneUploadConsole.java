@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
@@ -62,6 +63,7 @@ public class InkstoneUploadConsole extends Dialog {
 	private InkstoneUploadMainService mainService;
 	private Properties proHistory = new Properties();
 
+	public static LinkedList<String> consoleStr = new LinkedList<String>();
 	private static final String configPropertiesPath = "src/main/resources/usr.properties";
 	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
 	public static volatile int num = 0;
@@ -354,7 +356,7 @@ public class InkstoneUploadConsole extends Dialog {
 				try {
 					Runnable progress = new Runnable() {
 						public void run() {
-							for (;;) {
+							for (; num < Integer.MAX_VALUE;) {
 								if (!flag && (num == 0 || ++num % 2 == 0)) {
 									display.asyncExec(new Runnable() {
 										public void run() {
@@ -362,7 +364,15 @@ public class InkstoneUploadConsole extends Dialog {
 												return;
 											progressBar.setSelection(InkstoneUploadMainService.process
 													.get(InkstoneUploadMainService.currentChapterName));
+											if (consoleStr.size() != 0) {
+												consoleTextArea.append("\n");
+												String next = consoleStr.get(0);
+												if (!StringUtils.isEmpty(next))
+													consoleTextArea.append(next);
+												consoleStr.remove(0);
+											}
 
+											flag = true;
 										}
 									});
 								}
@@ -383,12 +393,6 @@ public class InkstoneUploadConsole extends Dialog {
 										bookListPath = bookListText.getText();
 										chromeCachePath = chromeCacheText.getText();
 										compareListPath = compareListText.getText();
-										try {
-											Thread.sleep(20);
-										} catch (Exception e) {
-											e.printStackTrace();
-											handleError(e, parent.getDisplay());
-										}
 									}
 								});
 								startToRunUploadService();

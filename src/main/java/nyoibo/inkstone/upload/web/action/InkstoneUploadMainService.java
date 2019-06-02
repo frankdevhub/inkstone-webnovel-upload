@@ -14,6 +14,8 @@ import java.util.concurrent.Executors;
 import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.WebDriver;
 
+import nyoibo.inkstone.upload.gui.ConsoleTextAreaListener;
+import nyoibo.inkstone.upload.gui.InkstoneUploadConsole;
 import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.selenium.config.ChromeDataConfig;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
@@ -21,7 +23,7 @@ import nyoibo.inkstone.upload.utils.CompareExcelReaderUtils;
 import nyoibo.inkstone.upload.utils.ExcelReaderUtils;
 import nyoibo.inkstone.upload.utils.InkstoneRawHeaderUtils;
 
-public class InkstoneUploadMainService {
+public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 
 	public static ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<String, Integer>();
 	public static ArrayList<String> finishedChapters = new ArrayList<String>();
@@ -41,7 +43,6 @@ public class InkstoneUploadMainService {
 	private WebDriver driver;
 
 	private String dataFolderPath;
-	private final boolean foreign;
 
 	public InkstoneUploadMainService(String bookListPath, String bookCompareListPath, String dataFolderPath,
 			String cacheSourcePath, boolean foreign) throws Exception {
@@ -54,7 +55,6 @@ public class InkstoneUploadMainService {
 		this.bookCompareListPath = bookCompareListPath;
 		this.dataFolderPath = dataFolderPath;
 		this.path = cacheSourcePath;
-		this.foreign = foreign;
 	}
 
 	private String configChromeData(String path) throws IOException, InterruptedException {
@@ -83,27 +83,21 @@ public class InkstoneUploadMainService {
 
 	private void initRawUpload() throws Exception {
 		this.mirrorPath = configChromeData(this.path);
-		// ConsoleUtils.pushToConsole(String.format("Chrome cache mirror
-		// path:[%s]", mirrorPath));
-
 		DriverBase.instantiateDriverObject();
 		// DANGER :
 		this.driver = DriverBase.getDriver(mirrorPath);
 
 		File folder = new File(dataFolderPath);
-
 		for (File f : folder.listFiles()) {
 			chapterFileList.put(InkstoneRawHeaderUtils.convertRawENeader(f.getName()), f.getAbsolutePath());
 		}
 
 		this.bookName = folder.getName();
-
 		// int nCPU = Runtime.getRuntime().availableProcessors();
 		/*
 		 * ExecutorService service = new ThreadPoolExecutor(3, 2 * nCPU, 0L,
 		 * TimeUnit.MICROSECONDS, new LinkedBlockingQueue<Runnable>(300));
 		 */
-
 		this.threadPool = Executors.newSingleThreadExecutor();
 		readBookList();
 		readCompareList();
@@ -148,11 +142,8 @@ public class InkstoneUploadMainService {
 		return this.driver;
 	}
 
-	public static void main(String[] args) throws Exception {
-		InkstoneUploadMainService service = new InkstoneUploadMainService(
-				"C:\\Users\\Administrator\\Desktop\\booklist.xls", "C:\\Users\\Administrator\\Desktop\\booklist.xls",
-				"D:\\nyoibo_automation\\Sweet Love 1V1 Spoiled by The Executive",
-				"C:\\Users\\Administrator\\AppData\\Local\\Google\\Chrome\\User Data", false);
-		service.rawUploadStart();
+	@Override
+	public void pushLog(String message) {
+		InkstoneUploadConsole.consoleStr.add(message);
 	}
 }

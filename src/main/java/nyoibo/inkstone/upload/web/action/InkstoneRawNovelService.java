@@ -8,23 +8,15 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.gui.ConsoleTextAreaListener;
+import nyoibo.inkstone.upload.gui.InkstoneUploadConsole;
 import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 import nyoibo.inkstone.upload.utils.WebDriverUtils;
 import nyoibo.inkstone.upload.web.pages.InkstoneChapterPage;
 import nyoibo.inkstone.upload.web.pages.InkstoneHomePage;
 
-/**
- * <p>Title:InkstoneNovelUploadService.java</p>  
- * <p>Description: </p>  
- * <p>Copyright: Copyright (c) 2019</p>  
- * <p>Company: www.frankdevhub.site</p>
- * <p>github: https://github.com/frankdevhub</p>  
- * @author frankdevhub   
- * @date:2019-05-08 11:00
- */
-
-public class InkstoneRawNovelService implements Runnable{
+public class InkstoneRawNovelService implements Runnable, ConsoleTextAreaListener {
 	private final WebDriver driver;
 	private final InkstoneHomePage inkstoneHomePage;
 	private final InkstoneChapterPage inkstoneChapterPage;
@@ -35,12 +27,10 @@ public class InkstoneRawNovelService implements Runnable{
 
 	private Thread homePageThread;
 	private Thread chapterThread;
-	
-	
+
 	public InkstoneRawNovelService(boolean foreign, String bookUrl, String bookName,
-			ConcurrentHashMap<String, Integer> process, Map<String, String> bookCompareList, boolean needLogin,WebDriver driver,
-			Map<String,String> chapterFileList)
-			throws Exception {
+			ConcurrentHashMap<String, Integer> process, Map<String, String> bookCompareList, boolean needLogin,
+			WebDriver driver, Map<String, String> chapterFileList) throws Exception {
 		this.driver = driver;
 		this.needLogin = needLogin;
 		this.inkstoneHomePage = new InkstoneHomePage(foreign, driver, bookName);
@@ -57,7 +47,7 @@ public class InkstoneRawNovelService implements Runnable{
 
 		if (needLogin) {
 			try {
-				System.out.println("START FIRST");
+				pushLog("start to navigate to inkstone homepage.");
 				homePageThread.start();
 				homePageThread.join();
 				Thread.sleep(3000);
@@ -68,7 +58,7 @@ public class InkstoneRawNovelService implements Runnable{
 			}
 		} else {
 			try {
-				System.out.println("START NEXT");
+				pushLog(LOGGER.begin().headerMethod(MessageMethod.EVENT).info("go to next chapter..."));
 				Thread.sleep(2000);
 				driver.get(SeleniumInkstone.INKSTONE_PRO_DASHBOARD);
 
@@ -88,5 +78,10 @@ public class InkstoneRawNovelService implements Runnable{
 		Thread.currentThread().interrupt();
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("raw main thread kill complete");
 
+	}
+
+	@Override
+	public void pushLog(String message) {
+		InkstoneUploadConsole.consoleStr.add(message);
 	}
 }
