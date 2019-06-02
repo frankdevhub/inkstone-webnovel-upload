@@ -29,7 +29,6 @@ public class CompareChapterWindow extends Dialog {
 
 	private String filePath;
 
-	public static Map<String, String> chapterList = new HashMap<String, String>();
 	public static Map<String, String> compareList = new HashMap<String, String>();
 	public static String chapCacheName;
 	public static String dataPath;

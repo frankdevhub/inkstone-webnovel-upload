@@ -16,6 +16,7 @@ import org.openqa.selenium.WebDriver;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.gui.CompareChapterWindow;
 import nyoibo.inkstone.upload.gui.ConsoleTextAreaListener;
 import nyoibo.inkstone.upload.gui.InkstoneUploadConsole;
 import nyoibo.inkstone.upload.message.MessageMethod;
@@ -78,13 +79,13 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 	}
 
 	private void readCompareList() throws Exception {
-		File compareFile = new File(bookCompareListPath);
-		this.bookCompareList = CompareExcelReaderUtils.readExcel(compareFile);
-
-		Set<Entry<String, String>> set = bookCompareList.entrySet();
-		for (Entry<String, String> entry : set) {
-			System.out.println(entry.getKey() + "======" + entry.getValue());
+		if (!InkstoneUploadConsole.skipReadingExcel) {
+			File compareFile = new File(bookCompareListPath);
+			this.bookCompareList = CompareExcelReaderUtils.readExcel(compareFile);
+		} else {
+			this.bookCompareList = CompareChapterWindow.compareList;
 		}
+
 	}
 
 	private void initRawUpload() throws Exception {

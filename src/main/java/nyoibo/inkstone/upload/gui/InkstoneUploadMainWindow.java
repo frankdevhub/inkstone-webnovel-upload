@@ -37,6 +37,9 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 	public static String CHAPTER_EXCEL = "chapters_excel_path";
 	public static String BOOK_LIST_PATH = "book_list_path";
 	public static String CHROME_CACHE_PATH = "chrome_cache_path";
+	public static String COMPARE_LIST_DATE = "compare_last_modify";
+	public static String CHAPTER_PATH_DATE = "chapter_list_modify";
+	public static String BOOK_LIST_MODIFY = "book_list_modify";
 
 	public static final int START_RUN_ID = 280;
 

@@ -141,8 +141,8 @@ public class ChapterTable {
 			item.setText(new String[] { entry.getKey(), entry.getValue() });
 		}
 
-		CompareChapterWindow.chapterList = chapterList;
-		CompareChapterWindow.compareList = compareList;
+		CompareChapterWindow.compareList = chapterList;
+
 	}
 
 	private void createViewForm(Composite parent) {
@@ -280,18 +280,18 @@ public class ChapterTable {
 		}
 		if (savePath != null) {
 			getTableValues();
-			getHSSFWorkbook(savePath, CompareChapterWindow.chapterList);
+			getHSSFWorkbook(savePath, CompareChapterWindow.compareList);
 		}
 	}
 
 	private void getTableValues() {
-		CompareChapterWindow.chapterList = new HashedMap<String, String>();
+		CompareChapterWindow.compareList = new HashedMap<String, String>();
 		TableItem[] items = table.getItems();
 
 		if (items.length < 1)
 			return;
 		for (TableItem item : items) {
-			CompareChapterWindow.chapterList.put(item.getText(0), item.getText(1));
+			CompareChapterWindow.compareList.put(item.getText(0), item.getText(1));
 		}
 	}
 

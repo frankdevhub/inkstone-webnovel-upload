@@ -1,6 +1,7 @@
 package nyoibo.inkstone.upload.gui;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,7 +38,7 @@ import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.utils.ThreadUtils;
 import nyoibo.inkstone.upload.web.action.InkstoneUploadMainService;
 
-public class InkstoneUploadConsole extends Dialog {
+public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaListener {
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 	private Display display;
 	private Text bookListText;
@@ -67,7 +68,7 @@ public class InkstoneUploadConsole extends Dialog {
 	private static final String configPropertiesPath = "src/main/resources/usr.properties";
 	public static volatile int num = 0;
 	public static volatile boolean flag = false;
-	public static boolean skipReadingExcel = false;
+	public static boolean skipReadingExcel = true;
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
 
@@ -97,17 +98,32 @@ public class InkstoneUploadConsole extends Dialog {
 	}
 
 	private void saveProperties() throws IOException {
+		int change = 0;
 
 		FileOutputStream fos = new FileOutputStream(configPropertiesPath, false);
 		Properties usrConfigPro = new Properties();
-		usrConfigPro.setProperty(InkstoneUploadMainWindow.BOOK_LIST_PATH, bookListPath);
-		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_PATH, chapterListPath);
-		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL, compareListPath);
-		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHROME_CACHE_PATH, chromeCachePath);
 
+		usrConfigPro.setProperty(InkstoneUploadMainWindow.BOOK_LIST_PATH, bookListPath);
+		if (!proHistory.get(InkstoneUploadMainWindow.BOOK_LIST_PATH).equals(bookListPath) || !proHistory
+				.get(InkstoneUploadMainWindow.BOOK_LIST_MODIFY).equals(new File(bookListPath).lastModified()))
+			change++;
+		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_PATH, chapterListPath);
+
+		if (!proHistory.get(InkstoneUploadMainWindow.CHAPTER_PATH).equals(chapterListPath) || !proHistory
+				.get(InkstoneUploadMainWindow.CHAPTER_PATH_DATE).equals(new File(chapterListPath).lastModified()))
+			change++;
+		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL, compareListPath);
+
+		if (!proHistory.get(InkstoneUploadMainWindow.CHAPTER_EXCEL).equals(compareListPath) || !proHistory
+				.get(InkstoneUploadMainWindow.COMPARE_LIST_DATE).equals(new File(compareListPath).lastModified()))
+			change++;
+		usrConfigPro.setProperty(InkstoneUploadMainWindow.CHROME_CACHE_PATH, chromeCachePath);
+		if (change > 0)
+			skipReadingExcel = false;
 		usrConfigPro.store(fos, "usr");
 		fos.flush();
 		fos.close();
+
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("local usr configuration saved");
 	}
 
@@ -459,15 +475,12 @@ public class InkstoneUploadConsole extends Dialog {
 		super.configureShell(newShell);
 		newShell.setText("WebNovel Upload Console");
 		newShell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
-
 	}
 
-	public static void main(String[] args) throws IOException {
-		Display display = new Display();
-		Shell shell = new Shell(display);
-
-		InkstoneUploadConsole console = new InkstoneUploadConsole(shell, display);
-		console.open();
+	@Override
+	public void pushLog(String message) {
+		InkstoneUploadConsole.consoleStr.add(message);
+		InkstoneUploadConsole.flag = false;
 	}
 
 }
