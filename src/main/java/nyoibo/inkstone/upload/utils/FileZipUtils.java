@@ -110,7 +110,7 @@ public class FileZipUtils {
 				File targetFile = new File(filePath + File.separator + fileName);
 				System.out.println(targetFile.getAbsolutePath());
 				try {
-					if (file.getParentFile() != null && !file.getParentFile().exists()) {
+					if (targetFile.getParentFile() != null && !targetFile.getParentFile().exists()) {
 						createParentPath(targetFile.getAbsolutePath());
 					}
 					targetFile.createNewFile();
@@ -226,7 +226,9 @@ public class FileZipUtils {
 		String[] splitList = childPath.split("\\\\");
 		StringBuilder pathBuilder = new StringBuilder();
 
-		for (int i = 0; i < splitList.length; i++) {
+		System.out.println("create:" + childPath);
+
+		for (int i = 0; i < splitList.length - 1; i++) {
 			pathBuilder = pathBuilder.append(splitList[i]).append(File.separator);
 			File check = new File(pathBuilder.toString());
 			if (!check.exists())
