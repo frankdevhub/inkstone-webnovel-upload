@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -19,6 +20,10 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.util.FileUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.widgets.Display;
 
 import info.monitorenter.cpdetector.io.CodepageDetectorProxy;
 import nyoibo.inkstone.upload.data.logging.Logger;
@@ -35,7 +40,6 @@ public class FileZipUtils {
 	private final Logger LOGGER = LoggerFactory.getLogger(FileZipUtils.class);
 
 	public void unZipDriveZip(String filePath) throws Exception {
-
 		boolean hasZip = false;
 		File downloadZipDir = new File(filePath);
 
@@ -78,58 +82,102 @@ public class FileZipUtils {
 		return encode;
 	}
 
+	private int getZipEntryCount(Enumeration<?> entries) {
+		int count = 0;
+		while (entries.hasMoreElements()) {
+			entries.nextElement();
+			count++;
+		}
+		System.out.println("entry count complete");
+		return count;
+	}
+
 	public ArrayList<String> unZipFile(File file, String filePath) throws ZipException, IOException {
 		unZipFolderNames = new ArrayList<String>();
 		failedUnZipNames = new ArrayList<String>();
 
-		ZipFile zipFile = null;
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("zip path is :[%s]", filePath));
 		String fileEncode = getFileEncode(file);
-		zipFile = new ZipFile(file.getAbsolutePath(), Charset.forName(fileEncode));
+		final ZipFile zipFile = new ZipFile(file.getAbsolutePath(), Charset.forName(fileEncode));
+		int entryCount = getZipEntryCount(zipFile.entries());
 		Enumeration<?> entries = zipFile.entries();
-		while (entries.hasMoreElements()) {
-			ZipEntry entry = (ZipEntry) entries.nextElement();
-			String fileName = reFormatPath(entry.getName());
-			InputStream is = null;
-			FileOutputStream fos = null;
-			BufferedOutputStream bos = null;
-			byte[] buf = new byte[2048];
 
-			if (entry.isDirectory()) {
-				unZipFolderNames.add(fileName);
-				String dirPath = filePath + File.separator + fileName;
-				File dir = new File(dirPath);
-				dir.mkdirs();
-			} else {
-				File targetFile = new File(filePath + File.separator + fileName);
+		class UnZipProgressMonitorDialog {
+			private void showDialog() {
 				try {
-					if (targetFile.getParentFile() != null && !targetFile.getParentFile().exists()) {
-						createParentPath(targetFile.getAbsolutePath());
-					}
-					targetFile.createNewFile();
+					ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(
+							Display.getCurrent().getActiveShell());
+					IRunnableWithProgress runnalble = new IRunnableWithProgress() {
+						@Override
+						public void run(IProgressMonitor monitor)
+								throws InvocationTargetException, InterruptedException {
+							monitor.beginTask("UnZip Chapter Files ...", entryCount);
+							int step = 0;
+							if (entryCount <= 100) {
+								step = 100 / entryCount;
+							} else {
+								step = (100 * 100) / entryCount;
+							}
 
+							while (entries.hasMoreElements()) {
+								ZipEntry entry = (ZipEntry) entries.nextElement();
+								String fileName = reFormatPath(entry.getName());
+								InputStream is = null;
+								FileOutputStream fos = null;
+								BufferedOutputStream bos = null;
+								byte[] buf = new byte[2048];
+
+								if (entry.isDirectory()) {
+									unZipFolderNames.add(fileName);
+									String dirPath = filePath + File.separator + fileName;
+									File dir = new File(dirPath);
+									dir.mkdirs();
+								} else {
+									File targetFile = new File(filePath + File.separator + fileName);
+									try {
+										if (targetFile.getParentFile() != null
+												&& !targetFile.getParentFile().exists()) {
+											createParentPath(targetFile.getAbsolutePath());
+										}
+										targetFile.createNewFile();
+										monitor.worked(step);
+										monitor.subTask(String.format("Unzip file complete:[%s]",
+												targetFile.getAbsolutePath()));
+										is = zipFile.getInputStream(entry);
+										fos = new FileOutputStream(targetFile);
+										bos = new BufferedOutputStream(fos);
+										int len;
+										while ((len = is.read(buf)) != -1) {
+											fos.write(buf, 0, len);
+										}
+
+										bos.flush();
+										bos.close();
+										fos.close();
+
+										is.close();
+									} catch (Exception e) {
+										e.printStackTrace();
+										failedUnZipNames.add(targetFile.getAbsolutePath());
+									}
+								}
+							}
+							if (monitor.isCanceled())
+								throw new InterruptedException("Unzip has been canceled mannually.");
+						}
+					};
+					progressDialog.run(true, false, runnalble);
 				} catch (Exception e) {
 					e.printStackTrace();
-					failedUnZipNames.add(targetFile.getAbsolutePath());
-				} finally {
-					is = zipFile.getInputStream(entry);
-					fos = new FileOutputStream(targetFile);
-					bos = new BufferedOutputStream(fos);
-
-					int len;
-					while ((len = is.read(buf)) != -1) {
-						fos.write(buf, 0, len);
-					}
-
-					bos.flush();
-					bos.close();
-					fos.close();
-
-					is.close();
 				}
-
 			}
 		}
+		;
+
+		UnZipProgressMonitorDialog dialog = new UnZipProgressMonitorDialog();
+		System.out.println("show unzip moinitor");
+		dialog.showDialog();
+
 		zipFile.close();
 		return failedUnZipNames;
 	}
@@ -227,13 +275,6 @@ public class FileZipUtils {
 			if (!check.exists())
 				check.mkdirs();
 		}
-
-	}
-
-	public static void main(String[] args) throws ZipException, IOException {
-
-		new FileZipUtils().unZipFile(new File("D:\\nyoibo_automation\\5-Finished Editing-20190528T172455Z-001.zip"),
-				"D:\\nyoibo_automation");
 
 	}
 

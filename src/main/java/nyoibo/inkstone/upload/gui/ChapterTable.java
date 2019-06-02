@@ -8,7 +8,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.io.FileUtils;
@@ -20,7 +19,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ControlEditor;
 import org.eclipse.swt.custom.TableCursor;
@@ -38,10 +36,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -123,7 +118,6 @@ public class ChapterTable {
 				}
 				return true;
 			}
-
 		});
 
 		for (File f : fileList) {
@@ -135,37 +129,46 @@ public class ChapterTable {
 	private void wrapDataMap(String filePath) throws Exception {
 		File dataFile = new File(filePath);
 		File[] dataFileList = dataFile.listFiles();
-        int fileCount = dataFileList.length;
-		
+		int fileCount = dataFileList.length;
+
 		Map<String, String> compareList = new HashMap<String, String>();
 		Map<String, String> chapterList = new HashMap<String, String>();
-		class ProgressMonitorDialog extends ApplicationWindow {
+		class CompareProgressMonitorDialog {
 
-			public ProgressMonitorDialog(Shell parentShell) {
-				super(parentShell);
-
-			}
 			private void showDialog() {
 				try {
+					ProgressMonitorDialog dialog = new ProgressMonitorDialog(Display.getCurrent().getActiveShell());
 					TableItem item = new TableItem(table, SWT.NONE);
 					IRunnableWithProgress runnalble = new IRunnableWithProgress() {
-						public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+						public void run(IProgressMonitor monitor)
+								throws InvocationTargetException, InterruptedException {
 							monitor.beginTask("Scanning Chapter Files ...", fileCount);
-					        int step =0;
-							if(fileCount<=100){
-								 step = 100/dataFileList.length;
-							}else{
-								step = (100*100)/dataFileList.length;
+							int step = 0;
+							if (fileCount <= 100) {
+								step = 100 / dataFileList.length;
+							} else {
+								step = (100 * 100) / dataFileList.length;
 							}
 							for (int i = 0; i < fileCount && !monitor.isCanceled(); i++) {
 								File current = dataFileList[i];
 								String fileName = current.getName();
-								String guessCHName = InkstoneRawHeaderUtils.convertRawENeader(fileName);
-								compareList.put(guessCHName, fileName);
-								chapterList.put(fileName, current.getAbsolutePath());
-								monitor.worked(step);
-								monitor.subTask(String.format("Scanning complete:[%s]",dataFileList[i].getAbsolutePath()));
-								item.setText(new String[] { guessCHName, fileName });
+								String guessCHName;
+								try {
+									guessCHName = InkstoneRawHeaderUtils.convertRawENeader(fileName);
+									compareList.put(guessCHName, fileName);
+									chapterList.put(fileName, current.getAbsolutePath());
+									monitor.worked(step);
+									monitor.subTask(
+											String.format("Scanning complete:[%s]", dataFileList[i].getAbsolutePath()));
+									parent.getDisplay().asyncExec(new Runnable() {
+										@Override
+										public void run() {
+											item.setText(new String[] { guessCHName, fileName });
+										}
+									});
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
 							}
 							CompareChapterWindow.compareList = compareList;
 							monitor.done();
@@ -173,14 +176,16 @@ public class ChapterTable {
 								throw new InterruptedException("Scanning has been canceled mannually.");
 						}
 					};
-					this.run(true, false, runnalble);
+					dialog.run(true, false, runnalble);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-		};
-		
-		new ProgressMonitorDialog(parent.getShell()).showDialog();
+		}
+
+		CompareProgressMonitorDialog monitorDialog = new CompareProgressMonitorDialog();
+		System.out.println("show scanning zipped file moinitor");
+		monitorDialog.showDialog();
 	}
 
 	private void createViewForm(Composite parent) {
@@ -462,13 +467,5 @@ public class ChapterTable {
 			}
 		}
 	}
-
-	public static void main(String[] args) {
-		ProgressMonitorDialogTest test = new ProgressMonitorDialogTest();
-		test.setBlockOnOpen(true);
-		test.open();
-		Display.getCurrent().dispose();
-	}
-}
 
 }
