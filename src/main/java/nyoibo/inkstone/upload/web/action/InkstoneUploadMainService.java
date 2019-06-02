@@ -63,10 +63,12 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 
 	private String configChromeData(String path) throws IOException, InterruptedException {
 		ChromeDataConfig.cleanData();
+
 		pushLog(LOGGER.begin().headerAction(MessageMethod.EVENT).info("local chrome cache source:" + path));
 		String dataName = ChromeDataConfig.createDataName(SeleniumInkstone.INKSTONE_TRANS_STATUS_RAW);
 		String cacheMirror = ChromeDataConfig.config(path, dataName);
 		pushLog(LOGGER.begin().headerAction(MessageMethod.EVENT).info(cacheMirror));
+
 		return cacheMirror;
 	}
 

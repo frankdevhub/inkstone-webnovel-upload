@@ -65,9 +65,11 @@ public class InkstoneUploadConsole extends Dialog {
 
 	public static LinkedList<String> consoleStr = new LinkedList<String>();
 	private static final String configPropertiesPath = "src/main/resources/usr.properties";
-	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
 	public static volatile int num = 0;
 	public static volatile boolean flag = false;
+	public static boolean skipReadingExcel = false;
+
+	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
 
 	private void startToRunUploadService() throws Exception {
 		LOGGER.begin().headerMethod(MessageMethod.EVENT).info("check configuration and start to upload novels");
