@@ -29,7 +29,7 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 
 	public static ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<String, Integer>();
 	public static ArrayList<String> finishedChapters = new ArrayList<String>();
-	public static String currentChapterName = "InkstoneLogin";
+	public static String currentChapterName;
 	public static int fileTotal = 0;
 	public static int initFileCount = 0;
 

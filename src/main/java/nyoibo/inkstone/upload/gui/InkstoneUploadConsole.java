@@ -391,17 +391,14 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 										public void run() {
 											if (progressBar.isDisposed())
 												return;
-											/*
-											 * if (InkstoneUploadMainService.
-											 * process
-											 * .get(InkstoneUploadMainService.
-											 * currentChapterName).equals(null))
-											 * { progressBar.setSelection(0); }
-											 * else { progressBar.setSelection(
-											 * InkstoneUploadMainService.process
-											 * .get(InkstoneUploadMainService.
-											 * currentChapterName)); }
-											 */
+											if (!StringUtils.isEmpty(InkstoneUploadMainService.currentChapterName)) {
+												if (null != InkstoneUploadMainService.process
+														.get(InkstoneUploadMainService.currentChapterName)) {
+													Integer status = InkstoneUploadMainService.process
+															.get(InkstoneUploadMainService.currentChapterName);
+													progressBar.setSelection(status);
+												}
+											}
 											if (consoleStr.size() != 0) {
 												consoleTextArea.append("\n");
 												String next = consoleStr.get(0);
