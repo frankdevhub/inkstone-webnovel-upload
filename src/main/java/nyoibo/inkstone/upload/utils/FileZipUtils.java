@@ -58,7 +58,7 @@ public class FileZipUtils {
 		if (!hasZip)
 			throw new Exception(String.format("Cannot find zip file in path [%s]", filePath));
 		for (File zip : unZipFiles) {
-			// unZipFile(zip, filePath);
+			unZipFile(zip, filePath);
 			FileUtils.forceDelete(zip);
 		}
 	}

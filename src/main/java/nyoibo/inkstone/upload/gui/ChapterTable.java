@@ -91,6 +91,7 @@ public class ChapterTable {
 
 		if (fileList != null) {
 			for (File f : fileList) {
+				System.out.println("delete file:" + f.getName());
 				FileUtils.forceDelete(f);
 			}
 		}
