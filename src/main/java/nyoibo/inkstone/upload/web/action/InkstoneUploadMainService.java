@@ -21,18 +21,8 @@ import nyoibo.inkstone.upload.utils.CompareExcelReaderUtils;
 import nyoibo.inkstone.upload.utils.ExcelReaderUtils;
 import nyoibo.inkstone.upload.utils.InkstoneRawHeaderUtils;
 
-/**
- * <p>Title:InkstoneNovelUploadThread.java</p>  
- * <p>Description: </p>  
- * <p>Copyright: Copyright (c) 2019</p>  
- * <p>Company: www.frankdevhub.site</p>
- * <p>github: https://github.com/frankdevhub</p>  
- * @author frankdevhub   
- * @date:2019-05-12 22:00
- */
-
 public class InkstoneUploadMainService {
-  
+
 	public static ConcurrentHashMap<String, Integer> process = new ConcurrentHashMap<String, Integer>();
 	public static ArrayList<String> finishedChapters = new ArrayList<String>();
 	public static String currentChapterName = null;
@@ -84,16 +74,17 @@ public class InkstoneUploadMainService {
 	private void readCompareList() throws Exception {
 		File compareFile = new File(bookCompareListPath);
 		this.bookCompareList = CompareExcelReaderUtils.readExcel(compareFile);
-		
-		Set<Entry<String,String>> set = bookCompareList.entrySet();
-		for(Entry<String,String>entry:set){
-			System.out.println(entry.getKey()+"======"+entry.getValue());
+
+		Set<Entry<String, String>> set = bookCompareList.entrySet();
+		for (Entry<String, String> entry : set) {
+			System.out.println(entry.getKey() + "======" + entry.getValue());
 		}
 	}
 
 	private void initRawUpload() throws Exception {
 		this.mirrorPath = configChromeData(this.path);
-		//ConsoleUtils.pushToConsole(String.format("Chrome cache mirror path:[%s]", mirrorPath));
+		// ConsoleUtils.pushToConsole(String.format("Chrome cache mirror
+		// path:[%s]", mirrorPath));
 
 		DriverBase.instantiateDriverObject();
 		// DANGER :
@@ -117,11 +108,11 @@ public class InkstoneUploadMainService {
 		readBookList();
 		readCompareList();
 
-		Set<Entry<String,String>> entrySet = bookListUrl.entrySet();
-		for(Entry<String,String> entry:entrySet){
-			System.out.println(entry.getKey()+"==="+entry.getValue());
+		Set<Entry<String, String>> entrySet = bookListUrl.entrySet();
+		for (Entry<String, String> entry : entrySet) {
+			System.out.println(entry.getKey() + "===" + entry.getValue());
 		}
-		
+
 		String url = bookListUrl.get(bookName);
 		System.out.println(String.format("Book url:[%s]", url));
 		if (StringUtils.isEmpty(url))
@@ -156,10 +147,12 @@ public class InkstoneUploadMainService {
 	public WebDriver getDriver() {
 		return this.driver;
 	}
-	
-	
+
 	public static void main(String[] args) throws Exception {
-		InkstoneUploadMainService service = new InkstoneUploadMainService("C:\\Users\\Administrator\\Desktop\\booklist.xls", "C:\\Users\\Administrator\\Desktop\\booklist.xls", "D:\\nyoibo_automation\\Sweet Love 1V1 Spoiled by The Executive", "C:\\Users\\Administrator\\AppData\\Local\\Google\\Chrome\\User Data", false);
+		InkstoneUploadMainService service = new InkstoneUploadMainService(
+				"C:\\Users\\Administrator\\Desktop\\booklist.xls", "C:\\Users\\Administrator\\Desktop\\booklist.xls",
+				"D:\\nyoibo_automation\\Sweet Love 1V1 Spoiled by The Executive",
+				"C:\\Users\\Administrator\\AppData\\Local\\Google\\Chrome\\User Data", false);
 		service.rawUploadStart();
 	}
 }

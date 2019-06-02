@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.Random;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
@@ -64,8 +63,9 @@ public class InkstoneUploadConsole extends Dialog {
 	private Properties proHistory = new Properties();
 
 	private static final String configPropertiesPath = "src/main/resources/usr.properties";
-
 	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
+	public static volatile int num = 0;
+	public static volatile boolean flag = false;
 
 	private void startToRunUploadService() throws Exception {
 		LOGGER.begin().headerMethod(MessageMethod.EVENT).info("check configuration and start to upload novels");
@@ -355,38 +355,28 @@ public class InkstoneUploadConsole extends Dialog {
 					Runnable progress = new Runnable() {
 						public void run() {
 							for (;;) {
-								display.asyncExec(new Runnable() {
-									public void run() {
-										try {
-											wait();
-										} catch (InterruptedException e1) {
-											e1.printStackTrace();
+								if (!flag && (num == 0 || ++num % 2 == 0)) {
+									display.asyncExec(new Runnable() {
+										public void run() {
+											if (progressBar.isDisposed())
+												return;
+											progressBar.setSelection(InkstoneUploadMainService.process
+													.get(InkstoneUploadMainService.currentChapterName));
+
 										}
-										try {
-											Thread.sleep(20);
-										} catch (InterruptedException e) {
-											e.printStackTrace();
-										}
-										if (progressBar.isDisposed())
-											return;
-										progressBar.setSelection(progressBar.getSelection() + 1);
-										if (weblinkUrl.isDisposed())
-											return;
-										weblinkUrl.setText("ss" + new Random().nextInt());
-									}
-								});
+									});
+								}
 							}
 						}
 					};
 					Thread progressThread = new Thread(progress);
 					progressThread.setDaemon(true);
-					// progressThread.start();
+					progressThread.start();
 
 					Runnable service = new Runnable() {
 						@Override
 						public void run() {
 							try {
-
 								display.asyncExec(new Runnable() {
 									public void run() {
 										chapterListPath = chapterListText.getText();
@@ -422,7 +412,6 @@ public class InkstoneUploadConsole extends Dialog {
 			}
 		});
 		Button cancelButton = createButton(parent, CONSOLE_CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
-
 		cancelButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
