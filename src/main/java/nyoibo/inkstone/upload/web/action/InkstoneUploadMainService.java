@@ -24,6 +24,7 @@ import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 import nyoibo.inkstone.upload.utils.CompareExcelReaderUtils;
 import nyoibo.inkstone.upload.utils.ExcelReaderUtils;
 import nyoibo.inkstone.upload.utils.InkstoneRawHeaderUtils;
+import nyoibo.inkstone.upload.utils.ThreadUtils;
 
 public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 
@@ -129,10 +130,16 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 
 				waitList.add(rawService);
 			}
-			for (InkstoneRawNovelService raw : waitList)
-				this.threadPool.execute(new Thread(raw));
-			this.threadPool.shutdown();
+			for (InkstoneRawNovelService raw : waitList) {
+				Thread next = new Thread(raw);
+				next.setName("innkstone-novel-upload");
+				this.threadPool.execute(next);
+				this.threadPool.shutdown();
+			}
 		} catch (Exception e) {
+			Thread check = ThreadUtils.check("innkstone-novel-upload");
+			if (check != null)
+				check.interrupt();
 			this.threadPool.shutdown();
 		}
 	}
