@@ -107,19 +107,27 @@ public class ChapterTable {
 						public void run(IProgressMonitor monitor)
 								throws InvocationTargetException, InterruptedException {
 							monitor.beginTask("Delete history files ...", filterCount);
-							int step = 0;
+							double step = 0;
+							boolean groupStep = false;
+							int group = 0;
 							System.out.println("ready to delete file count:" + filterCount);
 							if (filterCount <= 100) {
 								step = 100 / filterCount;
 							} else {
-								step = 1 / (filterCount / 100);
+								step = ((double) 1) / (filterCount / 100);
+								groupStep = true;
+								group = (int) ((double) 1 / step);
 							}
 							System.out.println("delete-step:" + step);
 							for (File file : fileList) {
 								System.out.println("delete file:" + file.getName());
 								try {
 									FileUtils.forceDelete(file);
-									monitor.worked(step);
+									if (groupStep) {
+										monitor.worked((int) group);
+									} else {
+										monitor.worked((int) step);
+									}
 									monitor.subTask(String.format("File deleted:[%s]", file.getAbsolutePath()));
 								} catch (IOException e) {
 									e.printStackTrace();
@@ -171,24 +179,28 @@ public class ChapterTable {
 	private void wrapDataMap(String filePath) throws Exception {
 		File dataFile = new File(filePath);
 		File[] dataFileList = dataFile.listFiles();
-		int fileCount = dataFileList.length;
-
-		Map<String, String> compareList = new HashMap<String, String>();
-		Map<String, String> chapterList = new HashMap<String, String>();
 		class CompareProgressMonitorDialog {
 
 			private void showDialog() {
 				try {
+					int fileCount = dataFileList.length;
+					Map<String, String> compareList = new HashMap<String, String>();
+					Map<String, String> chapterList = new HashMap<String, String>();
+
 					ProgressMonitorDialog dialog = new ProgressMonitorDialog(Display.getCurrent().getActiveShell());
 					IRunnableWithProgress runnalble = new IRunnableWithProgress() {
 						public void run(IProgressMonitor monitor)
 								throws InvocationTargetException, InterruptedException {
 							monitor.beginTask("Scanning Chapter Files ...", fileCount);
-							int step = 0;
+							double step = 0;
+							boolean groupStep = false;
+							int group = 0;
 							if (fileCount <= 100) {
 								step = 100 / dataFileList.length;
 							} else {
-								step = 1 / (dataFileList.length / 100);
+								step = ((double) 1) / (dataFileList.length / 100);
+								groupStep = true;
+								group = (int) (((double) 1) / (step));
 							}
 							for (int i = 0; i < fileCount && !monitor.isCanceled(); i++) {
 								File current = dataFileList[i];
@@ -198,7 +210,11 @@ public class ChapterTable {
 									guessCHName = InkstoneRawHeaderUtils.convertRawENeader(fileName);
 									compareList.put(guessCHName, fileName);
 									chapterList.put(fileName, current.getAbsolutePath());
-									monitor.worked(step);
+									if (groupStep) {
+										monitor.worked(group);
+									} else {
+										monitor.worked((int) step);
+									}
 									monitor.subTask(
 											String.format("Scanning complete:[%s]", dataFileList[i].getAbsolutePath()));
 									parent.getDisplay().asyncExec(new Runnable() {
@@ -509,5 +525,4 @@ public class ChapterTable {
 			}
 		}
 	}
-
 }
