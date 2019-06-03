@@ -95,9 +95,10 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 		this.driver = DriverBase.getDriver(mirrorPath);
 
 		File folder = new File(dataFolderPath);
-		for (File f : folder.listFiles()) {
-			chapterFileList.put(InkstoneRawHeaderUtils.convertRawENeader(f.getName()), f.getAbsolutePath());
-		}
+		if (!InkstoneUploadConsole.skipReadingExcel)
+			for (File f : folder.listFiles()) {
+				chapterFileList.put(InkstoneRawHeaderUtils.convertRawENeader(f.getName()), f.getAbsolutePath());
+			}
 
 		this.bookName = folder.getName();
 		// int nCPU = Runtime.getRuntime().availableProcessors();
