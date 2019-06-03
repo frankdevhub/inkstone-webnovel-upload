@@ -1,13 +1,16 @@
 package nyoibo.inkstone.upload.gui;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.zip.ZipEntry;
 
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.io.FileUtils;
@@ -95,11 +98,51 @@ public class ChapterTable {
 
 		});
 
-		if (fileList != null) {
-			for (File f : fileList) {
-				System.out.println("delete file:" + f.getName());
-				FileUtils.forceDelete(f);
+		final int filterCount = fileList.length;
+
+		class DeleteProgressMonitorDialog {
+			private void showDialog() {
+				try {
+					ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(
+							Display.getCurrent().getActiveShell());
+					IRunnableWithProgress runnalble = new IRunnableWithProgress() {
+						@Override
+						public void run(IProgressMonitor monitor)
+								throws InvocationTargetException, InterruptedException {
+							monitor.beginTask("Delete history files ...", filterCount);
+							int step = 0;
+							if (filterCount <= 100) {
+								step = 100 / filterCount;
+							} else {
+								step = (100 * 100) / filterCount;
+							}
+
+							for (File file : fileList) {
+								System.out.println("delete file:" + file.getName());
+								try {
+									FileUtils.forceDelete(file);
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							}
+
+							monitor.worked(step);
+							monitor.subTask(String.format("File deleted:[%s]", file.getAbsolutePath()));
+
+							if (monitor.isCanceled())
+								throw new InterruptedException("Delete has been canceled mannually.");
+						}
+					};
+					progressDialog.run(true, false, runnalble);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
+		}
+
+		if (null != fileList && fileList.length > 0) {
+			DeleteProgressMonitorDialog dialog = new DeleteProgressMonitorDialog();
+			dialog.showDialog();
 		}
 
 	}
