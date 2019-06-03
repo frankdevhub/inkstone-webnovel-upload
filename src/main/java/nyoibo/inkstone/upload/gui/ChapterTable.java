@@ -232,6 +232,8 @@ public class ChapterTable {
 								}
 							}
 							CompareChapterWindow.compareList = compareList;
+							CompareChapterWindow.chapterFileList = chapterList;
+
 							monitor.done();
 							if (monitor.isCanceled())
 								throw new InterruptedException("Scanning has been canceled mannually.");
@@ -379,7 +381,6 @@ public class ChapterTable {
 			savePath = selecteddir + "\\";
 			saveFileName = Long.toString(System.currentTimeMillis()) + "ChapAutoList.xls";
 			savePath = savePath + saveFileName;
-			CompareChapterWindow.chapterListPath = savePath;
 
 			LOGGER.begin().headerAction(MessageMethod.EVENT).info(savePath);
 			CompareChapterWindow.comaprePath = savePath;

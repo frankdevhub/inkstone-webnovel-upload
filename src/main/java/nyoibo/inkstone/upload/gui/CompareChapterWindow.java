@@ -30,10 +30,10 @@ public class CompareChapterWindow extends Dialog {
 	private String filePath;
 
 	public static Map<String, String> compareList = new HashMap<String, String>();
+	public static Map<String, String> chapterFileList = new HashMap<String, String>();;
 	public static String chapCacheName;
 	public static String dataPath;
 	public static String comaprePath;
-	public static String chapterListPath;
 
 	public CompareChapterWindow(Shell parentShell, String filePath) {
 		super(parentShell);

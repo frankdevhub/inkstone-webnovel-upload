@@ -83,13 +83,13 @@ public class InkstoneRawHeaderUtils {
 
 	private static String getInnerPart(String header) {
 		String convert = clearBrace(header);
-		header = header.toLowerCase();
+		convert = convert.toLowerCase();
 
 		Matcher matcher = Pattern.compile(selectENRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group();
 		} else {
-			matcher = Pattern.compile(selectENRegx).matcher(header);
+			matcher = Pattern.compile(numRegx).matcher(header);
 			if (matcher.find()) {
 				convert = matcher.group();
 			} else {
