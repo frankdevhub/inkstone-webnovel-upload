@@ -278,7 +278,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 		});
 
 		compareListText = formToolkit.createText(container, "compareListText", SWT.NONE);
-		compareListText.setEditable(chapterCompareEdit);
+		compareListText.setEditable(false);
 		compareListText.setText("");
 		GridData gdCompareListText = new GridData(SWT.LEFT, SWT.CENTER, true, false, 4, 1);
 		gdCompareListText.widthHint = 422;
@@ -307,7 +307,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 		});
 
 		chapterListText = formToolkit.createText(container, "chapterListText", SWT.NONE);
-		chapterListText.setEditable(chapterCompareEdit);
+		chapterListText.setEditable(false);
 		chapterListText.setText("");
 		chapterListText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 

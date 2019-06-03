@@ -134,7 +134,6 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 				Thread next = new Thread(raw);
 				next.setName("innkstone-novel-upload");
 				this.threadPool.execute(next);
-
 			}
 			this.threadPool.shutdown();
 		} catch (Exception e) {

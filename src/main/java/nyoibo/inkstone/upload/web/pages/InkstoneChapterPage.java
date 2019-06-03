@@ -4,6 +4,11 @@ import java.io.File;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -14,6 +19,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.gui.InkstoneUploadMainWindow;
 import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.selenium.AssignDriver;
 import nyoibo.inkstone.upload.selenium.Query;
@@ -25,8 +31,8 @@ import nyoibo.inkstone.upload.web.action.InkstoneUploadMainService;
 
 public class InkstoneChapterPage implements Runnable {
 
-	private long start;
-	private long end;
+	private long start = 0L;
+	private long end = 0L;
 
 	private final Query transBtn;
 	private final Query editBtn;
@@ -99,6 +105,8 @@ public class InkstoneChapterPage implements Runnable {
 	}
 
 	public void editLatestRaw() throws Exception {
+		start = System.currentTimeMillis();
+
 		LOGGER.begin().headerAction(MessageMethod.EVENT).info("navigate to inkstone dashboard");
 		Thread.sleep(2000);
 
@@ -128,11 +136,34 @@ public class InkstoneChapterPage implements Runnable {
 		String enChapName = bookCompareList.get(InkstoneRawHeaderUtils.convertRawCNHeader(currentChapterName));
 		System.out.println("EN_CHAP_NAME" + enChapName);
 
-		if (enChapName == null)
-			throw new Exception(String.format(
-					"Cannot find related translated file with raw :[%s] please check mannually", currentChapterName));
+		if (enChapName == null) {
+			while (StringUtils.isEmpty(filePath)) {
+				Shell shell = Display.getCurrent().getActiveShell();
+				FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+				dialog.setFilterPath(System.getProperty(InkstoneUploadMainWindow.CHAPTER_PATH));
 
-		this.filePath = chapterFileList.get(enChapName);
+				dialog.setText(String.format("Canot match [] current raw file, please select mannually.",
+						firstChapter.getText()));
+				dialog.setFilterExtensions(new String[] { "*.doc", "*.docx" });
+				filePath = dialog.open();
+
+				MessageBox confirm = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+				confirm.setText("Confirm");
+				confirm.setMessage(String.format("Are you sure using [%s] ?", new File(filePath).getName()));
+				int choice = confirm.open();
+				if (choice == SWT.NO)
+					filePath = null;
+			}
+
+		} else {
+			this.filePath = chapterFileList.get(enChapName);
+		}
+		/*
+		 * throw new Exception(String.format(
+		 * "Cannot find related translated file with raw :[%s] please check mannually"
+		 * , currentChapterName));
+		 */
+
 		if (filePath == null)
 			throw new Exception(String.format(
 					"Cannot find related translated file with raw:[%s] please check mannually", currentChapterName));
@@ -283,6 +314,8 @@ public class InkstoneChapterPage implements Runnable {
 				WebDriverUtils.findWebElement(reditBtn);
 				Thread.sleep(2000);
 				InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 100);
+				end = System.currentTimeMillis();
+
 				Thread.currentThread().interrupt();
 			} catch (Exception e1) {
 				e.printStackTrace();
