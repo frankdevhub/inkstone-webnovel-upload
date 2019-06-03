@@ -112,9 +112,9 @@ public class ChapterTable {
 							if (filterCount <= 100) {
 								step = 100 / filterCount;
 							} else {
-								step = (100 * 100) / filterCount;
+								step = 1 / (filterCount / 100);
 							}
-
+							System.out.println("delete-step:" + step);
 							for (File file : fileList) {
 								System.out.println("delete file:" + file.getName());
 								try {
