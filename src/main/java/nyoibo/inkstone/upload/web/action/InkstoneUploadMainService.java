@@ -79,7 +79,7 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 	}
 
 	private void readCompareList() throws Exception {
-		if (!InkstoneUploadConsole.skipReadingExcel) {
+		if (!InkstoneUploadConsole.skipChapterCompareListExcel) {
 			File compareFile = new File(bookCompareListPath);
 			this.bookCompareList = CompareExcelReaderUtils.readExcel(compareFile);
 		} else {
@@ -95,7 +95,7 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 		this.driver = DriverBase.getDriver(mirrorPath);
 
 		File folder = new File(dataFolderPath);
-		if (!InkstoneUploadConsole.skipReadingExcel)
+		if (!InkstoneUploadConsole.skipChapterCompareListExcel)
 			for (File f : folder.listFiles()) {
 				chapterFileList.put(InkstoneRawHeaderUtils.convertRawENeader(f.getName()), f.getAbsolutePath());
 			}

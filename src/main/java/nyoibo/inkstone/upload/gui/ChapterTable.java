@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Map.Entry;
 
 import org.apache.commons.collections4.map.HashedMap;
@@ -65,12 +66,15 @@ public class ChapterTable {
 	private Table table = null;
 	private Menu menu = null;
 	private Composite parent = null;
+	private String chapterFilePath = null;
+	private String saveExcelPath;
 
 	private final Logger LOGGER = LoggerFactory.getLogger(ChapterTable.class);
 
 	public ChapterTable(Composite parent, String filePath) throws Exception {
 		this.composite = parent;
 		this.parent = parent;
+		this.chapterFilePath = filePath;
 		createViewForm(parent);
 		createToolBar();
 		createMenu(parent);
@@ -306,6 +310,17 @@ public class ChapterTable {
 					getTableValues();
 					try {
 						saveExcelFile();
+						CompareChapterWindow.useSaved = true;
+
+						FileOutputStream fos = new FileOutputStream(InkstoneUploadConsole.configPropertiesPath, false);
+						Properties usrConfigPro = new Properties();
+						usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_PATH, chapterFilePath);
+						usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL, saveExcelPath);
+
+						usrConfigPro.store(fos, "usr");
+						fos.flush();
+						fos.close();
+
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -389,6 +404,7 @@ public class ChapterTable {
 			getTableValues();
 			getHSSFWorkbook(savePath, CompareChapterWindow.compareList);
 		}
+		this.saveExcelPath = savePath;
 	}
 
 	private void getTableValues() {

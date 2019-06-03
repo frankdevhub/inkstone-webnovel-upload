@@ -35,6 +35,8 @@ public class CompareChapterWindow extends Dialog {
 	public static String dataPath;
 	public static String comaprePath;
 
+	public static boolean useSaved = false;
+
 	public CompareChapterWindow(Shell parentShell, String filePath) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX | SWT.MIN);
