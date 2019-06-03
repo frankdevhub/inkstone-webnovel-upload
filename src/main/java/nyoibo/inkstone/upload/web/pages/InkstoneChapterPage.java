@@ -127,7 +127,6 @@ public class InkstoneChapterPage implements Runnable {
 		System.out.println("CN_CHAP_NAME" + InkstoneRawHeaderUtils.convertRawCNHeader(currentChapterName));
 		String enChapName = bookCompareList.get(InkstoneRawHeaderUtils.convertRawCNHeader(currentChapterName));
 		System.out.println("EN_CHAP_NAME" + enChapName);
-		
 
 		if (enChapName == null)
 			throw new Exception(String.format(
@@ -314,5 +313,9 @@ public class InkstoneChapterPage implements Runnable {
 	 * ; System.out.println(a.split("-")[1]);
 	 * System.out.println(a.split("—")[1]); }
 	 */
+
+	public static void main(String[] args) {
+
+	}
 
 }
