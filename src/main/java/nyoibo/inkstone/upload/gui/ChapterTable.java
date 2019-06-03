@@ -119,12 +119,14 @@ public class ChapterTable {
 								group = (int) ((double) 1 / step);
 							}
 							System.out.println("delete-step:" + step);
-							for (File file : fileList) {
+							for (int i = 0; i < fileList.length; i++) {
+								File file = fileList[i];
 								System.out.println("delete file:" + file.getName());
 								try {
 									FileUtils.forceDelete(file);
 									if (groupStep) {
-										monitor.worked((int) group);
+										if (i % group == 0)
+											monitor.worked(1);
 									} else {
 										monitor.worked((int) step);
 									}
@@ -211,7 +213,8 @@ public class ChapterTable {
 									compareList.put(guessCHName, fileName);
 									chapterList.put(fileName, current.getAbsolutePath());
 									if (groupStep) {
-										monitor.worked(group);
+										if (i % group == 0)
+											monitor.worked(1);
 									} else {
 										monitor.worked((int) step);
 									}

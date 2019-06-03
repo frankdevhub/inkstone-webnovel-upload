@@ -123,7 +123,9 @@ public class FileZipUtils {
 								group = (int) (((double) 1) / (step));
 							}
 
+							int index = -1;
 							while (entries.hasMoreElements()) {
+								index++;
 								ZipEntry entry = (ZipEntry) entries.nextElement();
 								String fileName = reFormatPath(entry.getName());
 								InputStream is = null;
@@ -145,7 +147,8 @@ public class FileZipUtils {
 										}
 										targetFile.createNewFile();
 										if (groupStep) {
-											monitor.worked(group);
+											if (index % group == 0)
+												monitor.worked(1);
 										} else {
 											monitor.worked((int) step);
 										}
