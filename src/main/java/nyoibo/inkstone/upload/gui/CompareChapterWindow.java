@@ -77,8 +77,8 @@ public class CompareChapterWindow extends Dialog {
 					chapterComposite.setFocus();
 				}
 			});
-
 			chapterComposite.layout();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

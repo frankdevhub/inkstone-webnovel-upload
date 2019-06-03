@@ -1,16 +1,13 @@
 package nyoibo.inkstone.upload.gui;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.zip.ZipEntry;
 
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.io.FileUtils;
@@ -111,6 +108,7 @@ public class ChapterTable {
 								throws InvocationTargetException, InterruptedException {
 							monitor.beginTask("Delete history files ...", filterCount);
 							int step = 0;
+							System.out.println("ready to delete file count:" + filterCount);
 							if (filterCount <= 100) {
 								step = 100 / filterCount;
 							} else {
