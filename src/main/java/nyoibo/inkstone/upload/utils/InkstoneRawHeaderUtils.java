@@ -2,17 +2,10 @@ package nyoibo.inkstone.upload.utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.thymeleaf.util.StringUtils;
-
-import nyoibo.inkstone.upload.data.logging.Logger;
-import nyoibo.inkstone.upload.data.logging.LoggerFactory;
-import nyoibo.inkstone.upload.gui.InkstoneUploadConsole;
-import nyoibo.inkstone.upload.message.MessageMethod;
 
 public class InkstoneRawHeaderUtils {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(InkstoneRawHeaderUtils.class);
 	private static final String numRegx = "\\d+(\\.\\d+){0,1}";
 	private static final String chapCNRegx = "第([\\s\\S]*?)章";
 	private static final String selectENRegx = "(?<=\\()[^\\)]+";
@@ -28,8 +21,7 @@ public class InkstoneRawHeaderUtils {
 		Matcher matcher = Pattern.compile(chapCNRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group(1).trim();
-			System.out.println(convert);
-
+			convert = new Integer(StringNumberUtils.numberCN2Arab(convert)).toString();
 		} else {
 			matcher = Pattern.compile(numRegx).matcher(header);
 			if (matcher.find()) {
@@ -76,15 +68,13 @@ public class InkstoneRawHeaderUtils {
 		}
 	}
 
-	public static String getInnerPart(String header) {
+	private static String getInnerPart(String header) {
 		String convert = null;
 		header = header.toLowerCase();
 
 		Matcher matcher = Pattern.compile(selectENRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group();
-			pushLog(LOGGER.begin().headerAction(MessageMethod.EVENT)
-					.info(String.format("Catch raw header key:[%s]", convert)));
 		} else {
 			matcher = Pattern.compile(selectENRegx).matcher(header);
 			if (matcher.find()) {
@@ -92,7 +82,6 @@ public class InkstoneRawHeaderUtils {
 			} else {
 				return null;
 			}
-
 		}
 
 		convert = convert.trim();
@@ -115,12 +104,8 @@ public class InkstoneRawHeaderUtils {
 		}
 	}
 
-	private static void pushLog(String message) {
-		InkstoneUploadConsole.consoleStr.add(message);
-		InkstoneUploadConsole.flag = false;
-	}
-
-	public static void main(String[] args) {
-
+	public static void main(String[] args) throws Exception {
+		String res = convertRawCNHeader("第一百二十三章");
+		System.out.println(res);
 	}
 }

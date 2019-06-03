@@ -41,6 +41,8 @@ public class FileZipUtils {
 
 	public void unZipDriveZip(String filePath) throws Exception {
 		boolean hasZip = false;
+		unZipFolderNames = new ArrayList<String>();
+
 		File downloadZipDir = new File(filePath);
 
 		if (!downloadZipDir.exists()) {

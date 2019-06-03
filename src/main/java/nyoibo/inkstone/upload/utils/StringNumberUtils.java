@@ -1,15 +1,5 @@
 package nyoibo.inkstone.upload.utils;
 
-/**
- * <p>Title:StringNumberUtils.java</p>  
- * <p>Description: </p>  
- * <p>Copyright: Copyright (c) 2019</p>  
- * <p>Company: www.frankdevhub.site</p>
- * <p>github: https://github.com/frankdevhub</p>  
- * @author frankdevhub   
- * @date:2019-05-19 23:27
- */
-
 public class StringNumberUtils {
 	private static final String[] units = { "千", "百", "十", "" };
 	private static final String[] bigUnits = { "万", "亿" };
