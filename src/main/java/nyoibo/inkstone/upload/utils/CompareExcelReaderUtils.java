@@ -135,7 +135,7 @@ public class CompareExcelReaderUtils {
 					HSSFCell value = hssfRow.getCell(1);
 					String keyStr = getValue(key);
 					String valueStr = getValue(value);
-					if (InkstoneUploadConsole.skipReadingExcel) {
+					if (InkstoneUploadConsole.skipChapterCompareListExcel) {
 						container.put(keyStr, valueStr);
 					} else {
 						container.put(InkstoneRawHeaderUtils.convertRawCNHeader(getValue(key)),

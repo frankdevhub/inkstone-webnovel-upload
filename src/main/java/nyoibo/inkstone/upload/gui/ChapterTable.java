@@ -310,8 +310,6 @@ public class ChapterTable {
 					getTableValues();
 					try {
 						saveExcelFile();
-						CompareChapterWindow.useSaved = true;
-
 						FileOutputStream fos = new FileOutputStream(InkstoneUploadConsole.configPropertiesPath, false);
 						Properties usrConfigPro = new Properties();
 						usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_PATH, chapterFilePath);
@@ -320,6 +318,8 @@ public class ChapterTable {
 						usrConfigPro.store(fos, "usr");
 						fos.flush();
 						fos.close();
+
+						CompareChapterWindow.useSaved = true;
 
 					} catch (IOException e) {
 						e.printStackTrace();

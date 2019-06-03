@@ -73,6 +73,8 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadConsole.class);
 
+	private boolean chapterCompareEdit = !CompareChapterWindow.useSaved;
+
 	private void startToRunUploadService() throws Exception {
 
 		LOGGER.begin().headerMethod(MessageMethod.EVENT).info("check configuration and start to upload novels");
@@ -256,6 +258,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 		GridData gdCompareListButton = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
 		gdCompareListButton.widthHint = 425;
 		compareListButton.setLayoutData(gdCompareListButton);
+		compareListButton.setEnabled(chapterCompareEdit);
 		compareListButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -275,7 +278,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 		});
 
 		compareListText = formToolkit.createText(container, "compareListText", SWT.NONE);
-		compareListText.setEditable(false);
+		compareListText.setEditable(chapterCompareEdit);
 		compareListText.setText("");
 		GridData gdCompareListText = new GridData(SWT.LEFT, SWT.CENTER, true, false, 4, 1);
 		gdCompareListText.widthHint = 422;
@@ -285,6 +288,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 		GridData gdChapterListButton = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
 		gdChapterListButton.widthHint = 423;
 		chapterListButton.setLayoutData(gdChapterListButton);
+		chapterListButton.setEnabled(chapterCompareEdit);
 		chapterListButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -303,7 +307,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 		});
 
 		chapterListText = formToolkit.createText(container, "chapterListText", SWT.NONE);
-		chapterListText.setEditable(false);
+		chapterListText.setEditable(chapterCompareEdit);
 		chapterListText.setText("");
 		chapterListText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 
