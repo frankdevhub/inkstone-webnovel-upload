@@ -86,7 +86,6 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 		} else {
 			this.bookCompareList = CompareChapterWindow.compareList;
 		}
-
 	}
 
 	private void initRawUpload() throws Exception {
@@ -130,12 +129,14 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 
 				waitList.add(rawService);
 			}
+
 			for (InkstoneRawNovelService raw : waitList) {
 				Thread next = new Thread(raw);
 				next.setName("innkstone-novel-upload");
 				this.threadPool.execute(next);
-				this.threadPool.shutdown();
+
 			}
+			this.threadPool.shutdown();
 		} catch (Exception e) {
 			Thread check = ThreadUtils.check("innkstone-novel-upload");
 			if (check != null)
@@ -157,4 +158,5 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 		InkstoneUploadConsole.consoleStr.add(message);
 		InkstoneUploadConsole.flag = false;
 	}
+
 }
