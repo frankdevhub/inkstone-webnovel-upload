@@ -107,4 +107,7 @@ public class InkstoneRawHeaderUtils {
 		}
 	}
 
+	public static void main(String[] args) throws Exception {
+		System.out.println(InkstoneRawHeaderUtils.convertRawCNHeader("123章"));
+	}
 }

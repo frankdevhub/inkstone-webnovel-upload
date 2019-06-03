@@ -209,7 +209,7 @@ public class ChapterTable {
 								String fileName = current.getName();
 								String guessCHName;
 								try {
-									guessCHName = InkstoneRawHeaderUtils.convertRawENeader(fileName);
+									guessCHName = InkstoneRawHeaderUtils.convertRawCNHeader(fileName);
 									compareList.put(guessCHName, fileName);
 									chapterList.put(fileName, current.getAbsolutePath());
 									if (groupStep) {
@@ -379,6 +379,8 @@ public class ChapterTable {
 			savePath = selecteddir + "\\";
 			saveFileName = Long.toString(System.currentTimeMillis()) + "ChapAutoList.xls";
 			savePath = savePath + saveFileName;
+			CompareChapterWindow.chapterListPath = savePath;
+
 			LOGGER.begin().headerAction(MessageMethod.EVENT).info(savePath);
 			CompareChapterWindow.comaprePath = savePath;
 		}
