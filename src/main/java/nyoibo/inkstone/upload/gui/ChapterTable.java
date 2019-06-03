@@ -161,8 +161,10 @@ public class ChapterTable {
 		});
 
 		for (File f : fileList) {
+			System.out.println("delete-folder:" + f.getAbsolutePath());
 			FileUtils.forceDelete(f);
 		}
+
 		wrapDataMap(filePath);
 	}
 
