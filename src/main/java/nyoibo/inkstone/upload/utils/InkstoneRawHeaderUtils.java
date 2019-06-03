@@ -1,5 +1,7 @@
 package nyoibo.inkstone.upload.utils;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.thymeleaf.util.StringUtils;
@@ -24,14 +26,24 @@ public class InkstoneRawHeaderUtils {
 			return null;
 
 		String convert = clearBrace(header);
-		Matcher matcher = Pattern.compile(chapCNRegx).matcher(header);
+
+		Matcher matcher = Pattern.compile(chapCNRegx).matcher(convert);
 		if (matcher.find()) {
 			convert = matcher.group(1).trim();
 			convert = new Integer(StringNumberUtils.numberCN2Arab(convert)).toString();
+
 		} else {
-			matcher = Pattern.compile(numRegx).matcher(header);
+			matcher = Pattern.compile(numRegx).matcher(convert);
 			if (matcher.find()) {
 				convert = matcher.group();
+				return convert;
+			} else {
+				char[] chars = convert.toCharArray();
+				StringBuilder builder = new StringBuilder();
+				for (char c : chars) {
+					builder.append(StringNumberUtils.numberCN2Arab(new Character(c).toString()));
+				}
+				convert = builder.toString();
 			}
 		}
 
@@ -39,7 +51,6 @@ public class InkstoneRawHeaderUtils {
 			throw new Exception(String.format("Cannot recognize the raw header in format：[%s] if need help, "
 					+ "please contact support for this bug.", header));
 		}
-
 		String tail = getInnerPart(header);
 		if (tail == null) {
 			return convert;
@@ -55,15 +66,15 @@ public class InkstoneRawHeaderUtils {
 
 		String convert = clearBrace(header);
 		convert = header.toLowerCase();
-		Matcher matcher = Pattern.compile(numRegx).matcher(header);
+		Matcher matcher = Pattern.compile(numRegx).matcher(convert);
 		if (matcher.find()) {
 			convert = matcher.group();
 		}
 		if (StringUtils.isEmpty(convert)) {
 			throw new Exception(String.format("Cannot recognize the raw header in format：[%s] if need help, "
-					+ "please contact support for this bug.", header));
+					+ "please contact support for this bug.", convert));
 		}
-		String tail = getInnerPart(header);
+		String tail = getInnerPart(convert);
 		if (tail == null) {
 			return convert;
 		} else {
@@ -107,7 +118,4 @@ public class InkstoneRawHeaderUtils {
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
-		System.out.println(InkstoneRawHeaderUtils.convertRawCNHeader("123章"));
-	}
 }
