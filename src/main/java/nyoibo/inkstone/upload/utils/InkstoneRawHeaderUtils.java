@@ -74,7 +74,6 @@ public class InkstoneRawHeaderUtils {
 		} else {
 			return convert + tail;
 		}
-
 	}
 
 	public static String getInnerPart(String header) {
