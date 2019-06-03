@@ -52,6 +52,7 @@ public class CompareExcelReaderUtils {
 		return null;
 	}
 
+	@SuppressWarnings({ "static-access", "deprecation" })
 	private static String getValue(XSSFCell xssfRow) {
 		if (null == xssfRow)
 			return null;
@@ -64,6 +65,7 @@ public class CompareExcelReaderUtils {
 		}
 	}
 
+	@SuppressWarnings({ "deprecation", "static-access" })
 	private static String getValue(HSSFCell hssfCell) {
 		if (null == hssfCell)
 			return null;
