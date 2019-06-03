@@ -172,7 +172,6 @@ public class FileZipUtils {
 				}
 			}
 		}
-		;
 
 		UnZipProgressMonitorDialog dialog = new UnZipProgressMonitorDialog();
 		System.out.println("show unzip moinitor");

@@ -138,7 +138,6 @@ public class ChapterTable {
 			private void showDialog() {
 				try {
 					ProgressMonitorDialog dialog = new ProgressMonitorDialog(Display.getCurrent().getActiveShell());
-					TableItem item = new TableItem(table, SWT.NONE);
 					IRunnableWithProgress runnalble = new IRunnableWithProgress() {
 						public void run(IProgressMonitor monitor)
 								throws InvocationTargetException, InterruptedException {
@@ -163,6 +162,7 @@ public class ChapterTable {
 									parent.getDisplay().asyncExec(new Runnable() {
 										@Override
 										public void run() {
+											TableItem item = new TableItem(table, SWT.NONE);
 											item.setText(new String[] { guessCHName, fileName });
 										}
 									});

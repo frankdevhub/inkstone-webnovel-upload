@@ -5,17 +5,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
-
 import nyoibo.inkstone.upload.NyoiboApp;
 import nyoibo.inkstone.upload.google.drive.ftp.adapter.model.GoogleDriveFactory;
 import nyoibo.inkstone.upload.google.drive.ftp.adapter.utils.JarUtils;
-
 
 /**
  * <p>Title:GoogleDriveFtpAdapterFactory.java</p>  
