@@ -112,11 +112,15 @@ public class FileZipUtils {
 						public void run(IProgressMonitor monitor)
 								throws InvocationTargetException, InterruptedException {
 							monitor.beginTask("UnZip Chapter Files ...", entryCount);
-							int step = 0;
+							double step = 0;
+							boolean groupStep = false;
+							int group = 0;
 							if (entryCount <= 100) {
 								step = 100 / entryCount;
 							} else {
-								step = (100 * 100) / entryCount;
+								step = ((double) 1) / (entryCount / 100);
+								groupStep = true;
+								group = (int) (((double) 1) / (step));
 							}
 
 							while (entries.hasMoreElements()) {
@@ -140,7 +144,11 @@ public class FileZipUtils {
 											createParentPath(targetFile.getAbsolutePath());
 										}
 										targetFile.createNewFile();
-										monitor.worked(step);
+										if (groupStep) {
+											monitor.worked(group);
+										} else {
+											monitor.worked((int) step);
+										}
 										monitor.subTask(String.format("Unzip file complete:[%s]",
 												targetFile.getAbsolutePath()));
 										is = zipFile.getInputStream(entry);
