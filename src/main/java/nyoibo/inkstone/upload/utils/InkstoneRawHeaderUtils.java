@@ -10,14 +10,20 @@ public class InkstoneRawHeaderUtils {
 	private static final String chapCNRegx = "第([\\s\\S]*?)章";
 	private static final String selectENRegx = "(?<=\\()[^\\)]+";
 
+	private static String clearBrace(String source) {
+		String header = source;
+		if (header == null)
+			return null;
+		header = header.replaceAll("（", "(");
+		header = header.replaceAll("）", ")");
+		return header;
+	}
+
 	public static String convertRawCNHeader(String header) throws Exception {
 		if (header == null)
 			return null;
 
-		header = header.replaceAll("（", "(");
-		header = header.replaceAll("）", ")");
-
-		String convert = header;
+		String convert = clearBrace(header);
 		Matcher matcher = Pattern.compile(chapCNRegx).matcher(header);
 		if (matcher.find()) {
 			convert = matcher.group(1).trim();
@@ -47,10 +53,7 @@ public class InkstoneRawHeaderUtils {
 		if (header == null)
 			return null;
 
-		header = header.replaceAll("（", "(");
-		header = header.replaceAll("）", ")");
-
-		String convert = null;
+		String convert = clearBrace(header);
 		convert = header.toLowerCase();
 		Matcher matcher = Pattern.compile(numRegx).matcher(header);
 		if (matcher.find()) {
@@ -69,7 +72,8 @@ public class InkstoneRawHeaderUtils {
 	}
 
 	private static String getInnerPart(String header) {
-		String convert = null;
+
+		String convert = clearBrace(header);
 		header = header.toLowerCase();
 
 		Matcher matcher = Pattern.compile(selectENRegx).matcher(header);
@@ -105,7 +109,7 @@ public class InkstoneRawHeaderUtils {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String res = convertRawCNHeader("第一百二十三章");
+		String res = getInnerPart("第一百二十三章(1)");
 		System.out.println(res);
 	}
 }
