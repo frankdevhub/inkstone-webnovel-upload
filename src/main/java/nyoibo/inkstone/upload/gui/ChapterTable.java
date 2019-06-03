@@ -119,13 +119,12 @@ public class ChapterTable {
 								System.out.println("delete file:" + file.getName());
 								try {
 									FileUtils.forceDelete(file);
+									monitor.worked(step);
+									monitor.subTask(String.format("File deleted:[%s]", file.getAbsolutePath()));
 								} catch (IOException e) {
 									e.printStackTrace();
 								}
 							}
-
-							monitor.worked(step);
-							monitor.subTask(String.format("File deleted:[%s]", file.getAbsolutePath()));
 
 							if (monitor.isCanceled())
 								throw new InterruptedException("Delete has been canceled mannually.");
