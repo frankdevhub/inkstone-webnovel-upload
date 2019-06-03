@@ -1,13 +1,12 @@
 package nyoibo.inkstone.upload.utils;
 
 public class StringNumberUtils {
-	private static final String[] units = { "千", "百", "十", "" };
+	private static final String[] units = { "千", "百", "十", "万" };
 	private static final String[] bigUnits = { "万", "亿" };
 	private static final char[] numChars = { '一', '二', '三', '四', '五', '六', '七', '八', '九' };
 	private static char numZero = '零';
 
 	public static int numberCN2Arab(String numberCN) {
-
 		String tempNumberCN = numberCN;
 		if (tempNumberCN == null) {
 			return 0;
@@ -169,4 +168,8 @@ public class StringNumberUtils {
 		return (tempNum);
 	}
 
+	public static void main(String[] args) {
+		int num = numberCN2Arab("三百四十");
+		System.out.println(num);
+	}
 }

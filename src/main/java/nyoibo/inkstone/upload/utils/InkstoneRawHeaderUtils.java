@@ -72,7 +72,6 @@ public class InkstoneRawHeaderUtils {
 	}
 
 	private static String getInnerPart(String header) {
-
 		String convert = clearBrace(header);
 		header = header.toLowerCase();
 
@@ -108,8 +107,4 @@ public class InkstoneRawHeaderUtils {
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
-		String res = getInnerPart("第一百二十三章(1)");
-		System.out.println(res);
-	}
 }
