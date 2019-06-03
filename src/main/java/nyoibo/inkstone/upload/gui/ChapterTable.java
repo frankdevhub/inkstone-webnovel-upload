@@ -186,7 +186,7 @@ public class ChapterTable {
 							if (fileCount <= 100) {
 								step = 100 / dataFileList.length;
 							} else {
-								step = (100 * 100) / dataFileList.length;
+								step = 1 / (100 * dataFileList.length);
 							}
 							for (int i = 0; i < fileCount && !monitor.isCanceled(); i++) {
 								File current = dataFileList[i];
