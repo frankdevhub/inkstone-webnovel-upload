@@ -55,6 +55,7 @@ public class InkstoneRawNovelService implements Runnable, ConsoleTextAreaListene
 				chapterThread.join();
 			} catch (Exception e) {
 				e.printStackTrace();
+				InkstoneUploadMainService.exceptionList.add(e);
 			}
 		} else {
 			try {
@@ -73,6 +74,7 @@ public class InkstoneRawNovelService implements Runnable, ConsoleTextAreaListene
 
 			} catch (Exception e) {
 				e.printStackTrace();
+				InkstoneUploadMainService.exceptionList.add(e);
 			}
 		}
 		Thread.currentThread().interrupt();

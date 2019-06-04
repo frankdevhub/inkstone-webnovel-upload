@@ -4,14 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.WebDriver;
-
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.gui.CompareChapterWindow;
@@ -49,6 +48,8 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 
 	private String dataFolderPath;
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadMainService.class);
+
+	public static LinkedList<Exception> exceptionList = new LinkedList<Exception>();
 
 	public InkstoneUploadMainService(String bookListPath, String bookCompareListPath, String dataFolderPath,
 			String cacheSourcePath, boolean foreign) throws Exception {
@@ -131,6 +132,9 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 			}
 
 			for (InkstoneRawNovelService raw : waitList) {
+				if (null != exceptionList.get(0)) {
+					throw exceptionList.get(0);
+				}
 				Thread next = new Thread(raw);
 				next.setName("innkstone-novel-upload");
 				this.threadPool.execute(next);
