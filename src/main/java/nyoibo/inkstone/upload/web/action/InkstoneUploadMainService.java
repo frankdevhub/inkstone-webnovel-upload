@@ -132,7 +132,7 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 			}
 
 			for (InkstoneRawNovelService raw : waitList) {
-				if (null != exceptionList.get(0)) {
+				if (exceptionList.size() > 0) {
 					throw exceptionList.get(0);
 				}
 				Thread next = new Thread(raw);
