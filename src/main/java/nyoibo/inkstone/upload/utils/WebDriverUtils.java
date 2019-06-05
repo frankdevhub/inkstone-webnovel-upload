@@ -6,18 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import nyoibo.inkstone.upload.gui.SWTResourceManager;
 import nyoibo.inkstone.upload.selenium.Query;
-
-/**
- * <p>Title:WebDriverUtils.java</p>  
- * <p>Description: </p>  
- * <p>Copyright: Copyright (c) 2019</p>  
- * <p>Company: www.frankdevhub.site</p>
- * <p>github: https://github.com/frankdevhub</p>  
- * @author frankdevhub   
- * @date:2019-05-13 17:16
- */
 
 public class WebDriverUtils {
 

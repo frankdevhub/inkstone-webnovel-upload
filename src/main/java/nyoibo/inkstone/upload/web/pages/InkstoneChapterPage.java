@@ -331,20 +331,14 @@ public class InkstoneChapterPage implements Runnable {
 		try {
 			editLatestRaw();
 		} catch (Exception e) {
-			Thread.currentThread().interrupt();
 			e.printStackTrace();
-
 			LOGGER.begin().headerAction(MessageMethod.ERROR)
 					.error(String.format("Error at page:[%s]", driver.getTitle()));
+			LOGGER.begin().headerAction(MessageMethod.ERROR).error(e.getMessage());
+
+			InkstoneUploadMainService.exceptionList.add(e);
 		}
 	}
-
-	/*
-	 * public static void main(String[] args) { String a =
-	 * "Chapter 308 — She Had No Idea What Stunt Nian Junting Was Going to Pull"
-	 * ; System.out.println(a.split("-")[1]);
-	 * System.out.println(a.split("—")[1]); }
-	 */
 
 	class InProgressDialog extends Dialog {
 		public InProgressDialog(Shell parentShell) {

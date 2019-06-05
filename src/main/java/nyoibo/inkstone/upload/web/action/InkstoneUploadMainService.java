@@ -82,9 +82,11 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 
 	private void readCompareList() throws Exception {
 		if (!InkstoneUploadConsole.skipChapterCompareListExcel) {
+			pushLog(LOGGER.begin().headerAction(MessageMethod.EVENT).info("readCompareList...."));
 			File compareFile = new File(bookCompareListPath);
 			this.bookCompareList = CompareExcelReaderUtils.readExcel(compareFile);
 		} else {
+			pushLog(LOGGER.begin().headerAction(MessageMethod.EVENT).info("use history readCompareList...."));
 			this.bookCompareList = CompareChapterWindow.compareList;
 		}
 	}
@@ -134,7 +136,9 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 				}
 				Thread next = new Thread(rawService);
 				next.setName("innkstone-novel-upload");
-				this.threadPool.execute(next);
+				// this.threadPool.execute(next);
+				next.start();
+				next.join();
 
 				// waitList.add(rawService);
 			}
