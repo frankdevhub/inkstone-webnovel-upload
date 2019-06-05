@@ -173,9 +173,4 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 		newShell.setText("Inkstone-QiDian International's novel translation platform");
 		newShell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
 	}
-
-	public static void main(String[] args) throws Exception {
-		InkstoneUploadMainWindow main = new InkstoneUploadMainWindow(Display.getDefault().getActiveShell());
-		main.open();
-	}
 }
