@@ -399,6 +399,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 													Integer status = InkstoneUploadMainService.process
 															.get(InkstoneUploadMainService.currentChapterName);
 													progressBar.setSelection(status);
+													progressText.setText(InkstoneUploadMainService.currentChapterName);
 												}
 											}
 											if (consoleStr.size() != 0) {
