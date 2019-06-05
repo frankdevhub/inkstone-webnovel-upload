@@ -162,11 +162,6 @@ public class InkstoneChapterPage implements Runnable {
 		} else {
 			this.filePath = chapterFileList.get(enChapName);
 		}
-		/*
-		 * throw new Exception(String.format(
-		 * "Cannot find related translated file with raw :[%s] please check mannually"
-		 * , currentChapterName));
-		 */
 
 		if (filePath == null)
 			throw new Exception(String.format(
