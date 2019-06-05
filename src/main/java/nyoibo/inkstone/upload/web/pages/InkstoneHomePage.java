@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.gui.ConsoleTextAreaListener;
+import nyoibo.inkstone.upload.gui.ErrorDialogUtils;
 import nyoibo.inkstone.upload.gui.InkstoneUploadConsole;
 import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.selenium.AssignDriver;
@@ -82,8 +83,9 @@ public class InkstoneHomePage implements Runnable, ConsoleTextAreaListener {
 			WebDriverUtils.findWebElement(submitBtn).click();
 
 		} catch (Exception e) {
-			// another login page
+			// another login page start
 
+			// another login page end
 			JavascriptExecutor jsExec = (JavascriptExecutor) driver;
 			String function = "return document.readyState";
 			String code = (String) jsExec.executeScript(function);
@@ -106,7 +108,13 @@ public class InkstoneHomePage implements Runnable, ConsoleTextAreaListener {
 		try {
 			login();
 		} catch (Exception e) {
+			LOGGER.begin().headerAction(MessageMethod.ERROR)
+					.error(String.format("Error at page:[%s]", driver.getTitle()));
+			LOGGER.begin().headerAction(MessageMethod.ERROR).error(e.getMessage());
+
+			InkstoneUploadMainService.exceptionList.add(e);
 			e.printStackTrace();
+			new ErrorDialogUtils(InkstoneUploadConsole.display).openErrorDialog("InkstoneUploadMainService Error", e);
 		}
 
 	}

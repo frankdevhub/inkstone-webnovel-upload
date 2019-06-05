@@ -23,6 +23,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.gui.ErrorDialogUtils;
+import nyoibo.inkstone.upload.gui.InkstoneUploadConsole;
 import nyoibo.inkstone.upload.gui.InkstoneUploadMainWindow;
 import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.selenium.AssignDriver;
@@ -337,6 +339,7 @@ public class InkstoneChapterPage implements Runnable {
 			LOGGER.begin().headerAction(MessageMethod.ERROR).error(e.getMessage());
 
 			InkstoneUploadMainService.exceptionList.add(e);
+			new ErrorDialogUtils(InkstoneUploadConsole.display).openErrorDialog("InkstoneUploadMainService Error", e);
 		}
 	}
 

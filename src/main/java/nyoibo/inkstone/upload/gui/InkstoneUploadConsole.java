@@ -40,7 +40,7 @@ import nyoibo.inkstone.upload.web.action.InkstoneUploadMainService;
 
 public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaListener {
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
-	private Display display;
+	public static Display display;
 	private Text bookListText;
 	private Text chapterListText;
 	private Text chromeCacheText;
@@ -173,7 +173,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 
 	public InkstoneUploadConsole(Shell parentShell, Display display) throws IOException {
 		super(parentShell);
-		this.display = display;
+		InkstoneUploadConsole.display = display;
 		readProperties();
 
 		new ChromCachTextUtils(display, chromeCacheText);
