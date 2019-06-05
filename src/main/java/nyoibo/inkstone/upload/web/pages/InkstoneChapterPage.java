@@ -142,7 +142,7 @@ public class InkstoneChapterPage implements Runnable {
 
 		if (enChapName == null) {
 			while (StringUtils.isEmpty(filePath)) {
-				Shell shell = Display.getCurrent().getActiveShell();
+				Shell shell = new Shell(new Display());
 				FileDialog dialog = new FileDialog(shell, SWT.OPEN);
 				dialog.setFilterPath(System.getProperty(InkstoneUploadMainWindow.CHAPTER_PATH));
 
