@@ -260,6 +260,7 @@
 					<configuration>
 						<source>1.8</source>
 						<target>1.8</target>
+						<sope>system</sope>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -283,11 +284,12 @@
 						<target>1.8</target>
 						<encoding>${project.build.sourceEncoding}</encoding>
 						<fork>true</fork>
+						<scope>system</scope>
 					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
-		<defaultGoal>compile</defaultGoal>
+		<defaultGoal>system</defaultGoal>
 	</build>
 
 </project>
