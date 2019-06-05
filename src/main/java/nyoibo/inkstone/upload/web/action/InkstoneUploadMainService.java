@@ -117,8 +117,13 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 			throw new Exception(String.format("cannot find book:[%s]", bookName));
 
 		try {
-			ArrayList<InkstoneRawNovelService> waitList = new ArrayList<InkstoneRawNovelService>();
+			// ArrayList<InkstoneRawNovelService> waitList = new
+			// ArrayList<InkstoneRawNovelService>();
 			for (int i = 0; i < bookCompareList.size(); i++) {
+				if (exceptionList.size() > 0) {
+					LOGGER.begin().headerAction(MessageMethod.EVENT).info("Current Thread occured an error");
+					throw exceptionList.get(0);
+				}
 				InkstoneRawNovelService rawService = null;
 				if (i == 0) {
 					rawService = new InkstoneRawNovelService(false, url, this.bookName, process, bookCompareList, true,
@@ -127,19 +132,13 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 					rawService = new InkstoneRawNovelService(false, url, this.bookName, process, bookCompareList, false,
 							driver, chapterFileList);
 				}
-
-				waitList.add(rawService);
-			}
-
-			for (InkstoneRawNovelService raw : waitList) {
-				if (exceptionList.size() > 0) {
-					LOGGER.begin().headerAction(MessageMethod.EVENT).info("Current Thread occured an error");
-					throw exceptionList.get(0);
-				}
-				Thread next = new Thread(raw);
+				Thread next = new Thread(rawService);
 				next.setName("innkstone-novel-upload");
 				this.threadPool.execute(next);
+
+				// waitList.add(rawService);
 			}
+
 			this.threadPool.shutdown();
 		} catch (Exception e) {
 			Thread check = ThreadUtils.check("innkstone-novel-upload");
