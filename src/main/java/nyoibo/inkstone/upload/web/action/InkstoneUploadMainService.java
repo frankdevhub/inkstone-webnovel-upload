@@ -145,6 +145,8 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 
 			this.threadPool.shutdown();
 		} catch (Exception e) {
+			pushLog(LOGGER.begin().headerAction(MessageMethod.EVENT)
+					.info("main service catch exception, service shutdown..."));
 			Thread check = ThreadUtils.check("innkstone-novel-upload");
 			if (check != null)
 				check.interrupt();
