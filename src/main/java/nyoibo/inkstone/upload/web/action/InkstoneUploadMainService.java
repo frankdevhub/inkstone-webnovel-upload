@@ -44,7 +44,7 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 	private String bookListPath;
 	private String bookCompareListPath;
 	private String bookName;
-	private WebDriver driver;
+	public static WebDriver driver;
 
 	private String dataFolderPath;
 	private final Logger LOGGER = LoggerFactory.getLogger(InkstoneUploadMainService.class);
@@ -95,7 +95,7 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 		this.mirrorPath = configChromeData(this.path);
 		DriverBase.instantiateDriverObject();
 		// DANGER :
-		this.driver = DriverBase.getDriver(mirrorPath);
+		InkstoneUploadMainService.driver = DriverBase.getDriver(mirrorPath);
 
 		File folder = new File(dataFolderPath);
 		if (!InkstoneUploadConsole.skipChapterCompareListExcel)
@@ -159,7 +159,7 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 	}
 
 	public WebDriver getDriver() {
-		return this.driver;
+		return InkstoneUploadMainService.driver;
 	}
 
 	@Override
