@@ -7,12 +7,23 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * <p>Title:ImageFactory.java</p>  
- * <p>Description: </p>  
- * <p>Copyright: Copyright (c) 2019</p>  
- * <p>Company: www.frankdevhub.site</p>
- * <p>github: https://github.com/frankdevhub</p>  
- * @author frankdevhub   
+ * <p>
+ * Title:ImageFactory.java
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2019
+ * </p>
+ * <p>
+ * Company: www.frankdevhub.site
+ * </p>
+ * <p>
+ * github: https://github.com/frankdevhub
+ * </p>
+ * 
+ * @author frankdevhub
  * @date:2019-05-23 00:20
  */
 
@@ -52,6 +63,7 @@ public class ImageFactory {
 	public static final String SAMPLE_ICON = "sample_icon.gif";
 	public static final String FILE = "file.gif";
 	public static final String FOLDER = "folder.gif";
+	public static final String FAVICON = "favicon.ico";
 
 	private static Hashtable<String, Image> hashTableImage = new Hashtable<String, Image>();
 
