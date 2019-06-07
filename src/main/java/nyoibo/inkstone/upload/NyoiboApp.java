@@ -1,7 +1,7 @@
 package nyoibo.inkstone.upload;
 
-import org.eclipse.swt.widgets.Display;
 import nyoibo.inkstone.upload.gui.InkstoneUploadMainWindow;
+import org.eclipse.swt.widgets.Display;
 
 public class NyoiboApp {
 	public static void main(String[] args) throws Exception {

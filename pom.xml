@@ -13,11 +13,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<pagehelper.version>4.1.6</pagehelper.version>
 		<!-- Selenium Web Test -->
 		<!--Dependency Versions -->
-		<selenium.version>3.141.59</selenium.version>
-		<assertj-core.version>3.11.1</assertj-core.version>
+		<selenium.version>3.4.0</selenium.version>
 		<testng.version>6.14.3</testng.version>
 		<query.version>2.0.0-BETA3</query.version>
 		<!--Plugin Versions -->
@@ -28,7 +26,6 @@
 		<read.timeout>30000</read.timeout>
 		<connection.timeout>40000</connection.timeout>
 		<retry.attempts>4</retry.attempts>
-		<browser>firefox</browser>
 		<threads>1</threads>
 		<remote>false</remote>
 		<headless>true</headless>
@@ -129,6 +126,12 @@
 			<groupId>com.google.apis</groupId>
 			<artifactId>google-api-services-drive</artifactId>
 			<version>v3-rev124-1.23.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.guava</groupId>
+					<artifactId>guava-jdk5</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.google.oauth-client</groupId>
@@ -195,7 +198,13 @@
 			<version>4.0.1</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>22.0</version>
+		</dependency>
 		<!-- apache zip tool -->
+
 	</dependencies>
 
 	<build>
@@ -234,7 +243,7 @@
 				</executions>
 			</plugin>
 		</plugins>
-		<defaultGoal>compile</defaultGoal>
+		<defaultGoal>system</defaultGoal>
 	</build>
 </project>
 	

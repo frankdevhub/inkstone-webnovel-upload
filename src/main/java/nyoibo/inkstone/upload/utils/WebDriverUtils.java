@@ -26,6 +26,7 @@ public class WebDriverUtils {
 	}
 
 	public static synchronized void doWaitTitle(String header, WebDriverWait wait) {
+		
 		wait.until(pageTitleStartsWith(header));
 	}
 
