@@ -168,8 +168,4 @@ public class StringNumberUtils {
 		return (tempNum);
 	}
 
-	public static void main(String[] args) {
-		int num = numberCN2Arab("三百四十");
-		System.out.println(num);
-	}
 }

@@ -36,9 +36,4 @@ public class InProgressDialog extends Dialog {
 		return new Point(300, 400);
 	}
 
-	public static void main(String[] args) {
-		Display display = new Display();
-		Shell shell = new Shell(display);
-		InProgressDialog a = new InProgressDialog(shell);
-	}
 }
