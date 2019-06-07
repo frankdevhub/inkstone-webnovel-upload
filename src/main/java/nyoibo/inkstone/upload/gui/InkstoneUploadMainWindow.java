@@ -3,7 +3,7 @@ package nyoibo.inkstone.upload.gui;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.apache.maven.shared.utils.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;

@@ -3,7 +3,7 @@ package nyoibo.inkstone.upload.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.thymeleaf.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 public class InkstoneRawHeaderUtils {
 
