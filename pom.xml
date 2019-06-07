@@ -196,7 +196,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<!-- apache zip tool -->
-
 	</dependencies>
 
 	<build>
@@ -213,27 +212,12 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<artifactId> maven-assembly-plugin </artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.0.1</version>
 				<configuration>
-					<appendAssemblyId>false</appendAssemblyId>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<manifest>
-							<mainClass> nyoibo.inkstone.upload.NyoiboApp</mainClass>
-						</manifest>
-					</archive>
+					<includeSystemScope>true</includeSystemScope>
 				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -249,7 +233,7 @@
 				</executions>
 			</plugin>
 		</plugins>
-		<defaultGoal>system</defaultGoal>
+		<defaultGoal>compile</defaultGoal>
 	</build>
 
 </project>
