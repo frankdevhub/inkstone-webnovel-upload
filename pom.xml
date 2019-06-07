@@ -221,11 +221,6 @@
 			<artifactId>text</artifactId>
 			<version>3.3.0-v20070606-0010</version>
 		</dependency>
-		<dependency>
-			<groupId>org.eclipse.swt</groupId>
-			<artifactId>org.eclipse.swt.win32.win32.x86</artifactId>
-			<version>4.3</version>
-		</dependency>
 		<!-- apache zip tool -->
 
 	</dependencies>
