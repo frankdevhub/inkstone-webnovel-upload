@@ -65,7 +65,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 	private Properties proHistory = new Properties();
 
 	public static LinkedList<String> consoleStr = new LinkedList<String>();
-	public static final String configPropertiesPath = "src/main/resources/usr.properties";
+	public static final String configPropertiesPath = System.getProperty("user.dir") + "\\usr.properties";
 	public static volatile int num = 0;
 	public static volatile boolean flag = false;
 	public static boolean skipBookListExcel = true;

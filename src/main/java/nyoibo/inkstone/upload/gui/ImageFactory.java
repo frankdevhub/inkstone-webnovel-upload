@@ -1,17 +1,19 @@
 package nyoibo.inkstone.upload.gui;
 
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.springframework.core.io.ClassPathResource;
 
 public class ImageFactory {
 
 	private ImageFactory() {
 	}
 
-	public static final String REAL_PATH = "src/main/resources/gui/";
+	public static final String REAL_PATH = "gui/";
 	public static final String DELETE_EDIT = "delete_edit.gif";
 	public static final String SAVE_EDIT = "save_edit.gif";
 	public static final String SCOPY_EDIT = "copy_edit.gif";
@@ -49,7 +51,11 @@ public class ImageFactory {
 	public static Image loadImage(Display display, String imageName) {
 		Image image = (Image) hashTableImage.get(imageName.toUpperCase());
 		if (image == null) {
-			image = new Image(display, REAL_PATH + imageName);
+			try {
+				image = new Image(display, new ClassPathResource(REAL_PATH + imageName).getInputStream());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			hashTableImage.put(imageName.toUpperCase(), image);
 		}
 		return image;

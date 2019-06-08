@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.springframework.core.io.ClassPathResource;
 
 public class InkstoneUploadMainWindow extends TitleAreaDialog {
 
@@ -52,10 +53,11 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 	}
 
 	private class CustomComposite extends Composite {
-		public CustomComposite(Composite parent, int style, String imagePath) {
+		public CustomComposite(Composite parent, int style, String imagePath) throws IOException {
 			super(parent, style);
 			setLayout(new GridLayout(1, true));
-			Image img = new Image(Display.getDefault(), imagePath);
+			ClassPathResource resource = new ClassPathResource(imagePath);
+			Image img = new Image(Display.getDefault(), resource.getInputStream());
 
 			this.addPaintListener(new PaintListener() {
 				@Override
@@ -82,11 +84,16 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 		setTitle("Nyoibo Studio\r\n");
 		Composite area = (Composite) super.createDialogArea(parent);
 
-		CustomComposite container = new CustomComposite(area, SWT.None, "src/main/resources/gui/nyoibo.png");
-		container.setTouchEnabled(true);
-		container.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
-		container.setLayoutData(new GridData(GridData.FILL_BOTH));
+		CustomComposite container;
+		try {
+			container = new CustomComposite(area, SWT.None, "gui/nyoibo.png");
+			container.setTouchEnabled(true);
+			container.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
+			container.setLayoutData(new GridData(GridData.FILL_BOTH));
 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return area;
 	}
 
@@ -171,7 +178,11 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText("Inkstone-QiDian International's novel translation platform");
-		newShell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
+		try {
+			newShell.setImage(new Image(null, new ClassPathResource("gui/favicon.ico").getInputStream()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -226,15 +226,15 @@
 				<executions>
 					<execution>
 						<id>copy-resources</id>
-						<phase>process-sources</phase>
+						<phase>validate</phase>
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/classes</outputDirectory>
+							<outputDirectory>${project.build.directory}</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${basedir}/src/main/resources</directory>
+									<directory>src/main/resources</directory>
 									<includes>
 										<include>**/*.*</include>
 									</includes>
