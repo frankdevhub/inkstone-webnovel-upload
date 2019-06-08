@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.springframework.core.io.ClassPathResource;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
@@ -491,7 +492,11 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText("WebNovel Upload Console");
-		newShell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
+		try {
+			newShell.setImage(new Image(null, new ClassPathResource("gui/favicon.ico").getInputStream()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
