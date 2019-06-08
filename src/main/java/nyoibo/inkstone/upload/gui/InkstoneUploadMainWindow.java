@@ -82,8 +82,7 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 		setTitle("Nyoibo Studio\r\n");
 		Composite area = (Composite) super.createDialogArea(parent);
 
-		CustomComposite container = new CustomComposite(area, SWT.None,
-				this.getClass().getResource("src/main/resources/gui/nyoibo.png").getPath());
+		CustomComposite container = new CustomComposite(area, SWT.None, "src/main/resources/gui/nyoibo.png");
 		container.setTouchEnabled(true);
 		container.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -172,7 +171,7 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText("Inkstone-QiDian International's novel translation platform");
-		newShell.setImage(new Image(null, this.getClass().getResource("src/main/resources/gui/favicon.ico").getPath()));
+		newShell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
 	}
 
 }
