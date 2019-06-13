@@ -3,6 +3,7 @@ package nyoibo.inkstone.upload.web.pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import nyoibo.inkstone.upload.data.logging.Logger;
@@ -12,7 +13,6 @@ import nyoibo.inkstone.upload.gui.ErrorDialogUtils;
 import nyoibo.inkstone.upload.gui.InkstoneUploadConsole;
 import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.selenium.AssignDriver;
-import nyoibo.inkstone.upload.selenium.DriverBase;
 import nyoibo.inkstone.upload.selenium.Query;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 import nyoibo.inkstone.upload.utils.WebDriverUtils;
@@ -49,7 +49,7 @@ public class InkstoneHomePage implements Runnable, ConsoleTextAreaListener {
 				.defaultLocator(By.cssSelector("[class='" + SeleniumInkstone.INKSTONE_LOGIN_PANEL_EMAIL_CLASS + "']"));
 		submitBtn = new Query().defaultLocator(By.id(SeleniumInkstone.INKSTONE_LOGIN_SUBMIT_ID));
 
-		AssignDriver.initQueryObjects(this, DriverBase.getDriver(bookName));
+		AssignDriver.initQueryObjects(this, (RemoteWebDriver) this.driver);
 		pushLog(LOGGER.begin().headerAction(MessageMethod.EVENT).info("Init InkstoneHomePage Thread complete."));
 
 		InkstoneUploadMainService.currentChapterName = "InkstoneLogin";
