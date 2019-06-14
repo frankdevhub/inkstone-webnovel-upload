@@ -1,5 +1,6 @@
 package nyoibo.inkstone.upload.gui;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Shell;
+import org.springframework.core.io.ClassPathResource;
 
 public class CompareChapterWindow extends Dialog {
 
@@ -105,7 +107,11 @@ public class CompareChapterWindow extends Dialog {
 		super.configureShell(newShell);
 		newShell.setSize(900, 300);
 		newShell.setText("Config Chapter List");
-		newShell.setImage(new Image(null, "src/main/resources/gui/favicon.ico"));
+		try {
+			newShell.setImage(new Image(null, new ClassPathResource("gui/favicon.ico").getInputStream()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

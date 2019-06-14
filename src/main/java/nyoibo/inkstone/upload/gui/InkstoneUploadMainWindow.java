@@ -33,7 +33,7 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 	private InkstoneUploadConsole uploadConsole;
 	private CompareChapterWindow compareChapterWindow;
 
-	public static final String CHAPTERS_PATH_ROOT = "D:\\nyoibo_automation";
+	public static final String CHAPTERS_PATH_ROOT = "C:\\nyoibo_automation";
 	public static String CHAPTER_PATH = "chapters_file_path";
 	public static String CHAPTER_EXCEL = "chapters_excel_path";
 	public static String BOOK_LIST_PATH = "book_list_path";
@@ -142,7 +142,7 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 				if (!StringUtils.isEmpty(selecteddir))
 					if (!selecteddir.startsWith(CHAPTERS_PATH_ROOT)) {
 						new ErrorDialogUtils(parent.getDisplay()).openErrorDialog(
-								"Please select a folder named \"nyoibo_automation\" under root of disk D.",
+								"Please select a folder named \"nyoibo_automation\" under your root.",
 								new FileNotFoundException());
 						setExcelButton.setEnabled(true);
 
