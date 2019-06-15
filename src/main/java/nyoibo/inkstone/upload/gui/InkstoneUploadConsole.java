@@ -48,7 +48,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 	private Text chromeCacheText;
 
 	private Text consoleTextArea;
-	private Text webLinkText;
+	private Label webLinkLabel;
 	private Label progressLabel;
 	private Text weblinkUrl;
 	private Text compareListText;
@@ -313,13 +313,12 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 		chapterListText.setText("");
 		chapterListText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 
-		webLinkText = formToolkit.createText(container, "webLinkText", SWT.NONE);
-		webLinkText.setEnabled(false);
-		webLinkText.setToolTipText("");
-		webLinkText.setEditable(false);
-		webLinkText.setText("Web Link ");
-		webLinkText.setBackground(container.getBackground());
-		webLinkText.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1));
+		webLinkLabel = formToolkit.createLabel(container, "webLinkText", SWT.NONE);
+		webLinkLabel.setEnabled(true);
+		webLinkLabel.setToolTipText("");
+		webLinkLabel.setText("Web Url");
+		webLinkLabel.setBackground(container.getBackground());
+		webLinkLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1));
 
 		weblinkUrl = new Text(container, SWT.BORDER);
 		weblinkUrl.setText("https://inkstone.webnovel.com/book");
@@ -358,7 +357,8 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 
 		consoleCommposite = new Composite(scrolledComposite, SWT.BORDER | SWT.H_SCROLL);
 
-		consoleTextArea = formToolkit.createText(consoleCommposite, "InkstoneConsoleTextArea", SWT.BORDER | SWT.MULTI);
+		consoleTextArea = formToolkit.createText(consoleCommposite, "InkstoneConsoleTextArea",
+				SWT.HORIZONTAL | SWT.VERTICAL);
 		consoleTextArea.setEditable(false);
 		consoleTextArea.setText("Waiting ......");
 		consoleTextArea.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
