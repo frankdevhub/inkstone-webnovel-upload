@@ -7,6 +7,7 @@ import info.monitorenter.cpdetector.io.UnicodeDetector;
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.message.MessageMethod;
+import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.utils.IOUtils;
@@ -63,7 +64,7 @@ public class FileZipUtils {
     }
 
     public String getFileEncode(File file) {
-        String encode = "GBK";
+        String encode = SeleniumInkstone.Default_CN_Code;
         Charset charset = null;
         try {
             CodepageDetectorProxy detector = CodepageDetectorProxy.getInstance();
