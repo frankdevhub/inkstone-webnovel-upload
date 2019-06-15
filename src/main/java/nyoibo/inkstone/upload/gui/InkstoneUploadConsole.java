@@ -15,10 +15,13 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -29,6 +32,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -344,8 +348,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 		progressBar.setLayoutData(gdProgressBar);
 		formToolkit.adapt(progressBar, true, true);
 
-		ScrolledComposite scrolledComposite = new ScrolledComposite(container,
-				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		ScrolledComposite scrolledComposite = new ScrolledComposite(container, SWT.BORDER);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, false, false, 4, 1);
 		gridData.widthHint = 367;
 		gridData.heightHint = 218;
@@ -355,6 +358,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 		scrolledComposite.setAlwaysShowScrollBars(true);
 
 		Composite consoleCommposite = new Composite(scrolledComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		consoleCommposite.setLayout(new FillLayout(SWT.HORIZONTAL | SWT.VERTICAL));
 
 		consoleTextArea = formToolkit.createText(consoleCommposite, "InkstoneConsoleTextArea",
 				SWT.HORIZONTAL | SWT.VERTICAL);
@@ -364,8 +368,20 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 		consoleTextArea.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		consoleTextArea.setForeground(SWTResourceManager.getColor(SWT.COLOR_YELLOW));
 
-		scrolledComposite.setContent(consoleTextArea);
-		scrolledComposite.setMinSize(consoleTextArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		scrolledComposite.setContent(consoleCommposite);
+		scrolledComposite.setMinSize(consoleCommposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
+/*		ScrollBar vb = scrolledComposite.getVerticalBar();
+		vb.setIncrement(10);
+
+		scrolledComposite.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				scrolledComposite.setFocus();
+			}
+		});*/
+		scrolledComposite.layout();
+
 		setTextFromConfiguration();
 
 		return container;
