@@ -61,7 +61,6 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 
 	private ProgressBar progressBar;
 	private Composite composite;
-	private Composite consoleCommposite;
 	private final int CONSOLE_OK_ID = 10;
 	private final int CONSOLE_CANCEL_ID = 20;
 	private InkstoneUploadMainService mainService;
@@ -355,12 +354,13 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 		scrolledComposite.setExpandVertical(true);
 		scrolledComposite.setAlwaysShowScrollBars(true);
 
-		consoleCommposite = new Composite(scrolledComposite, SWT.BORDER | SWT.H_SCROLL);
+		Composite consoleCommposite = new Composite(scrolledComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 
 		consoleTextArea = formToolkit.createText(consoleCommposite, "InkstoneConsoleTextArea",
 				SWT.HORIZONTAL | SWT.VERTICAL);
-		consoleTextArea.setEditable(false);
+		consoleTextArea.setEditable(true);
 		consoleTextArea.setText("Waiting ......");
+
 		consoleTextArea.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		consoleTextArea.setForeground(SWTResourceManager.getColor(SWT.COLOR_YELLOW));
 
