@@ -30,245 +30,248 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
- * <p>Title:FileExplorer.java</p>  
- * <p>Description: </p>  
- * <p>Copyright: Copyright (c) 2019</p>  
+ * <p>Title:FileExplorer.java</p>
+ * <p>Description: </p>
+ * <p>Copyright: Copyright (c) 2019</p>
  * <p>Company: www.frankdevhub.site</p>
- * <p>github: https://github.com/frankdevhub</p>  
- * @author frankdevhub   
+ * <p>github: https://github.com/frankdevhub</p>
+ *
+ * @author frankdevhub
  * @date:2019-05-13 12:17
  */
 
-public class FileExplorer{
+public class FileExplorer {
 
-	private SashForm sash;
-	private TreeViewer tree;
-	private TableViewer table;
-	private SelectAction selectAction;
-	
+    private SashForm sash;
+    private TreeViewer tree;
+    private TableViewer table;
+    private SelectAction selectAction;
+
     public FileExplorer(Composite parent) {
-		selectAction = new SelectAction();
-		createContents(parent);
-	}
+        selectAction = new SelectAction();
+        createContents(parent);
+    }
 
-	protected Control createContents(Composite parent) {
-		sash = new SashForm(parent, SWT.SMOOTH);
-		sash.setLayoutData(new GridData(GridData.FILL_BOTH));
-		initTree();
-		initTable();
-		sash.setWeights(new int[] { 40, 60 });
-		return parent;
-	}
+    protected Control createContents(Composite parent) {
+        sash = new SashForm(parent, SWT.SMOOTH);
+        sash.setLayoutData(new GridData(GridData.FILL_BOTH));
+        initTree();
+        initTable();
+        sash.setWeights(new int[]{40, 60});
+        return parent;
+    }
 
-	private void initTable() {
-		table = new TableViewer(sash);
-		
-		new TableColumn(table.getTable(), SWT.LEFT).setText("Name");
-		new TableColumn(table.getTable(), SWT.LEFT).setText("Type");
-		new TableColumn(table.getTable(), SWT.LEFT).setText("Size");
-		new TableColumn(table.getTable(), SWT.LEFT).setText("Last Modify Date");
-		for (int i = 0; i < table.getTable().getColumnCount(); i++) {
-			table.getTable().getColumn(i).pack();
-		}
+    private void initTable() {
+        table = new TableViewer(sash);
 
-		table.getTable().setHeaderVisible(true);
-		table.getTable().setLinesVisible(true);
+        new TableColumn(table.getTable(), SWT.LEFT).setText("Name");
+        new TableColumn(table.getTable(), SWT.LEFT).setText("Type");
+        new TableColumn(table.getTable(), SWT.LEFT).setText("Size");
+        new TableColumn(table.getTable(), SWT.LEFT).setText("Last Modify Date");
+        for (int i = 0; i < table.getTable().getColumnCount(); i++) {
+            table.getTable().getColumn(i).pack();
+        }
 
-		table.setContentProvider(new FileTableContentProvider());
+        table.getTable().setHeaderVisible(true);
+        table.getTable().setLinesVisible(true);
 
-		table.setLabelProvider(new FileTableLabelProvider());
+        table.setContentProvider(new FileTableContentProvider());
 
-		table.setSorter(new FileSorter());
+        table.setLabelProvider(new FileTableLabelProvider());
 
-		table.addDoubleClickListener(selectAction);
+        table.setSorter(new FileSorter());
 
-	}
+        table.addDoubleClickListener(selectAction);
 
-	private void initTree() {
-		tree = new TreeViewer(sash);
-		tree.setContentProvider(new FileTreeContentProvider());
-		tree.setLabelProvider(new FileTreeLabelProvider());
-		tree.setInput("root");
-		tree.addSelectionChangedListener(selectAction);
-	};
+    }
 
-	public class FileTreeContentProvider implements ITreeContentProvider {
+    private void initTree() {
+        tree = new TreeViewer(sash);
+        tree.setContentProvider(new FileTreeContentProvider());
+        tree.setLabelProvider(new FileTreeLabelProvider());
+        tree.setInput("root");
+        tree.addSelectionChangedListener(selectAction);
+    }
 
-		public Object[] getChildren(Object element) {
-			return ((File) element).listFiles(new AllowOnlyFoldersFilter());
-		}
+    ;
 
-		public Object[] getElements(Object element) {
-			File[] roots = File.listRoots();
-			List<File> rootFolders = new ArrayList<File>();
-			for (int i = 0; i < roots.length; i++) {
-				if (roots[i].isDirectory())
-					rootFolders.add(roots[i]);
-			}
-			return rootFolders.toArray();
-		}
+    public class FileTreeContentProvider implements ITreeContentProvider {
 
-		public boolean hasChildren(Object element) {
-			Object[] obj = getChildren(element);
-			return obj == null ? false : obj.length > 0;
-		}
+        public Object[] getChildren(Object element) {
+            return ((File) element).listFiles(new AllowOnlyFoldersFilter());
+        }
 
-		public Object getParent(Object element) {
-			return ((File) element).getParentFile();
-		}
+        public Object[] getElements(Object element) {
+            File[] roots = File.listRoots();
+            List<File> rootFolders = new ArrayList<>();
+            for (int i = 0; i < roots.length; i++) {
+                if (roots[i].isDirectory())
+                    rootFolders.add(roots[i]);
+            }
+            return rootFolders.toArray();
+        }
 
-		public void dispose() {
-		}
+        public boolean hasChildren(Object element) {
+            Object[] obj = getChildren(element);
+            return null == obj ? false : obj.length > 0;
+        }
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		}
+        public Object getParent(Object element) {
+            return ((File) element).getParentFile();
+        }
 
-	}
+        public void dispose() {
+        }
 
-	public class FileTreeLabelProvider implements ILabelProvider {
+        public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        }
 
-		public Image getImage(Object element) {
-			File file = (File) element;
-			if (file.isDirectory())
-				return ImageFactory.loadImage(Display.getCurrent(), ImageFactory.FOLDER);
-			return ImageFactory.loadImage(Display.getCurrent(), ImageFactory.FILE);
-		}
+    }
 
-		public String getText(Object element) {
-			String text = ((File) element).getName();
-			if (text.length() == 0) {
-				text = ((File) element).getPath();
-			}
-			return text;
-		}
+    public class FileTreeLabelProvider implements ILabelProvider {
 
-		public void addListener(ILabelProviderListener listener) {
-		}
+        public Image getImage(Object element) {
+            File file = (File) element;
+            if (file.isDirectory())
+                return ImageFactory.loadImage(Display.getCurrent(), ImageFactory.FOLDER);
+            return ImageFactory.loadImage(Display.getCurrent(), ImageFactory.FILE);
+        }
 
-		public void dispose() {
-			ImageFactory.dispose();
-		}
+        public String getText(Object element) {
+            String text = ((File) element).getName();
+            if (text.length() == 0) {
+                text = ((File) element).getPath();
+            }
+            return text;
+        }
 
-		public boolean isLabelProperty(Object element, String property) {
-			return false;
-		}
+        public void addListener(ILabelProviderListener listener) {
+        }
 
-		public void removeListener(ILabelProviderListener listener) {
-		}
+        public void dispose() {
+            ImageFactory.dispose();
+        }
 
-	}
+        public boolean isLabelProperty(Object element, String property) {
+            return false;
+        }
 
-	class FileTableContentProvider implements IStructuredContentProvider {
+        public void removeListener(ILabelProviderListener listener) {
+        }
 
-		public void dispose() {
-		}
+    }
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		}
+    class FileTableContentProvider implements IStructuredContentProvider {
 
-		public Object[] getElements(Object inputElement) {
-			File file = (File) inputElement;
-			return file.listFiles();
-		}
+        public void dispose() {
+        }
 
-	}
+        public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        }
 
-	class FileTableLabelProvider implements ITableLabelProvider {
+        public Object[] getElements(Object inputElement) {
+            File file = (File) inputElement;
+            return file.listFiles();
+        }
 
-		public Image getColumnImage(Object element, int columnIndex) {
-			File file = (File) element;
-			if (columnIndex == 0) {
-				if (file.isDirectory())
-					return ImageFactory.loadImage(Display.getCurrent(), ImageFactory.FOLDER);
-				else
-					return ImageFactory.loadImage(Display.getCurrent(), ImageFactory.FILE);
-			}
-			return null;
-		}
+    }
 
-		@SuppressWarnings("deprecation")
-		public String getColumnText(Object element, int columnIndex) {
-			File file = (File) element;
-			if (columnIndex == 0)
-				return file.getName();
-			else if (columnIndex == 1) {
-				if (file.isDirectory())
-					return "folder";
-				else
-					return "file";
-			} else if (columnIndex == 2) {
-				if (file.isDirectory())
-					return "";
-				else
-					return file.length() + " KB";
-			} else if (columnIndex == 3) {
-				Date date = new Date(file.lastModified());
-				return date.toLocaleString();
-			}
-			return null;
-		}
+    class FileTableLabelProvider implements ITableLabelProvider {
 
-		public void addListener(ILabelProviderListener listener) {
-		}
+        public Image getColumnImage(Object element, int columnIndex) {
+            File file = (File) element;
+            if (columnIndex == 0) {
+                if (file.isDirectory())
+                    return ImageFactory.loadImage(Display.getCurrent(), ImageFactory.FOLDER);
+                else
+                    return ImageFactory.loadImage(Display.getCurrent(), ImageFactory.FILE);
+            }
+            return null;
+        }
 
-		public void dispose() {
-			ImageFactory.dispose();
-		}
+        @SuppressWarnings("deprecation")
+        public String getColumnText(Object element, int columnIndex) {
+            File file = (File) element;
+            if (columnIndex == 0)
+                return file.getName();
+            else if (columnIndex == 1) {
+                if (file.isDirectory())
+                    return "folder";
+                else
+                    return "file";
+            } else if (columnIndex == 2) {
+                if (file.isDirectory())
+                    return "";
+                else
+                    return file.length() + " KB";
+            } else if (columnIndex == 3) {
+                Date date = new Date(file.lastModified());
+                return date.toLocaleString();
+            }
+            return null;
+        }
 
-		public boolean isLabelProperty(Object element, String property) {
-			return false;
-		}
+        public void addListener(ILabelProviderListener listener) {
+        }
 
-		public void removeListener(ILabelProviderListener listener) {
-		}
+        public void dispose() {
+            ImageFactory.dispose();
+        }
 
-	}
+        public boolean isLabelProperty(Object element, String property) {
+            return false;
+        }
 
-	public class AllowOnlyFoldersFilter implements FileFilter {
-		public boolean accept(File pathname) {
-			return pathname.isDirectory();
-		}
+        public void removeListener(ILabelProviderListener listener) {
+        }
 
-	}
+    }
 
-	public class FileSorter extends ViewerSorter {
-		public int category(Object element) {
-			return ((File) element).isDirectory() ? 0 : 1;
-		}
-	}
+    public class AllowOnlyFoldersFilter implements FileFilter {
+        public boolean accept(File pathname) {
+            return pathname.isDirectory();
+        }
 
-	public class SelectAction implements ISelectionChangedListener, IDoubleClickListener {
+    }
 
-		public void selectionChanged(SelectionChangedEvent event) {
-			table.setInput(getTreeSelection());
-		}
+    public class FileSorter extends ViewerSorter {
+        public int category(Object element) {
+            return ((File) element).isDirectory() ? 0 : 1;
+        }
+    }
 
-		public void doubleClick(DoubleClickEvent event) {
-			Object selection = getTableSelection();
-			if (selection == null)
-				return;
-			File file = (File) selection;
-			if (file.isFile()) {
-				String selectFileName = file.getName();
-				CompareChapterWindow.chapCacheName = selectFileName;
-			} else if (file.isDirectory()) {
-				table.setInput(selection);
-			}
+    public class SelectAction implements ISelectionChangedListener, IDoubleClickListener {
 
-		}
-	}
+        public void selectionChanged(SelectionChangedEvent event) {
+            table.setInput(getTreeSelection());
+        }
 
-	public Object getTreeSelection() {
-		IStructuredSelection selection = (IStructuredSelection) tree.getSelection();
-		if (selection.size() != 1)
-			return null;
-		return selection.getFirstElement();
-	}
+        public void doubleClick(DoubleClickEvent event) {
+            Object selection = getTableSelection();
+            if (selection == null)
+                return;
+            File file = (File) selection;
+            if (file.isFile()) {
+                String selectFileName = file.getName();
+                CompareChapterWindow.chapCacheName = selectFileName;
+            } else if (file.isDirectory()) {
+                table.setInput(selection);
+            }
 
-	public Object getTableSelection() {
-		IStructuredSelection selection = (IStructuredSelection) table.getSelection();
-		if (selection.size() != 1)
-			return null;
-		return selection.getFirstElement();
-	}
+        }
+    }
+
+    public Object getTreeSelection() {
+        IStructuredSelection selection = (IStructuredSelection) tree.getSelection();
+        if (selection.size() != 1)
+            return null;
+        return selection.getFirstElement();
+    }
+
+    public Object getTableSelection() {
+        IStructuredSelection selection = (IStructuredSelection) table.getSelection();
+        if (selection.size() != 1)
+            return null;
+        return selection.getFirstElement();
+    }
 }

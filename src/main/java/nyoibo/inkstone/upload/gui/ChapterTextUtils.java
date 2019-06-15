@@ -5,22 +5,17 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
 public class ChapterTextUtils {
-	private static Display display;
-	private static Text textarea;
+    private static Display display;
+    private static Text textarea;
 
-	public ChapterTextUtils(Display display, Text textarea) {
-		ChapterTextUtils.display = display;
-		ChapterTextUtils.textarea = textarea;
-	}
+    public ChapterTextUtils(Display display, Text textarea) {
+        ChapterTextUtils.display = display;
+        ChapterTextUtils.textarea = textarea;
+    }
 
-	public static void pushToChapterText(String message) {
-		if (!StringUtils.isEmpty(message)) {
-			display.syncExec(new Runnable() {
-				@Override
-				public void run() {
-					textarea.append(message);
-				}
-			});
-		}
-	}
+    public static void pushToChapterText(String message) {
+        if (!StringUtils.isEmpty(message)) {
+            display.syncExec(() -> textarea.append(message));
+        }
+    }
 }

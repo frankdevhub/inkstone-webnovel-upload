@@ -23,95 +23,96 @@ import org.springframework.core.io.ClassPathResource;
 
 public class CompareChapterWindow extends Dialog {
 
-	private SashForm form;
+    private SashForm form;
 
-	private Composite fileComposite;
-	private Composite chapterComposite;
-	private ScrolledComposite scrolledComposite;
+    private Composite fileComposite;
+    private Composite chapterComposite;
+    private ScrolledComposite scrolledComposite;
 
-	private String filePath;
+    private String filePath;
 
-	public static Map<String, String> compareList = new HashMap<String, String>();
-	public static Map<String, String> chapterFileList = new HashMap<String, String>();;
-	public static String chapCacheName;
-	public static String dataPath;
-	public static String comaprePath;
+    public static Map<String, String> compareList = new HashMap<String, String>();
+    public static Map<String, String> chapterFileList = new HashMap<String, String>();
+    ;
+    public static String chapCacheName;
+    public static String dataPath;
+    public static String comaprePath;
 
-	public static boolean useSaved = false;
+    public static boolean useSaved = false;
 
-	public CompareChapterWindow(Shell parentShell, String filePath) {
-		super(parentShell);
-		setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX | SWT.MIN);
-		this.filePath = filePath;
-	}
+    public CompareChapterWindow(Shell parentShell, String filePath) {
+        super(parentShell);
+        setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX | SWT.MIN);
+        this.filePath = filePath;
+    }
 
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		dataPath = filePath;
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        dataPath = filePath;
 
-		Composite container = (Composite) super.createDialogArea(parent);
-		container.setLayout(new FillLayout(SWT.HORIZONTAL | SWT.VERTICAL));
+        Composite container = (Composite) super.createDialogArea(parent);
+        container.setLayout(new FillLayout(SWT.HORIZONTAL | SWT.VERTICAL));
 
-		this.form = new SashForm(container, SWT.BEGINNING | SWT.BORDER);
-		form.setLayout(new FillLayout());
+        this.form = new SashForm(container, SWT.BEGINNING | SWT.BORDER);
+        form.setLayout(new FillLayout());
 
-		fileComposite = new Composite(form, SWT.BEGINNING | SWT.BORDER);
-		fileComposite.setLayout(new GridLayout(1, true));
-		new FileExplorer(fileComposite);
+        fileComposite = new Composite(form, SWT.BEGINNING | SWT.BORDER);
+        fileComposite.setLayout(new GridLayout(1, true));
+        new FileExplorer(fileComposite);
 
-		scrolledComposite = new ScrolledComposite(form, SWT.H_SCROLL | SWT.V_SCROLL);
-		scrolledComposite.setTouchEnabled(true);
-		scrolledComposite.setExpandHorizontal(true);
-		scrolledComposite.setExpandVertical(true);
-		scrolledComposite.setAlwaysShowScrollBars(true);
+        scrolledComposite = new ScrolledComposite(form, SWT.H_SCROLL | SWT.V_SCROLL);
+        scrolledComposite.setTouchEnabled(true);
+        scrolledComposite.setExpandHorizontal(true);
+        scrolledComposite.setExpandVertical(true);
+        scrolledComposite.setAlwaysShowScrollBars(true);
 
-		chapterComposite = new Composite(scrolledComposite, SWT.BORDER | SWT.H_SCROLL);
-		try {
-			new ChapterTable(chapterComposite, filePath);
-			chapterComposite.setLayout(new FillLayout(SWT.HORIZONTAL | SWT.VERTICAL));
-			form.setWeights(new int[] { 444, 429 });
-			scrolledComposite.setMinSize(new Point(140, 680));
-			scrolledComposite.setContent(chapterComposite);
+        chapterComposite = new Composite(scrolledComposite, SWT.BORDER | SWT.H_SCROLL);
+        try {
+            new ChapterTable(chapterComposite, filePath);
+            chapterComposite.setLayout(new FillLayout(SWT.HORIZONTAL | SWT.VERTICAL));
+            form.setWeights(new int[]{444, 429});
+            scrolledComposite.setMinSize(new Point(140, 680));
+            scrolledComposite.setContent(chapterComposite);
 
-			ScrollBar vb = scrolledComposite.getVerticalBar();
-			vb.setIncrement(10);
+            ScrollBar vb = scrolledComposite.getVerticalBar();
+            vb.setIncrement(10);
 
-			chapterComposite.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseDown(MouseEvent e) {
-					chapterComposite.setFocus();
-				}
-			});
-			chapterComposite.layout();
+            chapterComposite.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseDown(MouseEvent e) {
+                    chapterComposite.setFocus();
+                }
+            });
+            chapterComposite.layout();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-		return container;
-	}
+        return container;
+    }
 
-	@Override
-	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
-	}
+    @Override
+    protected void createButtonsForButtonBar(Composite parent) {
+        createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+        createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+    }
 
-	@Override
-	protected Point getInitialSize() {
-		return new Point(450, 300);
-	}
+    @Override
+    protected Point getInitialSize() {
+        return new Point(450, 300);
+    }
 
-	@Override
-	protected void configureShell(Shell newShell) {
-		super.configureShell(newShell);
-		newShell.setSize(900, 300);
-		newShell.setText("Config Chapter List");
-		try {
-			newShell.setImage(new Image(null, new ClassPathResource("gui/favicon.ico").getInputStream()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    @Override
+    protected void configureShell(Shell newShell) {
+        super.configureShell(newShell);
+        newShell.setSize(900, 300);
+        newShell.setText("Config Chapter List");
+        try {
+            newShell.setImage(new Image(null, new ClassPathResource("gui/favicon.ico").getInputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

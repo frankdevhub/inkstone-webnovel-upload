@@ -10,45 +10,46 @@ import org.openqa.selenium.WebDriver;
 import org.testng.TestListenerAdapter;
 
 /**
- * <p>Title:ScreenshotListener.java</p>  
- * <p>Description: </p>  
- * <p>Copyright: Copyright (c) 2019</p>  
+ * <p>Title:ScreenshotListener.java</p>
+ * <p>Description: </p>
+ * <p>Copyright: Copyright (c) 2019</p>
  * <p>Company: www.frankdevhub.site</p>
- * <p>github: https://github.com/frankdevhub</p>  
- * @author frankdevhub   
+ * <p>github: https://github.com/frankdevhub</p>
+ *
+ * @author frankdevhub
  * @date:2019-04-21 01:21
  */
 
 public class ScreenshotListener extends TestListenerAdapter {
-	private boolean createFile(File screenshot) {
-		boolean fileCreated = false;
+    private boolean createFile(File screenshot) {
+        boolean fileCreated = false;
 
-		if (screenshot.exists()) {
-			fileCreated = true;
-		} else {
-			File parentDirectory = new File(screenshot.getParent());
-			if (parentDirectory.exists() || parentDirectory.mkdirs()) {
-				try {
-					fileCreated = screenshot.createNewFile();
-				} catch (IOException errorCreatingScreenshot) {
-					errorCreatingScreenshot.printStackTrace();
-				}
-			}
-		}
+        if (screenshot.exists()) {
+            fileCreated = true;
+        } else {
+            File parentDirectory = new File(screenshot.getParent());
+            if (parentDirectory.exists() || parentDirectory.mkdirs()) {
+                try {
+                    fileCreated = screenshot.createNewFile();
+                } catch (IOException errorCreatingScreenshot) {
+                    errorCreatingScreenshot.printStackTrace();
+                }
+            }
+        }
 
-		return fileCreated;
-	}
+        return fileCreated;
+    }
 
-	private void writeScreenshotToFile(WebDriver driver, File screenshot) {
-		try {
-			FileOutputStream screenshotStream = new FileOutputStream(screenshot);
-			screenshotStream.write(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES));
-			screenshotStream.close();
-		} catch (IOException unableToWriteScreenshot) {
-			System.err.println("Unable to write " + screenshot.getAbsolutePath());
-			unableToWriteScreenshot.printStackTrace();
-		}
-	}
+    private void writeScreenshotToFile(WebDriver driver, File screenshot) {
+        try {
+            FileOutputStream screenshotStream = new FileOutputStream(screenshot);
+            screenshotStream.write(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES));
+            screenshotStream.close();
+        } catch (IOException unableToWriteScreenshot) {
+            System.err.println("Unable to write " + screenshot.getAbsolutePath());
+            unableToWriteScreenshot.printStackTrace();
+        }
+    }
 
 	/*@Override
 	public void onTestFailure(ITestResult failingTest) {

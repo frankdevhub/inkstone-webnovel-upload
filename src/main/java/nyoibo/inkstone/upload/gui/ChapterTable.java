@@ -60,491 +60,475 @@ import nyoibo.inkstone.upload.utils.FileZipUtils;
 import nyoibo.inkstone.upload.utils.InkstoneRawHeaderUtils;
 
 public class ChapterTable {
-	private ViewForm viewForm = null;
-	private ToolBar toolBar = null;
-	private Composite composite = null;
-	private Table table = null;
-	private Menu menu = null;
-	private Composite parent = null;
-	private String chapterFilePath = null;
-	private String saveExcelPath;
+    private ViewForm viewForm = null;
+    private ToolBar toolBar = null;
+    private Composite composite = null;
+    private Table table = null;
+    private Menu menu = null;
+    private Composite parent = null;
+    private String chapterFilePath = null;
+    private String saveExcelPath;
 
-	private final Logger LOGGER = LoggerFactory.getLogger(ChapterTable.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(ChapterTable.class);
 
-	public ChapterTable(Composite parent, String filePath) throws Exception {
-		this.composite = parent;
-		this.parent = parent;
-		this.chapterFilePath = filePath;
-		createViewForm(parent);
-		createToolBar();
-		createMenu(parent);
-		createData(filePath);
-	}
+    public ChapterTable(Composite parent, String filePath) throws Exception {
+        this.composite = parent;
+        this.parent = parent;
+        this.chapterFilePath = filePath;
+        createViewForm(parent);
+        createToolBar();
+        createMenu(parent);
+        createData(filePath);
+    }
 
-	private void cleanExclusiveZip(String filePath) throws IOException {
-		File file = new File(filePath);
-		File[] fileList = file.listFiles(new FilenameFilter() {
+    private void cleanExclusiveZip(String filePath) throws IOException {
+        File file = new File(filePath);
+        File[] fileList = file.listFiles((dir, name) -> {
+            if (name.lastIndexOf('.') > 0) {
+                int lastIndex = name.lastIndexOf('.');
+                String str = name.substring(lastIndex);
+                if (!str.equals(".zip")) {
+                    return true;
+                }
+            }
+            return false;
+        });
 
-			@Override
-			public boolean accept(File dir, String name) {
-				if (name.lastIndexOf('.') > 0) {
-					int lastIndex = name.lastIndexOf('.');
-					String str = name.substring(lastIndex);
-					if (!str.equals(".zip")) {
-						return true;
-					}
-				}
-				return false;
-			}
+        final int filterCount = fileList.length;
 
-		});
+        class DeleteProgressMonitorDialog {
+            private void showDialog() {
+                try {
+                    ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(
+                            Display.getCurrent().getActiveShell());
+                    IRunnableWithProgress runnalble = monitor -> {
+                        monitor.beginTask("Delete history files ...", filterCount);
+                        double step = 0;
+                        boolean groupStep = false;
+                        int group = 0;
+                        System.out.println("ready to delete file count:" + filterCount);
+                        if (filterCount <= 100) {
+                            step = 100 / filterCount;
+                        } else {
+                            step = ((double) 1) / (filterCount / 100);
+                            groupStep = true;
+                            group = (int) ((double) 1 / step);
+                        }
+                        System.out.println("delete-step:" + step);
+                        for (int i = 0; i < fileList.length; i++) {
+                            File file1 = fileList[i];
+                            System.out.println("delete file:" + file1.getName());
+                            try {
+                                FileUtils.forceDelete(file1);
+                                if (groupStep) {
+                                    if (i % group == 0)
+                                        monitor.worked(1);
+                                } else {
+                                    monitor.worked((int) step);
+                                }
+                                monitor.subTask(String.format("File deleted:[%s]", file1.getAbsolutePath()));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
 
-		final int filterCount = fileList.length;
+                        if (monitor.isCanceled())
+                            throw new InterruptedException("Delete has been canceled mannually.");
+                    };
+                    progressDialog.run(true, false, runnalble);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
-		class DeleteProgressMonitorDialog {
-			private void showDialog() {
-				try {
-					ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(
-							Display.getCurrent().getActiveShell());
-					IRunnableWithProgress runnalble = new IRunnableWithProgress() {
-						@Override
-						public void run(IProgressMonitor monitor)
-								throws InvocationTargetException, InterruptedException {
-							monitor.beginTask("Delete history files ...", filterCount);
-							double step = 0;
-							boolean groupStep = false;
-							int group = 0;
-							System.out.println("ready to delete file count:" + filterCount);
-							if (filterCount <= 100) {
-								step = 100 / filterCount;
-							} else {
-								step = ((double) 1) / (filterCount / 100);
-								groupStep = true;
-								group = (int) ((double) 1 / step);
-							}
-							System.out.println("delete-step:" + step);
-							for (int i = 0; i < fileList.length; i++) {
-								File file = fileList[i];
-								System.out.println("delete file:" + file.getName());
-								try {
-									FileUtils.forceDelete(file);
-									if (groupStep) {
-										if (i % group == 0)
-											monitor.worked(1);
-									} else {
-										monitor.worked((int) step);
-									}
-									monitor.subTask(String.format("File deleted:[%s]", file.getAbsolutePath()));
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-							}
+        if (null != fileList && fileList.length > 0) {
+            DeleteProgressMonitorDialog dialog = new DeleteProgressMonitorDialog();
+            dialog.showDialog();
+        }
 
-							if (monitor.isCanceled())
-								throw new InterruptedException("Delete has been canceled mannually.");
-						}
-					};
-					progressDialog.run(true, false, runnalble);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
+    }
 
-		if (null != fileList && fileList.length > 0) {
-			DeleteProgressMonitorDialog dialog = new DeleteProgressMonitorDialog();
-			dialog.showDialog();
-		}
+    private void createData(String filePath) throws Exception {
+        cleanExclusiveZip(filePath);
+        new FileZipUtils().unZipDriveZip(filePath);
+        regroupFolder(filePath);
 
-	}
+        File[] fileList = new File(filePath).listFiles((dir, name) -> {
+            if (name.lastIndexOf('.') > 0) {
+                return false;
+            }
+            return true;
+        });
 
-	private void createData(String filePath) throws Exception {
-		cleanExclusiveZip(filePath);
-		new FileZipUtils().unZipDriveZip(filePath);
-		regroupFolder(filePath);
+        for (File f : fileList) {
+            System.out.println("delete-folder:" + f.getAbsolutePath());
+            FileUtils.forceDelete(f);
+        }
 
-		File[] fileList = new File(filePath).listFiles(new FilenameFilter() {
+        wrapDataMap(filePath);
+    }
 
-			@Override
-			public boolean accept(File dir, String name) {
-				if (name.lastIndexOf('.') > 0) {
-					return false;
-				}
-				return true;
-			}
-		});
+    private void wrapDataMap(String filePath) {
+        File dataFile = new File(filePath);
+        File[] dataFileList = dataFile.listFiles();
+        class CompareProgressMonitorDialog {
 
-		for (File f : fileList) {
-			System.out.println("delete-folder:" + f.getAbsolutePath());
-			FileUtils.forceDelete(f);
-		}
+            private void showDialog() {
+                try {
+                    int fileCount = dataFileList.length;
+                    Map<String, String> compareList = new HashMap<String, String>();
+                    Map<String, String> chapterList = new HashMap<String, String>();
 
-		wrapDataMap(filePath);
-	}
+                    ProgressMonitorDialog dialog = new ProgressMonitorDialog(Display.getCurrent().getActiveShell());
+                    IRunnableWithProgress runnalble = monitor -> {
+                        monitor.beginTask("Scanning Chapter Files ...", fileCount);
+                        double step = 0;
+                        boolean groupStep = false;
+                        int group = 0;
+                        if (fileCount <= 100) {
+                            step = 100 / dataFileList.length;
+                        } else {
+                            step = ((double) 1) / (dataFileList.length / 100);
+                            groupStep = true;
+                            group = (int) (((double) 1) / (step));
+                        }
+                        for (int i = 0; i < fileCount && !monitor.isCanceled(); i++) {
+                            File current = dataFileList[i];
+                            String fileName = current.getName();
+                            String guessCHName;
+                            try {
+                                guessCHName = InkstoneRawHeaderUtils.convertRawCNHeader(fileName);
+                                compareList.put(guessCHName, fileName);
+                                chapterList.put(fileName, current.getAbsolutePath());
+                                if (groupStep) {
+                                    if (i % group == 0)
+                                        monitor.worked(1);
+                                } else {
+                                    monitor.worked((int) step);
+                                }
+                                monitor.subTask(
+                                        String.format("Scanning complete:[%s]", dataFileList[i].getAbsolutePath()));
+                                parent.getDisplay().asyncExec(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        TableItem item = new TableItem(table, SWT.NONE);
+                                        item.setText(new String[]{guessCHName, fileName});
+                                    }
+                                });
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        CompareChapterWindow.compareList = compareList;
+                        CompareChapterWindow.chapterFileList = chapterList;
 
-	private void wrapDataMap(String filePath) throws Exception {
-		File dataFile = new File(filePath);
-		File[] dataFileList = dataFile.listFiles();
-		class CompareProgressMonitorDialog {
+                        monitor.done();
+                        if (monitor.isCanceled())
+                            throw new InterruptedException("Scanning has been canceled mannually.");
+                    };
+                    dialog.run(true, false, runnalble);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
-			private void showDialog() {
-				try {
-					int fileCount = dataFileList.length;
-					Map<String, String> compareList = new HashMap<String, String>();
-					Map<String, String> chapterList = new HashMap<String, String>();
+        CompareProgressMonitorDialog monitorDialog = new CompareProgressMonitorDialog();
+        System.out.println("show scanning zipped file moinitor");
+        monitorDialog.showDialog();
+    }
 
-					ProgressMonitorDialog dialog = new ProgressMonitorDialog(Display.getCurrent().getActiveShell());
-					IRunnableWithProgress runnalble = new IRunnableWithProgress() {
-						public void run(IProgressMonitor monitor)
-								throws InvocationTargetException, InterruptedException {
-							monitor.beginTask("Scanning Chapter Files ...", fileCount);
-							double step = 0;
-							boolean groupStep = false;
-							int group = 0;
-							if (fileCount <= 100) {
-								step = 100 / dataFileList.length;
-							} else {
-								step = ((double) 1) / (dataFileList.length / 100);
-								groupStep = true;
-								group = (int) (((double) 1) / (step));
-							}
-							for (int i = 0; i < fileCount && !monitor.isCanceled(); i++) {
-								File current = dataFileList[i];
-								String fileName = current.getName();
-								String guessCHName;
-								try {
-									guessCHName = InkstoneRawHeaderUtils.convertRawCNHeader(fileName);
-									compareList.put(guessCHName, fileName);
-									chapterList.put(fileName, current.getAbsolutePath());
-									if (groupStep) {
-										if (i % group == 0)
-											monitor.worked(1);
-									} else {
-										monitor.worked((int) step);
-									}
-									monitor.subTask(
-											String.format("Scanning complete:[%s]", dataFileList[i].getAbsolutePath()));
-									parent.getDisplay().asyncExec(new Runnable() {
-										@Override
-										public void run() {
-											TableItem item = new TableItem(table, SWT.NONE);
-											item.setText(new String[] { guessCHName, fileName });
-										}
-									});
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-							CompareChapterWindow.compareList = compareList;
-							CompareChapterWindow.chapterFileList = chapterList;
+    private void createViewForm(Composite parent) {
+        viewForm = new ViewForm(parent, SWT.NONE);
+        viewForm.setTopCenterSeparate(true);
+        createToolBar();
+        viewForm.setTopLeft(toolBar);
+        createComposite();
+        viewForm.setContent(composite);
+    }
 
-							monitor.done();
-							if (monitor.isCanceled())
-								throw new InterruptedException("Scanning has been canceled mannually.");
-						}
-					};
-					dialog.run(true, false, runnalble);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
+    private void createToolBar() {
+        toolBar = new ToolBar(viewForm, SWT.FLAT);
+        final ToolItem edit = new ToolItem(toolBar, SWT.PUSH);
+        edit.setText("edit");
+        edit.setImage(ImageFactory.loadImage(toolBar.getDisplay(), ImageFactory.ADD_OBJ));
+        final ToolItem del = new ToolItem(toolBar, SWT.PUSH);
+        del.setText("delete");
+        del.setImage(ImageFactory.loadImage(toolBar.getDisplay(), ImageFactory.DELETE_OBJ));
+        final ToolItem back = new ToolItem(toolBar, SWT.PUSH);
+        back.setText("back");
+        back.setImage(ImageFactory.loadImage(toolBar.getDisplay(), ImageFactory.BACKWARD_NAV));
+        final ToolItem forward = new ToolItem(toolBar, SWT.PUSH);
+        forward.setText("forward");
+        forward.setImage(ImageFactory.loadImage(toolBar.getDisplay(), ImageFactory.FORWARD_NAV));
+        final ToolItem save = new ToolItem(toolBar, SWT.PUSH);
+        save.setText("save");
+        save.setImage(ImageFactory.loadImage(toolBar.getDisplay(), ImageFactory.SAVE_EDIT));
 
-		CompareProgressMonitorDialog monitorDialog = new CompareProgressMonitorDialog();
-		System.out.println("show scanning zipped file moinitor");
-		monitorDialog.showDialog();
-	}
+        Listener listener = new Listener() {
+            public void handleEvent(Event event) {
+                if (event.widget == edit) {
+                    TableItem item = new TableItem(table, SWT.NONE);
+                    item.setText(new String[]{"", ""});
+                    bindEditors();
+                } else if (event.widget == del) {
+                    TableItem[] items = table.getItems();
+                    for (int i = 0; i < items.length; i++) {
+                        if (!items[i].getChecked())
+                            continue;
+                        int index = table.indexOf(items[i]);
+                        if (index < 0)
+                            continue;
+                        table.remove(index);
+                    }
+                } else if (event.widget == back) {
+                    int selectedRow = table.getSelectionIndex();
+                    if (selectedRow > 0)
+                        table.setSelection(selectedRow - 1);
+                } else if (event.widget == forward) {
+                    int selectedRow = table.getSelectionIndex();
+                    if (selectedRow > -1 && selectedRow < table.getItemCount() - 1)
+                        table.setSelection(selectedRow + 1);
+                } else if (event.widget == save) {
+                    getTableValues();
+                    try {
+                        saveExcelFile();
+                        FileOutputStream fos = new FileOutputStream(InkstoneUploadConsole.configPropertiesPath, false);
+                        Properties usrConfigPro = new Properties();
+                        usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_PATH, chapterFilePath);
+                        usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL, saveExcelPath);
 
-	private void createViewForm(Composite parent) {
-		viewForm = new ViewForm(parent, SWT.NONE);
-		viewForm.setTopCenterSeparate(true);
-		createToolBar();
-		viewForm.setTopLeft(toolBar);
-		createComposite();
-		viewForm.setContent(composite);
-	}
+                        usrConfigPro.store(fos, "usr");
+                        fos.flush();
+                        fos.close();
 
-	private void createToolBar() {
-		toolBar = new ToolBar(viewForm, SWT.FLAT);
-		final ToolItem edit = new ToolItem(toolBar, SWT.PUSH);
-		edit.setText("edit");
-		edit.setImage(ImageFactory.loadImage(toolBar.getDisplay(), ImageFactory.ADD_OBJ));
-		final ToolItem del = new ToolItem(toolBar, SWT.PUSH);
-		del.setText("delete");
-		del.setImage(ImageFactory.loadImage(toolBar.getDisplay(), ImageFactory.DELETE_OBJ));
-		final ToolItem back = new ToolItem(toolBar, SWT.PUSH);
-		back.setText("back");
-		back.setImage(ImageFactory.loadImage(toolBar.getDisplay(), ImageFactory.BACKWARD_NAV));
-		final ToolItem forward = new ToolItem(toolBar, SWT.PUSH);
-		forward.setText("forward");
-		forward.setImage(ImageFactory.loadImage(toolBar.getDisplay(), ImageFactory.FORWARD_NAV));
-		final ToolItem save = new ToolItem(toolBar, SWT.PUSH);
-		save.setText("save");
-		save.setImage(ImageFactory.loadImage(toolBar.getDisplay(), ImageFactory.SAVE_EDIT));
+                        CompareChapterWindow.useSaved = true;
 
-		Listener listener = new Listener() {
-			public void handleEvent(Event event) {
-				if (event.widget == edit) {
-					TableItem item = new TableItem(table, SWT.NONE);
-					item.setText(new String[] { "", "" });
-					bindEditors();
-				} else if (event.widget == del) {
-					TableItem[] items = table.getItems();
-					for (int i = 0; i < items.length; i++) {
-						if (!items[i].getChecked())
-							continue;
-						int index = table.indexOf(items[i]);
-						if (index < 0)
-							continue;
-						table.remove(index);
-					}
-				} else if (event.widget == back) {
-					int selectedRow = table.getSelectionIndex();
-					if (selectedRow > 0)
-						table.setSelection(selectedRow - 1);
-				} else if (event.widget == forward) {
-					int selectedRow = table.getSelectionIndex();
-					if (selectedRow > -1 && selectedRow < table.getItemCount() - 1)
-						table.setSelection(selectedRow + 1);
-				} else if (event.widget == save) {
-					getTableValues();
-					try {
-						saveExcelFile();
-						FileOutputStream fos = new FileOutputStream(InkstoneUploadConsole.configPropertiesPath, false);
-						Properties usrConfigPro = new Properties();
-						usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_PATH, chapterFilePath);
-						usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL, saveExcelPath);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
-						usrConfigPro.store(fos, "usr");
-						fos.flush();
-						fos.close();
+        };
+        edit.addListener(SWT.Selection, listener);
+        del.addListener(SWT.Selection, listener);
+        back.addListener(SWT.Selection, listener);
+        forward.addListener(SWT.Selection, listener);
+        save.addListener(SWT.Selection, listener);
+    }
 
-						CompareChapterWindow.useSaved = true;
+    private void createComposite() {
+        GridLayout gridLayout = new GridLayout();
+        gridLayout.numColumns = 1;
+        composite = new Composite(viewForm, SWT.NONE);
+        composite.setLayout(gridLayout);
+        createTable();
+        bindEditors();
+    }
 
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
+    private void bindEditors() {
+        TableItem[] items = table.getItems();
+        for (int i = 0; i < items.length; i++) {
+            for (int j = 0; j < 2; j++) {
+                final TableEditor editor = new TableEditor(table);
+                final Text text = new Text(table, SWT.NONE);
+                final int index = j;
+                text.setText(items[i].getText(index));
+                editor.grabHorizontal = true;
+                editor.setEditor(text, items[i], index);
+                text.addModifyListener(new ModifyListener() {
+                    public void modifyText(ModifyEvent e) {
+                        editor.getItem().setText(index, text.getText());
+                    }
 
-		};
-		edit.addListener(SWT.Selection, listener);
-		del.addListener(SWT.Selection, listener);
-		back.addListener(SWT.Selection, listener);
-		forward.addListener(SWT.Selection, listener);
-		save.addListener(SWT.Selection, listener);
-	}
+                });
 
-	private void createComposite() {
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 1;
-		composite = new Composite(viewForm, SWT.NONE);
-		composite.setLayout(gridLayout);
-		createTable();
-		bindEditors();
-	}
+                text.addMouseListener(new MouseListener() {
+                    @Override
+                    public void mouseUp(MouseEvent e) {
+                    }
 
-	private void bindEditors() {
-		TableItem[] items = table.getItems();
-		for (int i = 0; i < items.length; i++) {
-			for (int j = 0; j < 2; j++) {
-				final TableEditor editor = new TableEditor(table);
-				final Text text = new Text(table, SWT.NONE);
-				final int index = j;
-				text.setText(items[i].getText(index));
-				editor.grabHorizontal = true;
-				editor.setEditor(text, items[i], index);
-				text.addModifyListener(new ModifyListener() {
-					public void modifyText(ModifyEvent e) {
-						editor.getItem().setText(index, text.getText());
-					}
+                    @Override
+                    public void mouseDown(MouseEvent e) {
+                    }
 
-				});
+                    @Override
+                    public void mouseDoubleClick(MouseEvent e) {
+                        String tempChapter = CompareChapterWindow.chapCacheName;
+                        if (tempChapter != null) {
+                            text.setText(CompareChapterWindow.chapCacheName);
+                        }
+                    }
+                });
+            }
+        }
+    }
 
-				text.addMouseListener(new MouseListener() {
-					@Override
-					public void mouseUp(MouseEvent e) {
-					}
+    private void saveExcelFile() throws IOException {
+        String saveFileName = null;
+        String savePath = null;
+        DirectoryDialog folderdlg = new DirectoryDialog(new Shell());
+        folderdlg.setText("Select Save Path");
+        folderdlg.setFilterPath("SystemDrive");
+        folderdlg.setMessage("Please select your save excel path");
+        String selecteddir = folderdlg.open();
+        if (selecteddir == null) {
+            return;
+        } else {
+            savePath = selecteddir + "\\";
+            saveFileName = Long.toString(System.currentTimeMillis()) + "ChapAutoList.xls";
+            savePath = savePath + saveFileName;
 
-					@Override
-					public void mouseDown(MouseEvent e) {
-					}
+            LOGGER.begin().headerAction(MessageMethod.EVENT).info(savePath);
+            CompareChapterWindow.comaprePath = savePath;
+        }
+        if (savePath != null) {
+            getTableValues();
+            getHSSFWorkbook(savePath, CompareChapterWindow.compareList);
+        }
+        this.saveExcelPath = savePath;
+    }
 
-					@Override
-					public void mouseDoubleClick(MouseEvent e) {
-						String tempChapter = CompareChapterWindow.chapCacheName;
-						if (tempChapter != null) {
-							text.setText(CompareChapterWindow.chapCacheName);
-						}
-					}
-				});
-			}
-		}
-	}
+    private void getTableValues() {
+        CompareChapterWindow.compareList = new HashedMap<>();
+        TableItem[] items = table.getItems();
 
-	private void saveExcelFile() throws IOException {
-		String saveFileName = null;
-		String savePath = null;
-		DirectoryDialog folderdlg = new DirectoryDialog(new Shell());
-		folderdlg.setText("Select Save Path");
-		folderdlg.setFilterPath("SystemDrive");
-		folderdlg.setMessage("Please select your save excel path");
-		String selecteddir = folderdlg.open();
-		if (selecteddir == null) {
-			return;
-		} else {
-			savePath = selecteddir + "\\";
-			saveFileName = Long.toString(System.currentTimeMillis()) + "ChapAutoList.xls";
-			savePath = savePath + saveFileName;
+        if (items.length < 1)
+            return;
+        for (TableItem item : items) {
+            CompareChapterWindow.compareList.put(item.getText(0), item.getText(1));
+        }
+    }
 
-			LOGGER.begin().headerAction(MessageMethod.EVENT).info(savePath);
-			CompareChapterWindow.comaprePath = savePath;
-		}
-		if (savePath != null) {
-			getTableValues();
-			getHSSFWorkbook(savePath, CompareChapterWindow.compareList);
-		}
-		this.saveExcelPath = savePath;
-	}
+    private void createTable() {
+        GridData gridData = new GridData();
+        gridData.horizontalAlignment = SWT.FILL;
+        gridData.grabExcessHorizontalSpace = true;
+        gridData.grabExcessVerticalSpace = true;
+        gridData.verticalAlignment = SWT.FILL;
 
-	private void getTableValues() {
-		CompareChapterWindow.compareList = new HashedMap<String, String>();
-		TableItem[] items = table.getItems();
+        table = new Table(composite, SWT.MULTI);
+        table.setHeaderVisible(true);
+        table.setLayoutData(gridData);
+        table.setLinesVisible(true);
 
-		if (items.length < 1)
-			return;
-		for (TableItem item : items) {
-			CompareChapterWindow.compareList.put(item.getText(0), item.getText(1));
-		}
-	}
+        String[] tableHeader = {"RAW_ChapterName", "EN_ChapterName"};
+        for (int i = 0; i < tableHeader.length; i++) {
+            TableColumn tableColumn = new TableColumn(table, SWT.NONE);
+            tableColumn.setText(tableHeader[i]);
+            tableColumn.setMoveable(true);
+        }
 
-	private void createTable() {
-		GridData gridData = new GridData();
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		gridData.verticalAlignment = SWT.FILL;
+        for (int i = 0; i < tableHeader.length; i++) {
+            table.getColumn(i).pack();
+        }
 
-		table = new Table(composite, SWT.MULTI);
-		table.setHeaderVisible(true);
-		table.setLayoutData(gridData);
-		table.setLinesVisible(true);
+        final TableCursor cursor = new TableCursor(table, SWT.NONE);
+        final ControlEditor editor = new ControlEditor(cursor);
+        editor.grabHorizontal = true;
+        editor.grabVertical = true;
+        cursor.addSelectionListener(new SelectionAdapter() {
+            public void widgetDefaultSelected(SelectionEvent e) {
+                final Text text = new Text(cursor, SWT.NONE);
+                TableItem row = cursor.getRow();
+                int column = cursor.getColumn();
+                text.setText(row.getText(column));
+                text.addKeyListener(new KeyAdapter() {
+                    public void keyPressed(KeyEvent e) {
+                        if (e.character == SWT.CR) {
+                            TableItem row = cursor.getRow();
+                            int column = cursor.getColumn();
+                            row.setText(column, text.getText());
+                            text.dispose();
+                        }
+                        if (e.character == SWT.ESC) {
+                            text.dispose();
+                        }
+                    }
+                });
 
-		String[] tableHeader = { "RAW_ChapterName", "EN_ChapterName" };
-		for (int i = 0; i < tableHeader.length; i++) {
-			TableColumn tableColumn = new TableColumn(table, SWT.NONE);
-			tableColumn.setText(tableHeader[i]);
-			tableColumn.setMoveable(true);
-		}
+                text.addFocusListener(new FocusAdapter() {
+                    public void focusLost(FocusEvent e) {
+                        text.dispose();
+                    }
+                });
+                editor.setEditor(text);
+                text.setFocus();
+            }
 
-		for (int i = 0; i < tableHeader.length; i++) {
-			table.getColumn(i).pack();
-		}
+            public void widgetSelected(SelectionEvent e) {
+                table.setSelection(new TableItem[]{cursor.getRow()});
+            }
 
-		final TableCursor cursor = new TableCursor(table, SWT.NONE);
-		final ControlEditor editor = new ControlEditor(cursor);
-		editor.grabHorizontal = true;
-		editor.grabVertical = true;
-		cursor.addSelectionListener(new SelectionAdapter() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-				final Text text = new Text(cursor, SWT.NONE);
-				TableItem row = cursor.getRow();
-				int column = cursor.getColumn();
-				text.setText(row.getText(column));
-				text.addKeyListener(new KeyAdapter() {
-					public void keyPressed(KeyEvent e) {
-						if (e.character == SWT.CR) {
-							TableItem row = cursor.getRow();
-							int column = cursor.getColumn();
-							row.setText(column, text.getText());
-							text.dispose();
-						}
-						if (e.character == SWT.ESC) {
-							text.dispose();
-						}
-					}
-				});
+        });
 
-				text.addFocusListener(new FocusAdapter() {
-					public void focusLost(FocusEvent e) {
-						text.dispose();
-					}
-				});
-				editor.setEditor(text);
-				text.setFocus();
-			}
+    }
 
-			public void widgetSelected(SelectionEvent e) {
-				table.setSelection(new TableItem[] { cursor.getRow() });
-			}
+    private void createMenu(Composite parent) {
+        menu = new Menu(parent.getShell(), SWT.POP_UP);
+        table.setMenu(menu);
 
-		});
+        MenuItem del = new MenuItem(menu, SWT.PUSH);
+        del.setText("delete");
+        del.setImage(ImageFactory.loadImage(parent.getShell().getDisplay(), ImageFactory.DELETE_EDIT));
 
-	}
+        del.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event event) {
+                table.remove(table.getSelectionIndices());
+            }
+        });
+    }
 
-	private void createMenu(Composite parent) {
-		menu = new Menu(parent.getShell(), SWT.POP_UP);
-		table.setMenu(menu);
+    private HSSFWorkbook getHSSFWorkbook(String path, Map<String, String> values) throws IOException {
+        String[] title = new String[]{"CN_chapterName", "EN_chapterName"};
+        HSSFWorkbook wb = new HSSFWorkbook();
 
-		MenuItem del = new MenuItem(menu, SWT.PUSH);
-		del.setText("delete");
-		del.setImage(ImageFactory.loadImage(parent.getShell().getDisplay(), ImageFactory.DELETE_EDIT));
+        HSSFSheet sheet = wb.createSheet("compareSheet");
 
-		del.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event event) {
-				table.remove(table.getSelectionIndices());
-			}
-		});
-	}
+        HSSFRow row = sheet.createRow(0);
+        HSSFCellStyle style = wb.createCellStyle();
+        HSSFCell cell = null;
 
-	private HSSFWorkbook getHSSFWorkbook(String path, Map<String, String> values) throws IOException {
-		String[] title = new String[] { "CN_chapterName", "EN_chapterName" };
-		HSSFWorkbook wb = new HSSFWorkbook();
+        for (int i = 0; i < title.length; i++) {
+            cell = row.createCell(i);
+            cell.setCellValue(title[i]);
+            cell.setCellStyle(style);
+        }
 
-		HSSFSheet sheet = wb.createSheet("compareSheet");
+        int rowNum = 1;
+        for (Entry<String, String> entry : values.entrySet()) {
+            String cnName = entry.getKey();
+            String enName = entry.getValue();
+            if (!StringUtils.isEmpty(cnName) && !StringUtils.isEmpty(enName)) {
+                row = sheet.createRow(rowNum);
+                row.createCell(0).setCellValue(cnName);
+                row.createCell(1).setCellValue(enName);
+            }
+            rowNum++;
+        }
 
-		HSSFRow row = sheet.createRow(0);
-		HSSFCellStyle style = wb.createCellStyle();
-		HSSFCell cell = null;
+        FileOutputStream fos = new FileOutputStream(new File(path));
+        wb.write(fos);
+        return wb;
+    }
 
-		for (int i = 0; i < title.length; i++) {
-			cell = row.createCell(i);
-			cell.setCellValue(title[i]);
-			cell.setCellStyle(style);
-		}
+    public static void regroupFolder(String path) throws IOException {
+        regroupFolder(new File(path), path);
+    }
 
-		int rowNum = 1;
-		for (Entry<String, String> entry : values.entrySet()) {
-			String cnName = entry.getKey();
-			String enName = entry.getValue();
-			if (!StringUtils.isEmpty(cnName) && !StringUtils.isEmpty(enName)) {
-				row = sheet.createRow(rowNum);
-				row.createCell(0).setCellValue(cnName);
-				row.createCell(1).setCellValue(enName);
-			}
-			rowNum++;
-		}
-
-		FileOutputStream fos = new FileOutputStream(new File(path));
-		wb.write(fos);
-		return wb;
-	}
-
-	public static void regroupFolder(String path) throws IOException {
-		regroupFolder(new File(path), path);
-	}
-
-	private static void regroupFolder(File root, String destPath) throws IOException {
-		File file = root;
-		File[] listFiles = file.listFiles();
-		for (int i = 0; i < listFiles.length; i++) {
-			File current = listFiles[i];
-			if (current.isDirectory()) {
-				regroupFolder(current, destPath);
-			} else {
-				FileUtils.copyFileToDirectory(current, new File(destPath));
-				FileUtils.forceDelete(current);
-			}
-		}
-	}
+    private static void regroupFolder(File root, String destPath) throws IOException {
+        File file = root;
+        File[] listFiles = file.listFiles();
+        for (int i = 0; i < listFiles.length; i++) {
+            File current = listFiles[i];
+            if (current.isDirectory()) {
+                regroupFolder(current, destPath);
+            } else {
+                FileUtils.copyFileToDirectory(current, new File(destPath));
+                FileUtils.forceDelete(current);
+            }
+        }
+    }
 }
