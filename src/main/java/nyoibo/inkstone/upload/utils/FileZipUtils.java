@@ -1,6 +1,9 @@
 package nyoibo.inkstone.upload.utils;
 
+import info.monitorenter.cpdetector.io.ASCIIDetector;
 import info.monitorenter.cpdetector.io.CodepageDetectorProxy;
+import info.monitorenter.cpdetector.io.JChardetFacade;
+import info.monitorenter.cpdetector.io.ParsingDetector;
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.message.MessageMethod;
@@ -64,13 +67,22 @@ public class FileZipUtils {
         Charset charset = null;
         try {
             CodepageDetectorProxy detector = CodepageDetectorProxy.getInstance();
+            detector.add(new ParsingDetector(false));
+            detector.add(JChardetFacade.getInstance());
+            detector.add(ASCIIDetector.getInstance());
+
             charset = detector.detectCodepage(file.toURI().toURL());
         } catch (Exception e) {
             e.printStackTrace();
         }
         if (charset != null) {
-            encode = charset.name();
+            if (charset.name().equals("US-ASCII")) {
+                encode = "ISO_8859_1";
+            } else {
+                encode = charset.name();
+            }
         }
+
         return encode;
     }
 
@@ -102,7 +114,7 @@ public class FileZipUtils {
                             Display.getCurrent().getActiveShell());
                     IRunnableWithProgress runnalble = monitor -> {
                         monitor.beginTask("do unzip chapter files ...", entryCount);
-                        double step = 0;
+                        double step;
                         boolean groupStep = false;
                         int group = 0;
                         if (entryCount <= 100) {
