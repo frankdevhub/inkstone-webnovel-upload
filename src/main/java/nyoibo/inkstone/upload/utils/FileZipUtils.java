@@ -3,7 +3,7 @@ package nyoibo.inkstone.upload.utils;
 import info.monitorenter.cpdetector.io.ASCIIDetector;
 import info.monitorenter.cpdetector.io.CodepageDetectorProxy;
 import info.monitorenter.cpdetector.io.JChardetFacade;
-import info.monitorenter.cpdetector.io.ParsingDetector;
+import info.monitorenter.cpdetector.io.UnicodeDetector;
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.message.MessageMethod;
@@ -62,16 +62,17 @@ public class FileZipUtils {
         }
     }
 
-    public String getFileEncode(File file) {
+    public String getFileEncode(File file) throws IOException {
         String encode = "GBK";
         Charset charset = null;
         try {
             CodepageDetectorProxy detector = CodepageDetectorProxy.getInstance();
-            detector.add(new ParsingDetector(false));
+            detector.add(UnicodeDetector.getInstance());
             detector.add(JChardetFacade.getInstance());
             detector.add(ASCIIDetector.getInstance());
 
             charset = detector.detectCodepage(file.toURI().toURL());
+            charset = charset.name().equals("void") ? null : charset;
         } catch (Exception e) {
             e.printStackTrace();
         }
