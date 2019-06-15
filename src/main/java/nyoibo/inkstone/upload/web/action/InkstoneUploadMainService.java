@@ -115,14 +115,14 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
         readCompareList();
 
         String url = bookListUrl.get(bookName);
-        System.out.println(String.format("Book url:[%s]", url));
+        System.out.println(String.format("book url:[%s]", url));
         if (StringUtils.isEmpty(url))
             throw new Exception(String.format("cannot find book:[%s]", bookName));
 
         try {
             for (int i = 0; i < bookCompareList.size(); i++) {
                 if (exceptionList.size() > 0) {
-                    LOGGER.begin().headerAction(MessageMethod.EVENT).info("Current Thread occured an error");
+                    LOGGER.begin().headerAction(MessageMethod.EVENT).info("current thread occured an error");
                     throw exceptionList.get(0);
                 }
                 InkstoneRawNovelService rawService;

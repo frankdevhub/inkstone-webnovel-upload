@@ -62,11 +62,11 @@ import nyoibo.inkstone.upload.utils.InkstoneRawHeaderUtils;
 public class ChapterTable {
     private ViewForm viewForm = null;
     private ToolBar toolBar = null;
-    private Composite composite = null;
+    private Composite composite;
     private Table table = null;
     private Menu menu = null;
-    private Composite parent = null;
-    private String chapterFilePath = null;
+    private Composite parent;
+    private String chapterFilePath;
     private String saveExcelPath;
 
     private final Logger LOGGER = LoggerFactory.getLogger(ChapterTable.class);
@@ -81,7 +81,7 @@ public class ChapterTable {
         createData(filePath);
     }
 
-    private void cleanExclusiveZip(String filePath) throws IOException {
+    private void cleanExclusiveZip(String filePath) {
         File file = new File(filePath);
         File[] fileList = file.listFiles((dir, name) -> {
             if (name.lastIndexOf('.') > 0) {
@@ -102,7 +102,7 @@ public class ChapterTable {
                     ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(
                             Display.getCurrent().getActiveShell());
                     IRunnableWithProgress runnalble = monitor -> {
-                        monitor.beginTask("Delete history files ...", filterCount);
+                        monitor.beginTask("delete history files ...", filterCount);
                         double step = 0;
                         boolean groupStep = false;
                         int group = 0;
@@ -126,14 +126,14 @@ public class ChapterTable {
                                 } else {
                                     monitor.worked((int) step);
                                 }
-                                monitor.subTask(String.format("File deleted:[%s]", file1.getAbsolutePath()));
+                                monitor.subTask(String.format("file deleted:[%s]", file1.getAbsolutePath()));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }
 
                         if (monitor.isCanceled())
-                            throw new InterruptedException("Delete has been canceled mannually.");
+                            throw new InterruptedException("delete has been canceled mannually.");
                     };
                     progressDialog.run(true, false, runnalble);
                 } catch (Exception e) {
@@ -177,12 +177,12 @@ public class ChapterTable {
             private void showDialog() {
                 try {
                     int fileCount = dataFileList.length;
-                    Map<String, String> compareList = new HashMap<String, String>();
-                    Map<String, String> chapterList = new HashMap<String, String>();
+                    Map<String, String> compareList = new HashMap<>();
+                    Map<String, String> chapterList = new HashMap<>();
 
                     ProgressMonitorDialog dialog = new ProgressMonitorDialog(Display.getCurrent().getActiveShell());
                     IRunnableWithProgress runnalble = monitor -> {
-                        monitor.beginTask("Scanning Chapter Files ...", fileCount);
+                        monitor.beginTask("scanning chapter files ...", fileCount);
                         double step = 0;
                         boolean groupStep = false;
                         int group = 0;
@@ -208,13 +208,10 @@ public class ChapterTable {
                                     monitor.worked((int) step);
                                 }
                                 monitor.subTask(
-                                        String.format("Scanning complete:[%s]", dataFileList[i].getAbsolutePath()));
-                                parent.getDisplay().asyncExec(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        TableItem item = new TableItem(table, SWT.NONE);
-                                        item.setText(new String[]{guessCHName, fileName});
-                                    }
+                                        String.format("scanning complete:[%s]", dataFileList[i].getAbsolutePath()));
+                                parent.getDisplay().asyncExec(() -> {
+                                    TableItem item = new TableItem(table, SWT.NONE);
+                                    item.setText(new String[]{guessCHName, fileName});
                                 });
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -225,7 +222,7 @@ public class ChapterTable {
 
                         monitor.done();
                         if (monitor.isCanceled())
-                            throw new InterruptedException("Scanning has been canceled mannually.");
+                            throw new InterruptedException("scanning has been canceled mannually.");
                     };
                     dialog.run(true, false, runnalble);
                 } catch (Exception e) {
@@ -266,51 +263,48 @@ public class ChapterTable {
         save.setText("save");
         save.setImage(ImageFactory.loadImage(toolBar.getDisplay(), ImageFactory.SAVE_EDIT));
 
-        Listener listener = new Listener() {
-            public void handleEvent(Event event) {
-                if (event.widget == edit) {
-                    TableItem item = new TableItem(table, SWT.NONE);
-                    item.setText(new String[]{"", ""});
-                    bindEditors();
-                } else if (event.widget == del) {
-                    TableItem[] items = table.getItems();
-                    for (int i = 0; i < items.length; i++) {
-                        if (!items[i].getChecked())
-                            continue;
-                        int index = table.indexOf(items[i]);
-                        if (index < 0)
-                            continue;
-                        table.remove(index);
-                    }
-                } else if (event.widget == back) {
-                    int selectedRow = table.getSelectionIndex();
-                    if (selectedRow > 0)
-                        table.setSelection(selectedRow - 1);
-                } else if (event.widget == forward) {
-                    int selectedRow = table.getSelectionIndex();
-                    if (selectedRow > -1 && selectedRow < table.getItemCount() - 1)
-                        table.setSelection(selectedRow + 1);
-                } else if (event.widget == save) {
-                    getTableValues();
-                    try {
-                        saveExcelFile();
-                        FileOutputStream fos = new FileOutputStream(InkstoneUploadConsole.configPropertiesPath, false);
-                        Properties usrConfigPro = new Properties();
-                        usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_PATH, chapterFilePath);
-                        usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL, saveExcelPath);
+        Listener listener = event -> {
+            if (event.widget == edit) {
+                TableItem item = new TableItem(table, SWT.NONE);
+                item.setText(new String[]{"", ""});
+                bindEditors();
+            } else if (event.widget == del) {
+                TableItem[] items = table.getItems();
+                for (int i = 0; i < items.length; i++) {
+                    if (!items[i].getChecked())
+                        continue;
+                    int index = table.indexOf(items[i]);
+                    if (index < 0)
+                        continue;
+                    table.remove(index);
+                }
+            } else if (event.widget == back) {
+                int selectedRow = table.getSelectionIndex();
+                if (selectedRow > 0)
+                    table.setSelection(selectedRow - 1);
+            } else if (event.widget == forward) {
+                int selectedRow = table.getSelectionIndex();
+                if (selectedRow > -1 && selectedRow < table.getItemCount() - 1)
+                    table.setSelection(selectedRow + 1);
+            } else if (event.widget == save) {
+                getTableValues();
+                try {
+                    saveExcelFile();
+                    FileOutputStream fos = new FileOutputStream(InkstoneUploadConsole.configPropertiesPath, false);
+                    Properties usrConfigPro = new Properties();
+                    usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_PATH, chapterFilePath);
+                    usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL, saveExcelPath);
 
-                        usrConfigPro.store(fos, "usr");
-                        fos.flush();
-                        fos.close();
+                    usrConfigPro.store(fos, "usr");
+                    fos.flush();
+                    fos.close();
 
-                        CompareChapterWindow.useSaved = true;
+                    CompareChapterWindow.useSaved = true;
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-
         };
         edit.addListener(SWT.Selection, listener);
         del.addListener(SWT.Selection, listener);
@@ -338,12 +332,7 @@ public class ChapterTable {
                 text.setText(items[i].getText(index));
                 editor.grabHorizontal = true;
                 editor.setEditor(text, items[i], index);
-                text.addModifyListener(new ModifyListener() {
-                    public void modifyText(ModifyEvent e) {
-                        editor.getItem().setText(index, text.getText());
-                    }
-
-                });
+                text.addModifyListener(e -> editor.getItem().setText(index, text.getText()));
 
                 text.addMouseListener(new MouseListener() {
                     @Override
@@ -367,8 +356,8 @@ public class ChapterTable {
     }
 
     private void saveExcelFile() throws IOException {
-        String saveFileName = null;
-        String savePath = null;
+        String saveFileName;
+        String savePath;
         DirectoryDialog folderdlg = new DirectoryDialog(new Shell());
         folderdlg.setText("Select Save Path");
         folderdlg.setFilterPath("SystemDrive");
@@ -474,11 +463,7 @@ public class ChapterTable {
         del.setText("delete");
         del.setImage(ImageFactory.loadImage(parent.getShell().getDisplay(), ImageFactory.DELETE_EDIT));
 
-        del.addListener(SWT.Selection, new Listener() {
-            public void handleEvent(Event event) {
-                table.remove(table.getSelectionIndices());
-            }
-        });
+        del.addListener(SWT.Selection, event -> table.remove(table.getSelectionIndices()));
     }
 
     private HSSFWorkbook getHSSFWorkbook(String path, Map<String, String> values) throws IOException {
