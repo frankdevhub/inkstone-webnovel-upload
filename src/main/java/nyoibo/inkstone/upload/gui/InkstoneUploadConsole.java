@@ -348,40 +348,38 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 		progressBar.setLayoutData(gdProgressBar);
 		formToolkit.adapt(progressBar, true, true);
 
-		ScrolledComposite scrolledComposite = new ScrolledComposite(container, SWT.BORDER);
+		ScrolledComposite scrolledComposite = new ScrolledComposite(container, SWT.BORDER | SWT.VERTICAL);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, false, false, 4, 1);
 		gridData.widthHint = 367;
 		gridData.heightHint = 218;
 		scrolledComposite.setLayoutData(gridData);
+		scrolledComposite.setTouchEnabled(true);
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 		scrolledComposite.setAlwaysShowScrollBars(true);
 
-		Composite consoleCommposite = new Composite(scrolledComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		consoleCommposite.setLayout(new FillLayout(SWT.HORIZONTAL | SWT.VERTICAL));
+		Composite consoleComposite = new Composite(scrolledComposite, SWT.H_SCROLL | SWT.V_SCROLL);
+		consoleComposite.setLayout(new FillLayout(SWT.HORIZONTAL | SWT.VERTICAL));
 
-		consoleTextArea = formToolkit.createText(consoleCommposite, "InkstoneConsoleTextArea",
+		consoleTextArea = formToolkit.createText(consoleComposite, "InkstoneConsoleTextArea",
 				SWT.HORIZONTAL | SWT.VERTICAL);
 		consoleTextArea.setEditable(true);
 		consoleTextArea.setText("Waiting ......");
 
 		consoleTextArea.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		consoleTextArea.setForeground(SWTResourceManager.getColor(SWT.COLOR_YELLOW));
-
-		scrolledComposite.setContent(consoleCommposite);
-		scrolledComposite.setMinSize(consoleCommposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-
-/*		ScrollBar vb = scrolledComposite.getVerticalBar();
+		scrolledComposite.setContent(consoleComposite);
+		ScrollBar vb = scrolledComposite.getVerticalBar();
 		vb.setIncrement(10);
 
-		scrolledComposite.addMouseListener(new MouseAdapter() {
+		consoleComposite.addMouseListener(new MouseAdapter() {
+
 			@Override
 			public void mouseDown(MouseEvent e) {
-				scrolledComposite.setFocus();
+				consoleComposite.setFocus();
 			}
-		});*/
-		scrolledComposite.layout();
-
+		});
+		consoleComposite.layout();
 		setTextFromConfiguration();
 
 		return container;

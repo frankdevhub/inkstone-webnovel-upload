@@ -142,7 +142,7 @@ public class InkstoneUploadMainWindow extends TitleAreaDialog {
 				if (!StringUtils.isEmpty(selecteddir))
 					if (!selecteddir.startsWith(CHAPTERS_PATH_ROOT)) {
 						new ErrorDialogUtils(parent.getDisplay()).openErrorDialog(
-								"Please select a folder named \"nyoibo_automation\" under your root.",
+								"Please select a folder named \"nyoibo_automation\" under your system root.",
 								new FileNotFoundException());
 						setExcelButton.setEnabled(true);
 
