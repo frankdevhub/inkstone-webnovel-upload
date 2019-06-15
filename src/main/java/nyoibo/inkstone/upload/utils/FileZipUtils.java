@@ -281,4 +281,9 @@ public class FileZipUtils {
 
     }
 
+    public static void main(String[] args) throws IOException {
+        String filePath = "D:\\Automation";
+        new FileZipUtils().unZipFile(new File(filePath), filePath);
+
+    }
 }
