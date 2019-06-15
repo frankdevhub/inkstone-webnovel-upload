@@ -62,7 +62,7 @@ public class FileZipUtils {
         }
     }
 
-    public String getFileEncode(File file) throws IOException {
+    public String getFileEncode(File file) {
         String encode = "GBK";
         Charset charset = null;
         try {
