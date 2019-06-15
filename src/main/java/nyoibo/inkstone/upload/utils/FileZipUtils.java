@@ -96,6 +96,7 @@ public class FileZipUtils {
 
         LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("zip path is :[%s]", filePath));
         String fileEncode = getFileEncode(file);
+        LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("zip encode is :[%s]", fileEncode));
         final ZipFile zipFile = new ZipFile(file.getAbsolutePath(), Charset.forName(fileEncode));
         int entryCount = getZipEntryCount(zipFile.entries());
         Enumeration<?> entries = zipFile.entries();
@@ -281,9 +282,9 @@ public class FileZipUtils {
 
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         String filePath = "D:\\Automation";
-        new FileZipUtils().unZipFile(new File(filePath), filePath);
+        new FileZipUtils().unZipDriveZip(filePath);
 
     }
 }
