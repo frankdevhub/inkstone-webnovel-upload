@@ -1,19 +1,8 @@
 package nyoibo.inkstone.upload.utils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
+import nyoibo.inkstone.upload.data.logging.Logger;
+import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.message.MessageMethod;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.converter.WordToHtmlConverter;
@@ -22,9 +11,14 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.w3c.dom.Document;
 
-import nyoibo.inkstone.upload.data.logging.Logger;
-import nyoibo.inkstone.upload.data.logging.LoggerFactory;
-import nyoibo.inkstone.upload.message.MessageMethod;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.*;
+import java.util.List;
 
 
 /**
@@ -40,11 +34,9 @@ import nyoibo.inkstone.upload.message.MessageMethod;
 
 public class WordExtractorUtils {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(WordExtractorUtils.class);
     private String charLCN = "“";
     private String charRCN = "”";
-
-    private final Logger LOGGER = LoggerFactory.getLogger(WordExtractorUtils.class);
-
     private String title = null;
     private StringBuilder context = new StringBuilder();
     private String content = null;

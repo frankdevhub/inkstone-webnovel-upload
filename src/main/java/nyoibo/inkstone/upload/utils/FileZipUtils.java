@@ -1,18 +1,9 @@
 package nyoibo.inkstone.upload.utils;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
+import info.monitorenter.cpdetector.io.CodepageDetectorProxy;
+import nyoibo.inkstone.upload.data.logging.Logger;
+import nyoibo.inkstone.upload.data.logging.LoggerFactory;
+import nyoibo.inkstone.upload.message.MessageMethod;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.utils.IOUtils;
@@ -21,10 +12,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
-import info.monitorenter.cpdetector.io.CodepageDetectorProxy;
-import nyoibo.inkstone.upload.data.logging.Logger;
-import nyoibo.inkstone.upload.data.logging.LoggerFactory;
-import nyoibo.inkstone.upload.message.MessageMethod;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public class FileZipUtils {
 
@@ -66,7 +60,7 @@ public class FileZipUtils {
     }
 
     public String getFileEncode(File file) {
-        String encode = "UTF-8";
+        String encode = "GBK";
         Charset charset = null;
         try {
             CodepageDetectorProxy detector = CodepageDetectorProxy.getInstance();
@@ -86,7 +80,7 @@ public class FileZipUtils {
             entries.nextElement();
             count++;
         }
-        System.out.println("entry count complete");
+        LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("entry count complete :[%s]", count));
         return count;
     }
 
@@ -180,7 +174,7 @@ public class FileZipUtils {
         }
 
         UnZipProgressMonitorDialog dialog = new UnZipProgressMonitorDialog();
-        System.out.println("show unzip moinitor");
+        LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("show unzip monitor."));
         dialog.showDialog();
 
         zipFile.close();
