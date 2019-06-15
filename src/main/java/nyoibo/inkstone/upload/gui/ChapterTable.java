@@ -159,7 +159,8 @@ public class ChapterTable {
 		});
 
 		for (File f : fileList) {
-			System.out.println("delete-folder:" + f.getAbsolutePath());
+			LOGGER.begin().headerAction(MessageMethod.EVENT)
+					.info(String.format("delete folder :[%s]", f.getAbsolutePath()));
 			FileUtils.forceDelete(f);
 		}
 
@@ -229,7 +230,7 @@ public class ChapterTable {
 		}
 
 		CompareProgressMonitorDialog monitorDialog = new CompareProgressMonitorDialog();
-		System.out.println("show scanning zipped file moinitor");
+		LOGGER.begin().headerAction(MessageMethod.EVENT).info("show scanning zipped file moinitor");
 		monitorDialog.showDialog();
 	}
 
