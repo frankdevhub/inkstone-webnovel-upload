@@ -348,7 +348,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 		progressBar.setLayoutData(gdProgressBar);
 		formToolkit.adapt(progressBar, true, true);
 
-		ScrolledComposite scrolledComposite = new ScrolledComposite(container, SWT.BORDER | SWT.VERTICAL);
+		ScrolledComposite scrolledComposite = new ScrolledComposite(container, SWT.VERTICAL | SWT.V_SCROLL);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, false, false, 4, 1);
 		gridData.widthHint = 367;
 		gridData.heightHint = 218;
@@ -358,11 +358,11 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 		scrolledComposite.setExpandVertical(true);
 		scrolledComposite.setAlwaysShowScrollBars(true);
 
-		Composite consoleComposite = new Composite(scrolledComposite, SWT.H_SCROLL | SWT.V_SCROLL);
-		consoleComposite.setLayout(new FillLayout(SWT.HORIZONTAL | SWT.VERTICAL));
+		Composite consoleComposite = new Composite(scrolledComposite, SWT.BORDER);
+		consoleComposite.setLayout(new FillLayout(SWT.BORDER | SWT.HORIZONTAL | SWT.VERTICAL));
 
 		consoleTextArea = formToolkit.createText(consoleComposite, "InkstoneConsoleTextArea",
-				SWT.HORIZONTAL | SWT.VERTICAL);
+				SWT.VERTICAL | SWT.V_SCROLL);
 		consoleTextArea.setEditable(true);
 		consoleTextArea.setText("Waiting ......");
 
@@ -373,7 +373,6 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 		vb.setIncrement(10);
 
 		consoleComposite.addMouseListener(new MouseAdapter() {
-
 			@Override
 			public void mouseDown(MouseEvent e) {
 				consoleComposite.setFocus();
