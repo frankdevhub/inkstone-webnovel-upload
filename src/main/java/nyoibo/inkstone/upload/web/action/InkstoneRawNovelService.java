@@ -1,11 +1,5 @@
 package nyoibo.inkstone.upload.web.action;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.gui.ConsoleTextAreaListener;
@@ -15,6 +9,11 @@ import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 import nyoibo.inkstone.upload.utils.WebDriverUtils;
 import nyoibo.inkstone.upload.web.pages.InkstoneChapterPage;
 import nyoibo.inkstone.upload.web.pages.InkstoneHomePage;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class InkstoneRawNovelService implements Runnable, ConsoleTextAreaListener {
     private final WebDriver driver;

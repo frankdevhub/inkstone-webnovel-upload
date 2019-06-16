@@ -6,6 +6,7 @@
 *.iml
 /data
 /build
+/bin
 
 *.class
 
