@@ -116,7 +116,8 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
         LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("skipChapterExcel: [%s]", skipChapterCompareListExcel));
         usrConfigPro.setProperty(InkstoneUploadMainWindow.CHROME_CACHE_PATH, chromeCachePath);
         usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_PATH_DATE, Long.toString(new File(chapterListPath).lastModified()));
-
+        usrConfigPro.setProperty(InkstoneUploadMainWindow.BOOK_LIST_PATH, bookListPath);
+        usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_EXCEL, compareListPath);
         usrConfigPro.store(fos, "usr");
         fos.flush();
         fos.close();
