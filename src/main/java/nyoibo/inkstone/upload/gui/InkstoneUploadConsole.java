@@ -10,14 +10,10 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -35,7 +31,6 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
     private Text chapterListText;
     private Text chromeCacheText;
 
-    private Text consoleTextArea;
     private Label webLinkLabel;
     private Label progressLabel;
     private Text weblinkUrl;
@@ -330,40 +325,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
         progressBar.setLayoutData(gdProgressBar);
         formToolkit.adapt(progressBar, true, true);
 
-        ScrolledComposite scrolledComposite = new ScrolledComposite(container,
-                SWT.VERTICAL | SWT.V_SCROLL | SWT.HORIZONTAL | SWT.H_SCROLL | SWT.MULTI);
-        GridData gridData = new GridData(GridData.FILL_BOTH | SWT.MULTI);
-        gridData.widthHint = 410;
-        gridData.heightHint = 290;
-        scrolledComposite.setLayoutData(gridData);
-        scrolledComposite.setMinSize(new Point(140, 680));
-        scrolledComposite.setTouchEnabled(true);
-        scrolledComposite.setExpandHorizontal(true);
-        scrolledComposite.setExpandVertical(true);
-        scrolledComposite.setAlwaysShowScrollBars(true);
 
-        Composite consoleComposite = new Composite(scrolledComposite, SWT.INHERIT_NONE);
-        consoleComposite.setLayout(new FillLayout(SWT.HORIZONTAL | SWT.VERTICAL));
-        consoleTextArea = formToolkit.createText(consoleComposite, "InkstoneConsoleTextArea",
-                SWT.NONE | SWT.MULTI | SWT.WRAP);
-        consoleTextArea.setEditable(true);
-        consoleTextArea.setText("Waiting ......");
-
-        consoleTextArea.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
-        consoleTextArea.setForeground(SWTResourceManager.getColor(SWT.COLOR_YELLOW));
-        consoleTextArea.setTopIndex(Integer.MAX_VALUE);
-
-        scrolledComposite.setContent(consoleComposite);
-        ScrollBar vb = scrolledComposite.getVerticalBar();
-        vb.setIncrement(90);
-
-        consoleComposite.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseDown(MouseEvent e) {
-                consoleComposite.setFocus();
-            }
-        });
-        scrolledComposite.layout();
         setTextFromConfiguration();
 
         return container;
@@ -398,13 +360,6 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
                                                     .setText(InkstoneUploadMainService.driver.getCurrentUrl());
                                         }
                                     }
-                                    if (consoleStr.size() != 0) {
-                                        consoleTextArea.append("\n");
-                                        String next = consoleStr.get(0);
-                                        if (!StringUtils.isEmpty(next))
-                                            consoleTextArea.append(next);
-                                        consoleStr.remove(0);
-                                    }
 
                                     flag = true;
                                 });
@@ -413,7 +368,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
                     };
                     Thread progressThread = new Thread(progress);
                     progressThread.setDaemon(true);
-                    progressThread.start();
+                    // progressThread.start();
 
                     Runnable service = () -> {
                         try {
