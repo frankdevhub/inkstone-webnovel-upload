@@ -1,7 +1,5 @@
 package nyoibo.inkstone.upload.selenium.config;
 
-import java.util.HashMap;
-
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -17,6 +15,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.safari.SafariOptions;
+
+import java.util.HashMap;
 
 /**
  * <p>Title:DriverType.java</p>
@@ -34,7 +34,7 @@ public enum DriverType implements DriverSetup {
         public RemoteWebDriver getWebDriverObject(DesiredCapabilities capabilities, String path) {
             FirefoxOptions options = new FirefoxOptions();
             options.merge(capabilities);
-            options.setHeadless(HEADLESS);
+            options.setHeadless(true);
 
             return new FirefoxDriver(options);
         }
@@ -52,6 +52,7 @@ public enum DriverType implements DriverSetup {
             options.merge(capabilities);
             options.addArguments("disable-infobars");
             options.addArguments("user-data-dir=" + path + "");
+            options.addArguments("--start-maximized");
             System.out.println(String.format("config chrome data path:[%s]", path));
             options.setExperimentalOption("prefs", chromePreferences);
 
@@ -99,10 +100,10 @@ public enum DriverType implements DriverSetup {
         }
     };
 
-    public final static boolean HEADLESS = Boolean.getBoolean("headless");
-
     @Override
     public String toString() {
         return super.toString().toLowerCase();
     }
+
+
 }

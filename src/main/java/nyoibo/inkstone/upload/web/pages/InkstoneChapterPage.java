@@ -86,7 +86,7 @@ public class InkstoneChapterPage implements Runnable {
 
         this.chapterFileList = chapterFileList;
 
-        wait = new WebDriverWait(driver, 10, 1000);
+        wait = new WebDriverWait(driver, 10, 200);
 
         AssignDriver.initQueryObjects(this, (RemoteWebDriver) driver);
     }

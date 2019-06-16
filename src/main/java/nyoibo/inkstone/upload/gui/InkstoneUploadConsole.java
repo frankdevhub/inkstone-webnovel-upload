@@ -311,7 +311,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 
         progressLabel = formToolkit.createLabel(container, "progressText");
         progressLabel.setEnabled(true);
-        progressLabel.setText("Progress ");
+        progressLabel.setText("Progress");
         progressLabel.setBackground(container.getBackground());
         progressLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1));
 
@@ -356,6 +356,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
                                                     .get(InkstoneUploadMainService.currentChapterName);
                                             progressBar.setSelection(status);
                                             progressLabel.setText(InkstoneUploadMainService.currentChapterName);
+                                            progressLabel.pack();
                                             weblinkUrl
                                                     .setText(InkstoneUploadMainService.driver.getCurrentUrl());
                                         }

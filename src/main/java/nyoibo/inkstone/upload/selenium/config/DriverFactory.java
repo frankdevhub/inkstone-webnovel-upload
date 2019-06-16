@@ -1,11 +1,11 @@
 package nyoibo.inkstone.upload.selenium.config;
 
-import java.io.IOException;
-
 import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+
+import java.io.IOException;
 
 public class DriverFactory {
 
@@ -65,7 +65,7 @@ public class DriverFactory {
         desiredCapabilities.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.IGNORE);
         driver = driverType.getWebDriverObject(desiredCapabilities, path);
 
-        desiredCapabilities.setCapability("pageLoadStrategy", "eager");
+        desiredCapabilities.setCapability("pageLoadStrategy", "none");
 
     }
 }

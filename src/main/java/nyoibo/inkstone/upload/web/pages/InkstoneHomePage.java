@@ -1,11 +1,5 @@
 package nyoibo.inkstone.upload.web.pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.gui.ConsoleTextAreaListener;
@@ -17,19 +11,22 @@ import nyoibo.inkstone.upload.selenium.Query;
 import nyoibo.inkstone.upload.selenium.config.SeleniumInkstone;
 import nyoibo.inkstone.upload.utils.WebDriverUtils;
 import nyoibo.inkstone.upload.web.action.InkstoneUploadMainService;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class InkstoneHomePage implements Runnable, ConsoleTextAreaListener {
     private final String accountName;
     private final String accountPwd;
-
+    private final Logger LOGGER = LoggerFactory.getLogger(InkstoneHomePage.class);
     private Query signIntoBtn;
     private Query selectEmailLoginBtn;
     private Query accountNameInput;
     private Query accountPwdInput;
     private Query submitBtn;
-
     private WebDriver driver;
-    private final Logger LOGGER = LoggerFactory.getLogger(InkstoneHomePage.class);
 
     public InkstoneHomePage(boolean foreign, WebDriver driver) {
         this.driver = driver;
