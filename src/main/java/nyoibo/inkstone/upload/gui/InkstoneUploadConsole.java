@@ -109,8 +109,8 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
         if ((null != proHistory.get(InkstoneUploadMainWindow.CHAPTER_EXCEL)
                 && !proHistory.get(InkstoneUploadMainWindow.CHAPTER_EXCEL).equals(compareListPath))
                 || null != proHistory.get(InkstoneUploadMainWindow.COMPARE_LIST_DATE)
-                && !proHistory.get(InkstoneUploadMainWindow.CHAPTER_PATH_DATE)
-                .equals(new File(chapterListPath).lastModified()))
+                && !proHistory.get(InkstoneUploadMainWindow.COMPARE_LIST_DATE)
+                .equals(new File(compareListPath).lastModified()))
             skipChapterCompareListExcel = false;
 
         LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("skipChapterExcel: [%s]", skipChapterCompareListExcel));
