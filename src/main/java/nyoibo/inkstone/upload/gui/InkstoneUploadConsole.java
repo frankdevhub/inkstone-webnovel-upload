@@ -365,11 +365,16 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
                                     flag = true;
                                 });
                             }
+                            try {
+                                Thread.sleep(5000);
+                            } catch (InterruptedException e1) {
+                                e1.printStackTrace();
+                            }
                         }
                     };
                     Thread progressThread = new Thread(progress);
                     progressThread.setDaemon(true);
-                    //progressThread.start();
+                    progressThread.start();
 
                     Runnable service = () -> {
                         try {
