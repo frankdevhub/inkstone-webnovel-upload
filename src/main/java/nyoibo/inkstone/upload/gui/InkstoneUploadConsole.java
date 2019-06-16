@@ -91,6 +91,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 
     }
 
+
     private void saveProperties() throws IOException {
 
         FileOutputStream fos = new FileOutputStream(configPropertiesPath, false);
@@ -106,7 +107,8 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
         usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_PATH, chapterListPath);
         if ((null != proHistory.get(InkstoneUploadMainWindow.CHAPTER_PATH)
                 && !proHistory.get(InkstoneUploadMainWindow.CHAPTER_PATH).equals(bookListPath))
-                && !proHistory.get(InkstoneUploadMainWindow.CHAPTER_PATH_DATE)
+                || null != proHistory.get(InkstoneUploadMainWindow.CHAPTER_PATH_DATE)
+                && proHistory.get(InkstoneUploadMainWindow.CHAPTER_PATH_DATE)
                 .equals(new File(chapterListPath).lastModified()))
             skipChapterCompareListExcel = false;
 
