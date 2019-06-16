@@ -25,7 +25,7 @@ public class InkstoneRawHeaderUtils {
             return null;
 
         int chapIndex;
-        int partIndex = 0;
+        int partIndex = -1;
         String tail = null;
         Object res[] = getInnerPart(header);
         if (null != res) {
@@ -43,7 +43,7 @@ public class InkstoneRawHeaderUtils {
             matcher = Pattern.compile(numRegx).matcher(convert);
             if (matcher.find()) {
                 chapIndex = matcher.start();
-                if (chapIndex == partIndex) {
+                if (chapIndex == partIndex && partIndex >= 0) {
                     convert = matcher.group(1);
                     chapIndex = matcher.start();
                 } else {
@@ -80,8 +80,8 @@ public class InkstoneRawHeaderUtils {
         if (header == null)
             return null;
 
-        int chapIndex = 0;
-        int partIndex = 0;
+        int chapIndex = -1;
+        int partIndex = -1;
         String tail = null;
         Object res[] = getInnerPart(header);
         if (null != res) {
@@ -93,7 +93,7 @@ public class InkstoneRawHeaderUtils {
         Matcher matcher = Pattern.compile(numRegx).matcher(convert);
         if (matcher.find()) {
             chapIndex = matcher.start();
-            if (chapIndex == partIndex) {
+            if (chapIndex == partIndex && partIndex >= 0) {
                 convert = matcher.group(1);
                 chapIndex = matcher.start();
             } else {
