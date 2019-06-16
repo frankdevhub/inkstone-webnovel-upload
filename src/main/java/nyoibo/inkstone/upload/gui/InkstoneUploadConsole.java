@@ -83,7 +83,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
             textIsEmpty++;
         System.out.println(compareListPath);
         if (textIsEmpty > 0)
-            throw new Exception("Please input all configuration.");
+            throw new Exception("please input all configuration.");
 
         this.mainService = new InkstoneUploadMainService(bookListPath, compareListPath, chapterListPath,
                 chromeCachePath);
@@ -372,12 +372,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
     }
 
     private void handleError(Exception e, Display parent) {
-        display.asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                new ErrorDialogUtils(parent).openErrorDialog("InkstoneUploadMainService Error", e);
-            }
-        });
+        display.asyncExec(() -> new ErrorDialogUtils(parent).openErrorDialog("InkstoneUploadMainService Error", e));
     }
 
     @Override
@@ -388,37 +383,33 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
             public void widgetSelected(SelectionEvent e) {
                 okButton.setEnabled(false);
                 try {
-                    Runnable progress = new Runnable() {
-                        public void run() {
-                            for (; num < Integer.MAX_VALUE; ) {
-                                if (!flag && (num == 0 || ++num % 2 == 0)) {
-                                    display.asyncExec(new Runnable() {
-                                        public void run() {
-                                            if (progressBar.isDisposed())
-                                                return;
-                                            if (!StringUtils.isEmpty(InkstoneUploadMainService.currentChapterName)) {
-                                                if (null != InkstoneUploadMainService.process
-                                                        .get(InkstoneUploadMainService.currentChapterName)) {
-                                                    Integer status = InkstoneUploadMainService.process
-                                                            .get(InkstoneUploadMainService.currentChapterName);
-                                                    progressBar.setSelection(status);
-                                                    // progressText.setText(InkstoneUploadMainService.currentChapterName);
-                                                    weblinkUrl
-                                                            .setText(InkstoneUploadMainService.driver.getCurrentUrl());
-                                                }
-                                            }
-                                            if (consoleStr.size() != 0) {
-                                                consoleTextArea.append("\n");
-                                                String next = consoleStr.get(0);
-                                                if (!StringUtils.isEmpty(next))
-                                                    consoleTextArea.append(next);
-                                                consoleStr.remove(0);
-                                            }
-
-                                            flag = true;
+                    Runnable progress = () -> {
+                        for (; num < Integer.MAX_VALUE; ) {
+                            if (!flag && (num == 0 || ++num % 2 == 0)) {
+                                display.asyncExec(() -> {
+                                    if (progressBar.isDisposed())
+                                        return;
+                                    if (!StringUtils.isEmpty(InkstoneUploadMainService.currentChapterName)) {
+                                        if (null != InkstoneUploadMainService.process
+                                                .get(InkstoneUploadMainService.currentChapterName)) {
+                                            Integer status = InkstoneUploadMainService.process
+                                                    .get(InkstoneUploadMainService.currentChapterName);
+                                            progressBar.setSelection(status);
+                                            progressLabel.setText(InkstoneUploadMainService.currentChapterName);
+                                            weblinkUrl
+                                                    .setText(InkstoneUploadMainService.driver.getCurrentUrl());
                                         }
-                                    });
-                                }
+                                    }
+                                    if (consoleStr.size() != 0) {
+                                        consoleTextArea.append("\n");
+                                        String next = consoleStr.get(0);
+                                        if (!StringUtils.isEmpty(next))
+                                            consoleTextArea.append(next);
+                                        consoleStr.remove(0);
+                                    }
+
+                                    flag = true;
+                                });
                             }
                         }
                     };
@@ -426,23 +417,18 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
                     progressThread.setDaemon(true);
                     progressThread.start();
 
-                    Runnable service = new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                display.asyncExec(new Runnable() {
-                                    public void run() {
-                                        chapterListPath = chapterListText.getText();
-                                        bookListPath = bookListText.getText();
-                                        chromeCachePath = chromeCacheText.getText();
-                                        compareListPath = compareListText.getText();
-                                    }
-                                });
-                                startToRunUploadService();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                handleError(e, parent.getDisplay());
-                            }
+                    Runnable service = () -> {
+                        try {
+                            display.asyncExec(() -> {
+                                chapterListPath = chapterListText.getText();
+                                bookListPath = bookListText.getText();
+                                chromeCachePath = chromeCacheText.getText();
+                                compareListPath = compareListText.getText();
+                            });
+                            startToRunUploadService();
+                        } catch (Exception e2) {
+                            e2.printStackTrace();
+                            handleError(e2, parent.getDisplay());
                         }
                     };
                     Thread serviceThread = new Thread(service);
