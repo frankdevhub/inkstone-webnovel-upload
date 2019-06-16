@@ -264,6 +264,10 @@ public class ChapterTable {
                 getTableValues();
                 try {
                     saveExcelFile();
+
+                    InkstoneUploadConsole.skipChapterCompareListExcel = true;
+                    InkstoneUploadConsole.skipBookListExcel = true;
+
                     FileOutputStream fos = new FileOutputStream(InkstoneUploadConsole.configPropertiesPath, false);
                     Properties usrConfigPro = new Properties();
                     usrConfigPro.setProperty(InkstoneUploadMainWindow.CHAPTER_PATH, chapterFilePath);
