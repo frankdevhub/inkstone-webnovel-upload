@@ -289,10 +289,4 @@ public class FileZipUtils {
         }
 
     }
-
-    public static void main(String[] args) throws Exception {
-        String filePath = "D:\\Automation";
-        new FileZipUtils().unZipDriveZip(filePath);
-
-    }
 }

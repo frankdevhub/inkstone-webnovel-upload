@@ -115,7 +115,7 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
         readCompareList();
 
         String url = bookListUrl.get(bookName);
-        System.out.println(String.format("book url:[%s]", url));
+        LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("book url:[%s]", url));
         if (StringUtils.isEmpty(url))
             throw new Exception(String.format("cannot find book:[%s]", bookName));
 
@@ -134,7 +134,7 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
                             driver, chapterFileList);
                 }
                 Thread next = new Thread(rawService);
-                next.setName("innkstone-novel-upload");
+                next.setName("inkstone-novel-upload");
                 next.start();
                 next.join();
             }
@@ -143,7 +143,7 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
         } catch (Exception e) {
             pushLog(LOGGER.begin().headerAction(MessageMethod.EVENT)
                     .info("main service catch exception, service shutdown..."));
-            Thread check = ThreadUtils.check("innkstone-novel-upload");
+            Thread check = ThreadUtils.check("inkstone-novel-upload");
             if (check != null)
                 check.interrupt();
             this.threadPool.shutdown();

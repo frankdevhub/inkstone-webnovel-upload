@@ -306,12 +306,10 @@ public class InkstoneChapterPage implements Runnable {
             InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 98);
 
             InkstoneUploadMainService.finishedChapters.add(InkstoneUploadMainService.currentChapterName);
-
             Thread.currentThread().interrupt();
 
             InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 100);
         } catch (Exception e) {
-
             try {
                 WebDriverUtils.findWebElement(reditBtn);
                 Thread.sleep(2000);

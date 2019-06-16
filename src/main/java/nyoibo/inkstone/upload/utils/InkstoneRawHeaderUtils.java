@@ -1,15 +1,15 @@
 package nyoibo.inkstone.upload.utils;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang.StringUtils;
 
 public class InkstoneRawHeaderUtils {
 
     private static final String numRegx = "\\d+(\\.\\d+){0,1}";
     private static final String chapCNRegx = "第([\\s\\S]*?)章";
-    private static final String selectENRegx = "(?<=\\()[^\\)]+";
+    private static final String braceRegx = "(?<=\\()[^\\)]+";
 
     private static String clearBrace(String source) {
         String header = source;
@@ -24,19 +24,33 @@ public class InkstoneRawHeaderUtils {
         if (header == null)
             return null;
 
-        String convert = clearBrace(header);
+        int chapIndex;
+        int partIndex = 0;
+        String tail = null;
+        Object res[] = getInnerPart(header);
+        if (null != res) {
+            tail = (String) res[1];
+            partIndex = (int) res[0];
+        }
 
+        String convert = clearBrace(header);
         Matcher matcher = Pattern.compile(chapCNRegx).matcher(convert);
         if (matcher.find()) {
+            chapIndex = matcher.start();
             convert = matcher.group(1).trim();
             convert = new Integer(StringNumberUtils.numberCN2Arab(convert)).toString();
-
         } else {
             matcher = Pattern.compile(numRegx).matcher(convert);
             if (matcher.find()) {
-                convert = matcher.group();
-                return convert;
+                chapIndex = matcher.start();
+                if (chapIndex == partIndex) {
+                    convert = matcher.group(1);
+                    chapIndex = matcher.start();
+                } else {
+                    convert = matcher.group();
+                }
             } else {
+                chapIndex = 1;
                 char[] chars = convert.toCharArray();
                 StringBuilder builder = new StringBuilder();
                 for (char c : chars) {
@@ -50,11 +64,14 @@ public class InkstoneRawHeaderUtils {
             throw new Exception(String.format("Cannot recognize the raw header in format：[%s] if need help, "
                     + "please contact support for this bug.", header));
         }
-        String tail = getInnerPart(header);
+
         if (tail == null) {
             return convert;
         } else {
-            return convert + tail;
+            if (chapIndex < partIndex)
+                return convert + tail;
+            else
+                return convert;
         }
 
     }
@@ -63,38 +80,58 @@ public class InkstoneRawHeaderUtils {
         if (header == null)
             return null;
 
+        int chapIndex = 0;
+        int partIndex = 0;
+        String tail = null;
+        Object res[] = getInnerPart(header);
+        if (null != res) {
+            tail = (String) res[1];
+            partIndex = (int) res[0];
+        }
+
         String convert = clearBrace(header);
-        convert = header.toLowerCase();
         Matcher matcher = Pattern.compile(numRegx).matcher(convert);
         if (matcher.find()) {
-            convert = matcher.group();
+            chapIndex = matcher.start();
+            if (chapIndex == partIndex) {
+                convert = matcher.group(1);
+                chapIndex = matcher.start();
+            } else {
+                convert = matcher.group();
+            }
+
         }
         if (StringUtils.isEmpty(convert)) {
-            throw new Exception(String.format("Cannot recognize the raw header in format：[%s] if need help, "
-                    + "please contact support for this bug.", convert));
+            throw new Exception(String.format("cannot recognize the raw header in format：[%s] if need help, "
+                    + "please contact support for this bug.", header));
         }
-        String tail = getInnerPart(convert);
+
         if (tail == null) {
             return convert;
         } else {
-            return convert + tail;
+            if (chapIndex < partIndex)
+                return convert + tail;
+            else
+                return convert;
         }
     }
 
-    private static String getInnerPart(String header) {
+    private static Object[] getInnerPart(String header) {
+        //0:index 1:string
+        Object[] res = new Object[2];
         String convert = clearBrace(header);
         convert = convert.toLowerCase();
 
-        Matcher matcher = Pattern.compile(selectENRegx).matcher(header);
+        Matcher matcher = Pattern.compile(braceRegx).matcher(convert);
         if (matcher.find()) {
+            res[0] = matcher.start();
             convert = matcher.group();
-        } else {
-            matcher = Pattern.compile(numRegx).matcher(header);
+            matcher = Pattern.compile(numRegx).matcher(convert);
             if (matcher.find()) {
                 convert = matcher.group();
-            } else {
-                return null;
             }
+        } else {
+            return null;
         }
 
         convert = convert.trim();
@@ -103,16 +140,20 @@ public class InkstoneRawHeaderUtils {
 
         if (convert.contains("上")) {
             convert = "P1";
-            return convert;
+            res[1] = convert;
+            return res;
         } else if (convert.contains("下")) {
             convert = "P2";
-            return convert;
+            res[1] = convert;
+            return res;
         } else {
             try {
                 Integer part = Integer.parseInt(convert);
-                return "P" + part.toString();
+                res[1] = "P" + part.toString();
+                return res;
             } catch (Exception e) {
-                return "P" + StringNumberUtils.numberCN2Arab(convert);
+                res[1] = "P" + StringNumberUtils.numberCN2Arab(convert);
+                return res;
             }
         }
     }
