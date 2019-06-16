@@ -348,29 +348,32 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 		progressBar.setLayoutData(gdProgressBar);
 		formToolkit.adapt(progressBar, true, true);
 
-		ScrolledComposite scrolledComposite = new ScrolledComposite(container, SWT.VERTICAL | SWT.V_SCROLL);
-		GridData gridData = new GridData(SWT.FILL, SWT.FILL, false, false, 4, 1);
-		gridData.widthHint = 367;
-		gridData.heightHint = 218;
+		ScrolledComposite scrolledComposite = new ScrolledComposite(container,
+				SWT.VERTICAL | SWT.V_SCROLL | SWT.HORIZONTAL | SWT.H_SCROLL | SWT.MULTI);
+		GridData gridData = new GridData(GridData.FILL_BOTH | SWT.MULTI);
+		gridData.widthHint = 410;
+		gridData.heightHint = 290;
 		scrolledComposite.setLayoutData(gridData);
+		scrolledComposite.setMinSize(new Point(140, 680));
 		scrolledComposite.setTouchEnabled(true);
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 		scrolledComposite.setAlwaysShowScrollBars(true);
 
-		Composite consoleComposite = new Composite(scrolledComposite, SWT.BORDER);
-		consoleComposite.setLayout(new FillLayout(SWT.BORDER | SWT.HORIZONTAL | SWT.VERTICAL));
-
+		Composite consoleComposite = new Composite(scrolledComposite, SWT.INHERIT_NONE);
+		consoleComposite.setLayout(new FillLayout(SWT.HORIZONTAL | SWT.VERTICAL));
 		consoleTextArea = formToolkit.createText(consoleComposite, "InkstoneConsoleTextArea",
-				SWT.VERTICAL | SWT.V_SCROLL);
+				SWT.NONE | SWT.MULTI | SWT.WRAP);
 		consoleTextArea.setEditable(true);
 		consoleTextArea.setText("Waiting ......");
 
 		consoleTextArea.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 		consoleTextArea.setForeground(SWTResourceManager.getColor(SWT.COLOR_YELLOW));
+		consoleTextArea.setTopIndex(Integer.MAX_VALUE);
+
 		scrolledComposite.setContent(consoleComposite);
 		ScrollBar vb = scrolledComposite.getVerticalBar();
-		vb.setIncrement(10);
+		vb.setIncrement(90);
 
 		consoleComposite.addMouseListener(new MouseAdapter() {
 			@Override
@@ -378,7 +381,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
 				consoleComposite.setFocus();
 			}
 		});
-		consoleComposite.layout();
+		scrolledComposite.layout();
 		setTextFromConfiguration();
 
 		return container;
