@@ -13,7 +13,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class InkstoneRawNovelService implements Runnable, ConsoleTextAreaListener {
     private final WebDriver driver;
@@ -28,7 +27,7 @@ public class InkstoneRawNovelService implements Runnable, ConsoleTextAreaListene
     private Thread chapterThread;
 
     public InkstoneRawNovelService(boolean foreign, String bookUrl, String bookName,
-                                   ConcurrentHashMap<String, Integer> process, Map<String, String> bookCompareList, boolean needLogin,
+                                   Map<String, String> bookCompareList, boolean needLogin,
                                    WebDriver driver, Map<String, String> chapterFileList) throws Exception {
         this.driver = driver;
         this.needLogin = needLogin;

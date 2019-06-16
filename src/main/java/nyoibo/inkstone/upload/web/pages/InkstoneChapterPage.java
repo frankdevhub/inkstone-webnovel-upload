@@ -136,6 +136,7 @@ public class InkstoneChapterPage implements Runnable {
 
         if (enChapName == null) {
             //put into inprogress if cannot find related chapter
+            InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 50);
             firstChapter.click();
             LOGGER.begin().headerAction(MessageMethod.EVENT).info("click first raw button");
             WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_TRANSLATION, wait);
@@ -144,8 +145,9 @@ public class InkstoneChapterPage implements Runnable {
             long cost = (end - start) / 1000;
             LOGGER.begin().headerAction(MessageMethod.EVENT)
                     .info(String.format("current upload cost [%s] secs.", cost));
+            InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 100);
             //end current upload then navigate to in progress page and redirect to dashboard
-
+            return;
 
         } else {
             this.filePath = chapterFileList.get(enChapName);
@@ -229,6 +231,19 @@ public class InkstoneChapterPage implements Runnable {
                     titleString = titleSource.split(" ")[1];
                 }
             }
+        }
+
+        //block in progress if doc do not have title
+        if (StringUtils.isBlank(titleString) || StringUtils.isEmpty(titleString)) {
+
+            end = System.currentTimeMillis();
+            long cost = (end - start) / 1000;
+            LOGGER.begin().headerAction(MessageMethod.EVENT)
+                    .info(String.format("current upload cost [%s] secs.", cost));
+            InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 100);
+
+            Thread.currentThread().interrupt();
+            return;
         }
 
         InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 56);
@@ -320,6 +335,7 @@ public class InkstoneChapterPage implements Runnable {
     public void run() {
         try {
             editLatestRaw();
+            Thread.currentThread().interrupt();
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.begin().headerAction(MessageMethod.ERROR)

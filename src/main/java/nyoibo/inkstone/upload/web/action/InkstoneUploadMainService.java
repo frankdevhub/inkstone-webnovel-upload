@@ -1,17 +1,5 @@
 package nyoibo.inkstone.upload.web.action;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import org.apache.commons.lang.StringUtils;
-import org.openqa.selenium.WebDriver;
 import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.gui.CompareChapterWindow;
@@ -25,6 +13,18 @@ import nyoibo.inkstone.upload.utils.CompareExcelReaderUtils;
 import nyoibo.inkstone.upload.utils.ExcelReaderUtils;
 import nyoibo.inkstone.upload.utils.InkstoneRawHeaderUtils;
 import nyoibo.inkstone.upload.utils.ThreadUtils;
+import org.apache.commons.lang.StringUtils;
+import org.openqa.selenium.WebDriver;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class InkstoneUploadMainService implements ConsoleTextAreaListener {
 
@@ -127,10 +127,10 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
                 }
                 InkstoneRawNovelService rawService;
                 if (i == 0) {
-                    rawService = new InkstoneRawNovelService(false, url, this.bookName, process, bookCompareList, true,
+                    rawService = new InkstoneRawNovelService(false, url, this.bookName, bookCompareList, true,
                             driver, chapterFileList);
                 } else {
-                    rawService = new InkstoneRawNovelService(false, url, this.bookName, process, bookCompareList, false,
+                    rawService = new InkstoneRawNovelService(false, url, this.bookName, bookCompareList, false,
                             driver, chapterFileList);
                 }
                 Thread next = new Thread(rawService);
