@@ -122,7 +122,7 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
         try {
             for (int i = 0; i < bookCompareList.size(); i++) {
                 if (exceptionList.size() > 0) {
-                    LOGGER.begin().headerAction(MessageMethod.EVENT).info("current thread occured an error");
+                    LOGGER.begin().headerAction(MessageMethod.EVENT).info("current thread has an error");
                     throw exceptionList.get(0);
                 }
                 InkstoneRawNovelService rawService;
