@@ -368,7 +368,7 @@ public class InkstoneUploadConsole extends Dialog implements ConsoleTextAreaList
                     };
                     Thread progressThread = new Thread(progress);
                     progressThread.setDaemon(true);
-                    // progressThread.start();
+                    progressThread.start();
 
                     Runnable service = () -> {
                         try {

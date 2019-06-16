@@ -134,12 +134,14 @@ public class InkstoneChapterPage implements Runnable {
                 .info(String.format("EN_CHAP_NAME :%s", enChapName));
 
 
-        if (enChapName == null) {
+        if (null == enChapName) {
             //put into inprogress if cannot find related chapter
-            InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 50);
+            InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 20);
             firstChapter.click();
             LOGGER.begin().headerAction(MessageMethod.EVENT).info("click first raw button");
             WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_TRANSLATION, wait);
+
+            selectTranslate();
 
             end = System.currentTimeMillis();
             long cost = (end - start) / 1000;

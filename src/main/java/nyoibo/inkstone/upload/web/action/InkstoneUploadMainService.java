@@ -4,6 +4,7 @@ import nyoibo.inkstone.upload.data.logging.Logger;
 import nyoibo.inkstone.upload.data.logging.LoggerFactory;
 import nyoibo.inkstone.upload.gui.CompareChapterWindow;
 import nyoibo.inkstone.upload.gui.ConsoleTextAreaListener;
+import nyoibo.inkstone.upload.gui.ErrorDialogUtils;
 import nyoibo.inkstone.upload.gui.InkstoneUploadConsole;
 import nyoibo.inkstone.upload.message.MessageMethod;
 import nyoibo.inkstone.upload.selenium.DriverBase;
@@ -14,6 +15,7 @@ import nyoibo.inkstone.upload.utils.ExcelReaderUtils;
 import nyoibo.inkstone.upload.utils.InkstoneRawHeaderUtils;
 import nyoibo.inkstone.upload.utils.ThreadUtils;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.swt.widgets.Display;
 import org.openqa.selenium.WebDriver;
 
 import java.io.File;
@@ -143,6 +145,8 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
         } catch (Exception e) {
             pushLog(LOGGER.begin().headerAction(MessageMethod.EVENT)
                     .info("main service catch exception, service shutdown..."));
+            new ErrorDialogUtils(new Display()).openErrorDialog(e.getMessage(), e);
+
             Thread check = ThreadUtils.check("inkstone-novel-upload");
             if (check != null)
                 check.interrupt();
