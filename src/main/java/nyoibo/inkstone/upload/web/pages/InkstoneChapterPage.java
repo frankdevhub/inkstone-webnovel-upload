@@ -60,6 +60,7 @@ public class InkstoneChapterPage implements Runnable, ConsoleTextAreaListener {
     private ExpectedCondition<Boolean> pageTitleStartsWith(final String searchString) {
         System.out.println("Driver:" + driver.getTitle());
         System.out.println("FolderName" + searchString);
+        InkstoneUploadMainService.currentChapterName = searchString;
         return driver -> driver.getTitle().toLowerCase().contains(searchString.toLowerCase().split(" ")[0]);
     }
 
@@ -118,7 +119,8 @@ public class InkstoneChapterPage implements Runnable, ConsoleTextAreaListener {
         wait.until(pageTitleStartsWith(this.bookName));
 
         pushLog(LOGGER.begin().headerAction(MessageMethod.EVENT)
-                .info(String.format("into raw page under book :[%s].", this.bookName)));
+                .info(String.format("into raw page of book :[%s].", this.bookName)));
+        WebDriverUtils.doWaitQuery(firstRawChapter, wait);
         WebElement firstChapter = firstRawChapter.findWebElement();
 
         String currentChapterName;
