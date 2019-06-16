@@ -117,6 +117,7 @@ public class InkstoneUploadMainService implements ConsoleTextAreaListener {
         readCompareList();
 
         String url = bookListUrl.get(bookName);
+        InkstoneUploadMainService.currentChapterName = url;
         LOGGER.begin().headerAction(MessageMethod.EVENT).info(String.format("book url:[%s]", url));
         if (StringUtils.isEmpty(url))
             throw new Exception(String.format("cannot find book:[%s]", bookName));
