@@ -136,6 +136,16 @@ public class InkstoneChapterPage implements Runnable {
 
         if (enChapName == null) {
             //put into inprogress if cannot find related chapter
+            firstChapter.click();
+            LOGGER.begin().headerAction(MessageMethod.EVENT).info("click first raw button");
+            WebDriverUtils.doWaitTitle(SeleniumInkstone.INKSTONE_TRANSLATION, wait);
+
+            end = System.currentTimeMillis();
+            long cost = (end - start) / 1000;
+            LOGGER.begin().headerAction(MessageMethod.EVENT)
+                    .info(String.format("current upload cost [%s] secs.", cost));
+            //end current upload then navigate to in progress page and redirect to dashboard
+
 
         } else {
             this.filePath = chapterFileList.get(enChapName);
@@ -291,9 +301,11 @@ public class InkstoneChapterPage implements Runnable {
                 WebDriverUtils.findWebElement(reditBtn);
                 Thread.sleep(2000);
                 InkstoneUploadMainService.process.put(InkstoneUploadMainService.currentChapterName, 100);
-                end = System.currentTimeMillis();
 
-                Thread.currentThread().interrupt();
+                end = System.currentTimeMillis();
+                long cost = (end - start) / 1000;
+                LOGGER.begin().headerAction(MessageMethod.EVENT)
+                        .info(String.format("current upload cost [%s] secs.", cost));
             } catch (Exception e1) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();
@@ -315,7 +327,8 @@ public class InkstoneChapterPage implements Runnable {
             LOGGER.begin().headerAction(MessageMethod.ERROR).error(e.getMessage());
 
             InkstoneUploadMainService.exceptionList.add(e);
-            new ErrorDialogUtils(InkstoneUploadConsole.display).openErrorDialog("inkstone upload main service error", e);
+            new ErrorDialogUtils(InkstoneUploadConsole.display)
+                    .openErrorDialog("inkstone upload main service error", e);
         }
     }
 
