@@ -1,11 +1,7 @@
 package nyoibo.inkstone.upload.utils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-
+import nyoibo.inkstone.upload.gui.InkstoneUploadConsole;
+import nyoibo.inkstone.upload.web.action.InkstoneUploadMainService;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -15,8 +11,11 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import nyoibo.inkstone.upload.gui.InkstoneUploadConsole;
-import nyoibo.inkstone.upload.web.action.InkstoneUploadMainService;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CompareExcelReaderUtils {
     public static final String OFFICE_EXCEL_2003_POSTFIX = "xls";
@@ -100,8 +99,15 @@ public class CompareExcelReaderUtils {
                 if (xssfRow != null) {
                     XSSFCell key = xssfRow.getCell(0);
                     XSSFCell value = xssfRow.getCell(1);
-                    container.put(InkstoneRawHeaderUtils.convertRawCNHeader(getValue(key)),
-                            InkstoneRawHeaderUtils.convertRawENeader(getValue(value)));
+                    String keyStr = getValue(key);
+                    String valueStr = getValue(value);
+                    if (InkstoneUploadConsole.skipChapterCompareListExcel) {
+                        container.put(keyStr, valueStr);
+                    } else {
+                        container.put(InkstoneRawHeaderUtils.convertRawENeader(keyStr),
+                                valueStr);
+                    }
+
                 }
             }
 
@@ -140,8 +146,8 @@ public class CompareExcelReaderUtils {
                     if (InkstoneUploadConsole.skipChapterCompareListExcel) {
                         container.put(keyStr, valueStr);
                     } else {
-                        container.put(InkstoneRawHeaderUtils.convertRawCNHeader(getValue(key)),
-                                InkstoneRawHeaderUtils.convertRawENeader(getValue(value)));
+                        container.put(InkstoneRawHeaderUtils.convertRawENeader(keyStr),
+                                valueStr);
                     }
                 }
                 inited++;
