@@ -1,7 +1,7 @@
 # inkstone-webnovel-upload
 The FTP client using to upload files to google drive and inkstone platform
 
-# <img src="https://user-images.githubusercontent.com/29160332/60703027-3aca5d80-9f33-11e9-97f9-3ed80550f7aa.png" width = "50" height = "50" div align=left/> <div style="color:Red；float:left">Important Notice !!!</div>
+# <img src="https://user-images.githubusercontent.com/29160332/60703027-3aca5d80-9f33-11e9-97f9-3ed80550f7aa.png" width = "50" height = "50" div align=left/> Important Notice !!!
 
 This Demo is the Windows Applcation which build as the contribution of OSS(open source software)
 It doesnt belongs to anyone any company or organazation.
