@@ -1,11 +1,14 @@
 # inkstone-webnovel-upload
 The FTP client using to upload files to google drive and inkstone platform
 
-- Important Notice !!!
+- ***Important Notice !!!***
 
-This Demo is the Windows Applcation which build as the contribution of OSS(open source software)
+***
+<font color=Red>This Demo is the Windows Applcation which build as the contribution of OSS(open source software)
 It doesnt belongs to anyone any company or organazation.
 Its purppse is to save money for the publisher as such dulicate logic work may cost much time.
+</font>
+***
 
 ## <font color=#0099ff >Please Kindly Noted:</font>
 
@@ -26,7 +29,7 @@ Contact at 13585844052
 Mail at frankdevhub@gmail.com
 
 ## What is webnovel ?
-### [Go to webnovel@https://www.webnovel.com](https://www.webnovel.com/)
+ [**Go to webnovel@https://www.webnovel.com**](https://www.webnovel.com/)
 ![image](https://user-images.githubusercontent.com/29160332/60699202-752cfe00-9f25-11e9-97c8-4954f45a17b7.png)
 
 ## Function
@@ -37,7 +40,7 @@ Mail at frankdevhub@gmail.com
 - Safe and use Google Auth2.0 to access user's google drive so there may not have the security issure
 
 ## Logic 
-- Raw Container(Translate Files) -> Confirm Translate -> Deny then upload next chapter
+- **Raw Container(Translate Files) -> Confirm Translate -> Deny then upload next chapter**
 - Raw Container(Translate Files) -> Confirm Translate -> Do Translate(Upload) -> Confirm edit -> Deny then upload next chapter
 - Raw Container(Translate Files) -> Confirm Translate -> Do Translate(Upload) -> Confirm edit -> Confirm ready to publish -> Deny then upload next chapter 
 - Raw Container(Translate Files) -> Confirm Translate -> Do Translate(Upload) -> Confirm edit -> Confirm ready to publish -> Standby for publishment(Complete)
