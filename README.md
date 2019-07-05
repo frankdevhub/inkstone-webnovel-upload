@@ -34,7 +34,7 @@ Mail at frankdevhub@gmail.com
 - Provide data analize and warning on qulifaction of your novel
 - Provide log files for each upload action including upload time cost and result status
 - Scanning and match raw files and translate files automaticaly
-- Safe and use Google Auth2.0 to access user's google drive so there my not have the security issure
+- Safe and use Google Auth2.0 to access user's google drive so there may not have the security issure
 
 ## Logic 
 - Raw Container(Translate Files) -> Confirm Translate -> Deny then upload next chapter
