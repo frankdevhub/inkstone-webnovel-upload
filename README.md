@@ -7,7 +7,7 @@ This Demo is the Windows Applcation which build as the contribution of OSS(open 
 It doesnt belongs to anyone any company or organazation.
 Its purppse is to save money for the publisher as such dulicate logic work may cost much time.
 
-## <font color=#0099ff >Please Kindly Noticed:</font>
+## <font color=#0099ff >Please Kindly Noted:</font>
 
 - CopyRight@Franklinfang(CHN:FANG CHEN SHENG 房宸晟)
 
