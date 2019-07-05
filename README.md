@@ -15,7 +15,7 @@ Its purppse is to save money for the publisher as such dulicate logic work may c
 
 - Publish shall be inspect before post out, if it is lost or damage during the uploading process, we will not be responsible.
 
-**本应用仅适用于基于软件开源协议下的个人使用，方便个人提高效率。对于任何由此进行的商业行为将追究一切法律责任。运行应用程序时已嵌入了基于第三方安全协议的追踪机制，您的设备信息以及网络地址将会被记录。任何用于实验性环境下由于软件BUG造成的商业出版或者个人损失我方一概不负责。
+**本应用仅适用于基于软件开源协议下的个人使用，方便个人提高效率。对于任何由此进行的商业行为将追究一切法律责任。运行应用程序时已嵌入了基于第三方安全协议的追踪机制，您的设备信息以及网络地址将会被记录。任何用于实验性环境下由于软件BUG造成的商业出版或者个人损失我方一概不负责。**
 
 ## Get Your Own Full Version
 This application has been updated to full version and has been deployed on AWS Server. Full version will be published on Google Store. Then you may can have access to it. Currently we do only support payment as Paypal for outseas and Alipay only in CHINA.
