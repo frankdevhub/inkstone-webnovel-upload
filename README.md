@@ -42,7 +42,7 @@ Mail at frankdevhub@gmail.com
 - Raw Container(Translate Files) -> Confirm Translate -> Do Translate(Upload) -> Confirm edit -> Confirm ready to publish -> Deny then upload next chapter 
 - Raw Container(Translate Files) -> Confirm Translate -> Do Translate(Upload) -> Confirm edit -> Confirm ready to publish -> Standby for publishment(Complete)
 
-Currently all webnovels upload process will finished at status called "Ready to publish". Inkstone will do publish to social media at the end of the month and give feedback for publisher.
+Currently all webnovels upload process will finished at status called "Ready to publish". Inkstone will do publish to social media at the end of the month and give feedback to publisher.
 
 ## Extension(Full Version Only 仅限完整版，需购买)
 - Google Drive FTP Adapter(提供直连谷歌云盘服务，采用云端Auth2.0验证)
