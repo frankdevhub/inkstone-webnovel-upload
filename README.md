@@ -1,7 +1,7 @@
 # inkstone-webnovel-upload
 The FTP client using to upload files to google drive and inkstone platform
 
-# <img src="https://user-images.githubusercontent.com/29160332/60703027-3aca5d80-9f33-11e9-97f9-3ed80550f7aa.png" width = "50" height = "50" div align=left/> Important Notice !!!
+# Important Notice 
 
 This Demo is the Windows Applcation which build as the contribution of OSS(open source software)
 It doesnt belongs to anyone any company or organazation.
@@ -23,7 +23,7 @@ This application has been updated to full version and has been deployed on AWS S
 ## Cooperation and Support
 Contact at 13585844052
 
-Mail at frankdevhub@gmail.com
+Mail at frankdevhub@gmail.com / service@meixiangtech.site
 
 ## What is webnovel ?
  [**Go to webnovel@https://www.webnovel.com**](https://www.webnovel.com/)
