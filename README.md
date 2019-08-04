@@ -9,7 +9,7 @@ Its purppse is to save money for the publisher as such dulicate logic work may c
 
 ## <font color=#0099ff >Please Kindly Noted:</font>
 
-- CopyRight@Franklinfang(CHN:FANG CHEN SHENG 房宸晟)
+- CopyRight@Franklinfang(CHN:FANG CHEN SHENG)
 
 - Any violation or business usage on this application is illegal and will get punished in law.
 
@@ -21,8 +21,6 @@ Its purppse is to save money for the publisher as such dulicate logic work may c
 This application has been updated to full version and has been deployed on AWS Server. Full version will be published on Google Store. Then you may can have access to it. Currently we do only support payment as Paypal for outseas and Alipay only in CHINA.
 
 ## Cooperation and Support
-Contact at 13585844052
-
 Mail at frankdevhub@gmail.com / service@meixiangtech.site
 
 ## What is webnovel ?
