@@ -23,10 +23,10 @@ public class SeleniumInkstone {
     public static final String INKSTONE_HOME_PAGE_URL = "https://www.webnovel.com";
     public static final String INKSTONE_PRO_DASHBOARD = "https://inkstone.webnovel.com/dashboard.html";
     public static final String INKSTONE_PRO_BOOK = "https://inkstone.webnovel.com/book";
-    public static final String INKSTONE_ACCOUNT_NAME_CN = "doris.yang@jianlaiglobal.com";
-    public static final String INKSTONE_ACCOUNT_PWD_CN = "Newyorkoffice2019";
-    public static final String INKSTONE_ACCOUNT_NAME_EN = "doris.y.sh@hotmail.com";
-    public static final String INKSTONE_ACCOUNT_PWD_EN = "2018Nyoibo";
+    public static final String INKSTONE_ACCOUNT_NAME_CN = "";
+    public static final String INKSTONE_ACCOUNT_PWD_CN = "";
+    public static final String INKSTONE_ACCOUNT_NAME_EN = "";
+    public static final String INKSTONE_ACCOUNT_PWD_EN = "";
 
     // inkstone titles
     public static final String INKSTONE_TRANSLATION = "Chapter translation-Inkstone";
